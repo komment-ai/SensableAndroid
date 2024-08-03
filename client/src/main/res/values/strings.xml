@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Sensable</string>
+    <string name="button_list_sensors">Create Sensable</string>
+    <string name="title_activity_sensable">SensableActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="sensable_id">Sensable ID:</string>
+    <string name="sensable_location">Location:</string>
+    <string name="sensable_unit">Unit:</string>
+    <string name="sensable_samples">Samples:</string>
+    <string name="sensable_timestamp">Timestamp:</string>
+    <string name="sensable_value">Value:</string>
+    <string name="title_activity_saved_sensables">Sensables</string>
+    <string name="button_list_sensables">List All Sensables</string>
+    <string name="button_save_sensables">Favourite</string>
+    <string name="button_unsave_sensables">Unfavourite</string>
+    <string name="no_favourites">You have no favourite Sensables.</string>
+    <string name="title_activity_all_sensables">All sensables</string>
+    <string name="dialogTitleCreateSensable">Create a Sensable</string>
+    <string name="preference_file_key">io.sensable.client.PREFERENCES_FILE</string>
+    <string name="saved_username">SAVED_USERNAME</string>
+    <string name="saved_email">SAVED_EMAIL</string>
+    <string name="saved_access_token">SAVED_ACCESS_TOKEN</string>
+    <string name="action_login">Log in</string>
+    <string name="action_logout">Log out</string>
+    <string name="dialogTitleSensableLogin">Log into Sensables</string>
+    <string name="sensable_username">Username</string>
+    <string name="sensable_password">Password</string>
+    <string name="no_local">You have no local sensables</string>
+    <string name="favourite_title">Favourite Sensables</string>
+    <string name="local_sensables_title">Local Sensables</string>
+    <string name="text_stop">Stop</string>
+    <string name="title_app">Sensables</string>
+    <string name="action_create">Create Sensable</string>
+    <string name="title_activity_about">About Sensables</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="about_text"><![CDATA[
+<p>Sensables are any kind of sensor that can transmit data to <a href="http://sensable.io/">sensable.io</a></p>
+<p>This app lets you use the sensors in your Android device exactly the same as a hardware sensor and report samples to your account on sensable.io. Samples are taken every 15 minutes.</p>
+<h2>Icon attribution</h2>
+<p>Drop designed by Arthur Shlain from the Noun Project</p>
+<p>Microphone designed by John Caserta from the Noun Project</p>
+<p>Gyroscope designed by Arthur Shlain from the Noun Project</p>
+<p>Apple designed by Fabien Jouin from the Noun Project</p>
+<p>Speedometer designed by Michael Zenaty from the Noun Project</p>
+]]></string>
+
+</resources>
