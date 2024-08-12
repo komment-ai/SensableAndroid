@@ -8,11 +8,10 @@ import org.json.JSONObject;
  * Created by madine on 01/07/14.
  */
 /**
- * appears to be a data model for managing sensor readings and samples. It has various
- * fields such as ID, sensor ID, name, internal sensor ID, sensortype, unit, pending,
- * sample, private sensor, access token, and location (which is a double array). The
- * class also has methods for getting or setting values for these fields, as well as
- * a method for generating a JSON string representation of the sample data.
+ * Represents a data model for managing sensor readings and samples. It encapsulates
+ * various properties such as ID, sensor type, unit, sample data, and access token,
+ * allowing for CRUD operations on these values. The class also provides methods for
+ * generating JSON representations of the sample data.
  */
 public class ScheduledSensable {
     private int id;                 // Internal DB ID
@@ -33,45 +32,58 @@ public class ScheduledSensable {
     }
 
     /**
-     * retrieves a predefined string value, `sensorid`.
-     * 
-     * @returns a string representing the sensor ID.
+     * Returns a string value representing the sensor ID. It retrieves and returns the
+     * stored `sensorid` variable. This function provides read-only access to the sensor
+     * ID, allowing it to be used by other parts of the program for identification purposes.
+     *
+     * @returns a string representing the value of the `sensorid`.
      */
     public String getSensorid() {
         return sensorid;
     }
 
     /**
-     * sets a field named `sensorid` to a given string value, providing a new value for
-     * the object's sensor identification.
-     * 
-     * @param sensorid identifier of a specific sensor that this method is related to.
+     * Assigns a specified string value to the `sensorid` attribute of an object. This
+     * method is used to set or update the sensor ID, which can be used for identification
+     * purposes. The new value replaces any existing value stored in the `sensorid` attribute.
+     *
+     * @param sensorid identifier of a sensor, which is assigned to an instance variable
+     * `this.sensorid`.
      */
     public void setSensorid(String sensorid) {
         this.sensorid = sensorid;
     }
 
     /**
-     * retrieves a string representing the caller's name.
-     * 
-     * @returns a string representing the name of an object.
+     * Returns a string representing the current value of the `name` variable. This
+     * suggests that it is a getter method, allowing external access to the internal state
+     * of an object. It does not modify any data, but simply retrieves and returns the
+     * existing information.
+     *
+     * @returns a string representing the value of the variable `name`.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * sets the value of the object's `name` field to the provided String argument.
-     * 
-     * @param name new value of the class's `name` field.
+     * Assigns a given string value to the `name` attribute of an object. It updates the
+     * current value with the new one, replacing any previous content. This modification
+     * affects the object's state, allowing its `name` property to be modified externally.
+     *
+     * @param name string value to be assigned to the `this.name` variable, updating its
+     * current state.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * returns the internal sensor ID of an object.
-     * 
+     * Retrieves an integer value representing the internal sensor ID and returns it
+     * directly to the caller without any modification or processing. The returned value
+     * is stored in a variable called `internalSensorId`. This function provides read-only
+     * access to the internal sensor ID.
+     *
      * @returns an integer representing the internal sensor ID.
      */
     public int getInternalSensorId() {
@@ -79,107 +91,115 @@ public class ScheduledSensable {
     }
 
     /**
-     * sets the value of the internal sensor ID field of a class instance to the argument
-     * passed as an integer.
-     * 
-     * @param sensorId internal sensor ID that is being set for the object.
+     * Assigns a specified integer value to an internal variable `internalSensorId`. This
+     * variable is presumably a property of the class, allowing its state to be modified
+     * externally. The assigned value becomes the new value of `internalSensorId`, which
+     * can then be accessed or used within the class.
+     *
+     * @param sensorId integer value to be assigned to the internalSensorId field of the
+     * class.
      */
     public void setInternalSensorId(int sensorId) {
         this.internalSensorId = sensorId;
     }
 
     /**
-     * returns a string representing the sensortype of an object.
-     * 
-     * @returns a string representing the sensory type.
+     * Returns a string value representing the sensor type. It simply retrieves and returns
+     * the value of the `sensortype` variable without performing any operations or
+     * calculations. The returned value can be used for further processing or display purposes.
+     *
+     * @returns a string value of the `sensortype` variable.
      */
     public String getSensortype() {
         return sensortype;
     }
 
     /**
-     * sets a string value for the class member `sensortype`.
-     * 
-     * @param sensortype sensor type for which the method is setting the value of the
-     * `sensortype` field.
+     * Assigns a string value to the instance variable `sensortype`. This allows an
+     * external entity to modify the internal state of the object by setting its sensor
+     * type. The new value replaces any previous assignment to this attribute.
+     *
+     * @param sensortype sensor type to be assigned to an object's internal variable,
+     * which is then stored and accessible through the object.
      */
     public void setSensortype(String sensortype) {
         this.sensortype = sensortype;
     }
 
     /**
-     * retrieves a `String` value representing the unit of measurement for the current context.
-     * 
-     * @returns a string representing the unit of measurement.
+     * Returns a string value representing the unit.
+     *
+     * @returns a string value of the `unit` variable.
      */
     public String getUnit() {
         return unit;
     }
 
     /**
-     * sets a reference to a `String` variable `unit` within the function's scope,
-     * effectively updating the value of the class-level variable `this.unit`.
-     * 
-     * @param unit value of the unit of measurement for the object being manipulated by
-     * the `setUnit()` method.
+     * Assigns a given string value to the `unit` field of its class. It takes a `String`
+     * parameter, which represents the unit to be set. This function updates the internal
+     * state of the object with the provided unit information.
+     *
+     * @param unit string value that is assigned to the instance variable `this.unit`.
      */
     public void setUnit(String unit) {
         this.unit = unit;
     }
 
     /**
-     * retrieves the value of the `pending` field, which represents the number of tasks
-     * that are pending to be executed.
-     * 
-     * @returns the value of the `pending` variable, which is an integer representing the
-     * number of tasks that are pending to be executed.
+     * Retrieves and returns an integer value representing a pending state or status.
+     * This value is likely stored in a variable named `pending`. The function provides
+     * a read-only access to this value, allowing other parts of the program to obtain
+     * its current state.
+     *
+     * @returns an integer value representing the pending status.
      */
     public int getPending() {
         return pending;
     }
 
     /**
-     * sets the value of the class's `pending` field to the provided integer argument.
-     * 
-     * @param pending integer value that will be stored in the `this.pending` field of
-     * the class.
+     * Assigns a value to the `pending` field. The function accepts an integer parameter,
+     * `pending`, and sets it as the new value for the field with the same name. This
+     * allows the state of the object to be modified dynamically.
+     *
+     * @param pending integer value that is assigned to the instance variable `this.pending`.
      */
     public void setPending(int pending) {
         this.pending = pending;
     }
 
     /**
-     * returns a reference to an `sample` object.
-     * 
-     * @returns a reference to an `Sample` object named `sample`.
-     * 
-     * 	- The returned object is of type `sample`, indicating that it belongs to a class
-     * named `sample`.
-     * 	- The object contains an instance variable named `sample`, which holds some value.
-     * 	- The exact value of the `sample` instance variable is not specified in the
-     * function, as it depends on the implementation of the `sample` class.
+     * Returns an instance of the `Sample` class represented by the `sample` object. This
+     * suggests a getter method, providing access to the encapsulated `sample` object
+     * without modifying its state. The returned `Sample` object can then be used for
+     * further processing or inspection.
+     *
+     * @returns an instance of the `Sample` class, referenced by `sample`.
      */
     public Sample getSample() {
         return sample;
     }
 
     /**
-     * sets the `sample` field of an object to the provided `Sample` object.
-     * 
-     * @param sample Sample object that is assigned to the `this.sample` field within the
-     * function.
-     * 
-     * 	- The field `this.sample` is assigned with the given `sample` object as a reference.
-     * 	- `sample` is an instance of the class `Sample`, which has no explicit properties
-     * or attributes mentioned in the code snippet provided.
+     * Assigns a new value to the `sample` field, replacing any existing value with the
+     * provided `sample` object. This method does not perform any validation or processing
+     * on the input data. It simply updates the internal state of the class with the new
+     * sample object.
+     *
+     * @param sample object to be assigned to the `sample` field of the class, replacing
+     * its previous value.
      */
     public void setSample(Sample sample) {
         this.sample = sample;
     }
 
     /**
-     * returns a boolean value indicating whether the sensor is private or not.
-     * 
+     * Returns a boolean value indicating whether a sensor is private or not. It simply
+     * retrieves the value of a variable `privateSensor`, which presumably holds information
+     * about the sensor's privacy status. The returned value can be used by other parts
+     * of the program to determine how to handle the sensor.
+     *
      * @returns a boolean value indicating whether the sensor is private or not.
      */
     public boolean isPrivateSensor() {
@@ -187,41 +207,45 @@ public class ScheduledSensable {
     }
 
     /**
-     * sets the value of a field named `privateSensor` to a provided boolean value,
-     * updating the state of the object.
-     * 
-     * @param privateSensor boolean value that determines whether the sensor is private
-     * or not, which is then stored as an attribute of the class instance represented by
-     * the `this` reference.
+     * Sets a boolean value for the instance variable `privateSensor`. This method takes
+     * a single boolean parameter and updates the internal state of the object to reflect
+     * the new value. The modified state is accessible through other parts of the program.
+     *
+     * @param privateSensor boolean value that is assigned to the `privateSensor` instance
+     * variable, updating its state accordingly.
      */
     public void setPrivateSensor(boolean privateSensor) {
         this.privateSensor = privateSensor;
     }
 
     /**
-     * retrieves a pre-defined access token from storage and returns it as a string.
-     * 
-     * @returns a string representing the access token.
+     * Retrieves and returns the value of the `accessToken` variable. This method does
+     * not perform any calculations or operations, instead, it simply provides access to
+     * the stored token value. The returned token can be used for authentication purposes.
+     *
+     * @returns a string value of an access token.
      */
     public String getAccessToken() {
         return accessToken;
     }
 
     /**
-     * sets a reference to an `accessToken` variable, which stores a string value
-     * representing an authentication token for API calls.
-     * 
-     * @param accessToken token that grants access to the protected resources.
+     * Sets the value of an instance variable `accessToken`. It takes a `String` parameter
+     * representing the access token and assigns it to the instance variable. This variable
+     * can be accessed later by other parts of the program or class.
+     *
+     * @param accessToken value to be assigned to the instance variable `this.accessToken`,
+     * effectively setting it with a new access token.
      */
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
 
     /**
-     * retrieves a double array representing the location of an object from its associated
-     * sample object, if available; otherwise, it returns a default location array.
-     * 
-     * @returns a double array containing the location of the sample.
+     * Returns an array of doubles representing a location when a sample object is not
+     * already initialized, it creates a new sample object and retrieves its location.
+     *
+     * @returns an array of double values representing a location.
      */
     public double[] getLocation() {
         if (this.sample == null) {
@@ -231,13 +255,12 @@ public class ScheduledSensable {
     }
 
     /**
-     * sets the location of a `Sample` object associated with an instance of the `JavaClass`.
-     * 
-     * @param location 2D location of an object in a sample, which is then set to the
-     * corresponding field in the internal `Sample` class.
-     * 
-     * 	- `this.sample`: A reference to an instance variable named `sample`.
-     * 	- `location`: An array of double values representing the location data.
+     * Initializes or updates the location of a sample object when provided with a double
+     * array representing the coordinates. If the sample does not exist, it creates one
+     * before setting its location. The updated sample is stored for future use.
+     *
+     * @param location 2D array of coordinates that is set as the location for the current
+     * sample object within the class.
      */
     public void setLocation(double[] location) {
         if (this.sample == null) {
@@ -248,19 +271,24 @@ public class ScheduledSensable {
     }
 
     /**
-     * returns the `id` field of an object.
-     * 
-     * @returns an integer representing the value of the `id` field.
+     * Returns an integer value representing a unique identifier. It retrieves and provides
+     * access to the internal state variable `id`. This method allows external code to
+     * obtain and use the ID for various purposes.
+     *
+     * @returns an integer representing a unique identifier.
      */
     public int getId() {
         return id;
     }
 
     /**
-     * sets the `id` field of an object to a specified value.
-     * 
-     * @param id integer value that will be assigned to the `id` field of the class
-     * instance being updated by the `setId()` method.
+     * Sets the value of a private instance variable `id` with the provided integer
+     * parameter, updating its current state to match the new input value. This variable
+     * is likely used to uniquely identify an object or entity within the program. The
+     * change is reflected within the class.
+     *
+     * @param id identifier to be assigned to the object, which is stored in the instance
+     * variable `this.id`.
      */
     public void setId(int id) {
         this.id = id;
@@ -275,10 +303,11 @@ public class ScheduledSensable {
 //    }
 
     /**
-     * converts a `Sample` object to a JSON string if it is not null, otherwise it creates
-     * a new `Sample` object and returns its JSON representation.
-     * 
-     * @returns a JSON string representing a sample object.
+     * Returns a JSON string representation of a sample object if it is not null, otherwise
+     * it creates a new sample object and returns its JSON string representation. The
+     * function logs the JSON string to the debug log with a respective tag.
+     *
+     * @returns a JSON representation of either `this.sample` or a default `Sample` object.
      */
     public String getSampleAsJsonString() {
         if(this.sample != null) {

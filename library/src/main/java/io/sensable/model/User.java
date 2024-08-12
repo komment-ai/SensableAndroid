@@ -7,9 +7,10 @@ import android.os.Parcelable;
  * Created by simonmadine on 12/07/2014.
  */
 /**
- * in the provided Java file represents a user with personal information and an access
- * token. The class implements Parcelable, allowing it to be serialized and transmitted
- * efficiently.
+ * Represents a user with personal information and an access token, implementing
+ * Parcelable for efficient serialization and transmission. It provides getter and
+ * setter methods for username, email, and access token fields. The class also overrides
+ * the writeToParcel method to write these fields to a Parcel object.
  */
 public class User implements Parcelable {
 
@@ -21,8 +22,10 @@ public class User implements Parcelable {
     }
 
     /**
-     * retrieves the user name from a designated variable `username`.
-     * 
+     * Retrieves and returns the value stored in the `username` variable. It does not
+     * perform any computations or modifications, simply providing access to the existing
+     * data. The returned value is a string representing the username.
+     *
      * @returns a string representing the username.
      */
     public String getUsername() {
@@ -30,56 +33,73 @@ public class User implements Parcelable {
     }
 
     /**
-     * sets the value of the `username` field within an object to the provided `String`.
-     * 
-     * @param username user's username which is assigned to the `this.username` field of
-     * the function.
+     * Assigns a value to the instance variable `username`. It takes a `String` parameter,
+     * which is used to set the value of the `username` attribute within the class. This
+     * method sets the username for an object.
+     *
+     * @param username user name to be set for an object, and its value is assigned to
+     * the instance variable `this.username`.
      */
     public void setUsername(String username) {
         this.username = username;
     }
 
     /**
-     * retrieves a string representing the user's email address.
-     * 
-     * @returns a string representing the email address of the user.
+     * Returns a string value representing an email address. It retrieves and exposes the
+     * internal state of the object, providing access to the stored email information for
+     * external use or processing. The returned value is a simple string representation
+     * of the email address.
+     *
+     * @returns a string value representing an email address.
      */
     public String getEmail() {
         return email;
     }
 
     /**
-     * sets the `email` field of an object to a given String value.
-     * 
-     * @param email email address to be associated with the object instance.
+     * Sets a given string value as an instance variable named `email`. The provided email
+     * address is assigned to the object's internal state, allowing the object to maintain
+     * and store its email property. This property can be accessed and modified through
+     * this method.
+     *
+     * @param email email address to be set for the object, which is then assigned to the
+     * `email` field of the same object.
      */
     public void setEmail(String email) {
         this.email = email;
     }
 
     /**
-     * retrieves a pre-defined access token for use in API requests.
-     * 
-     * @returns a string representing the access token.
+     * Returns a string value representing an access token. The returned value is likely
+     * stored in an instance variable named `accessToken`. This function allows other
+     * parts of the program to retrieve and utilize the access token.
+     *
+     * @returns a string representing an access token.
      */
     public String getAccessToken() {
         return accessToken;
     }
 
     /**
-     * sets the `accessToken` field of an object to a provided string value.
-     * 
-     * @param accessToken token that grants access to a resource or service, and it is
-     * assigned to the `this.accessToken` field within the function.
+     * Assigns a specified string value to the `accessToken` property of an object. This
+     * property is then updated with the provided access token. The function does not
+     * return any value and has no effect on the program's execution flow beyond updating
+     * the object's state.
+     *
+     * @param accessToken value to be assigned to the `this.accessToken` instance variable.
      */
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
 
     /**
-     * returns an integer value of 0, indicating that no contents are described.
-     * 
-     * @returns 0.
+     * Returns an integer value indicating the type and complexity of the Parcelable
+     * object's contents. In this case, it returns a constant value of 0, indicating that
+     * the object has no complex or non-primitive data types. This is typically used for
+     * debugging purposes in Android development.
+     *
+     * @returns an integer value indicating the type of bundle containing the Parcelable
+     * object.
      */
     @Override
     public int describeContents() {
@@ -87,17 +107,15 @@ public class User implements Parcelable {
     }
 
     /**
-     * writes the username, email and access token to a Parcel object.
-     * 
-     * @param dest parcel that will receive the data written by the `writeToParcel()` method.
-     * 
-     * 	- `dest`: An instance of `Parcel`, which is a generic class in Android for storing
-     * and transmitting data between objects. It has various attributes such as `writeReason`
-     * (an integer), `nativeObject` (a native object), and `ref()` (a reference to an object).
-     * 
-     * @param flags 16-bit flag value that determines how the data is being written to
-     * the parcel, with possible values including 0x0000 for a standard write or 0x0001
-     * for a writable subset of the data.
+     * Serializes three string variables: `username`, `email`, and `accessToken`. It
+     * writes these values to a Parcel object, allowing them to be stored or transmitted
+     * as binary data.
+     *
+     * @param dest parcel where the object's data is being written, allowing the serialization
+     * of the provided values to the parcelled output stream.
+     *
+     * @param flags bitwise OR of multiple values that specify how the parcel should be
+     * written, such as whether to use compression or encryption.
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {

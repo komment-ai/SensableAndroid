@@ -1,7 +1,7 @@
 {
   "meta": {
     "version": "1",
-    "updated_at": "2024-08-12T21:53:26.834Z",
+    "updated_at": "2024-08-12T22:02:43.281Z",
     "created_at": "2024-08-12T18:03:18.789Z",
     "pipelines": [
       "5290e9fb-b07e-4f3a-b1dc-ade204499fa5",
@@ -10,7 +10,8 @@
       "586cd072-1664-40b6-a86b-eabc588d477a",
       "7d927ab4-6aa0-44dd-9a21-5bba27f58a29",
       "92451fc3-3e0e-44b7-ba54-9467bb091828",
-      "0a87801e-c9a0-4025-b165-54a14a406829"
+      "0a87801e-c9a0-4025-b165-54a14a406829",
+      "3e235bd1-bafe-4fc5-8d1d-927ea8b78489"
     ]
   },
   "lookup": [
@@ -39,7 +40,15 @@
       "client/src/main/java/io/sensable/client/sqlite/ScheduledSensablesTable.java",
       "client/src/main/java/io/sensable/client/sqlite/SensableContentProvider.java",
       "client/src/main/java/io/sensable/client/sqlite/SensableDatabaseHelper.java",
-      "library/src/main/java/io/sensable/SensableService.java"
+      "library/src/main/java/io/sensable/SensableService.java",
+      "library/src/main/java/io/sensable/model/Sample.java",
+      "library/src/main/java/io/sensable/model/SampleResponse.java",
+      "library/src/main/java/io/sensable/model/SampleSender.java",
+      "library/src/main/java/io/sensable/model/ScheduledSensable.java",
+      "library/src/main/java/io/sensable/model/Sensable.java",
+      "library/src/main/java/io/sensable/model/Statistics.java",
+      "library/src/main/java/io/sensable/model/User.java",
+      "library/src/main/java/io/sensable/model/UserLogin.java"
     ]
   ]
 }
