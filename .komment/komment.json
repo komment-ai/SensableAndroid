@@ -1,0 +1,15 @@
+{
+  "meta": {
+    "version": "1",
+    "updated_at": "2024-08-12T18:03:17.776Z",
+    "created_at": "2024-08-12T18:03:18.789Z",
+    "pipelines": [
+      "5290e9fb-b07e-4f3a-b1dc-ade204499fa5"
+    ]
+  },
+  "lookup": [
+    [
+      "client/src/main/java/io/sensable/client/adapter/ExpandableListAdapter.java"
+    ]
+  ]
+}

@@ -1,0 +1,473 @@
+[
+  {
+    "name": "ExpandableListAdapter.java",
+    "path": "client/src/main/java/io/sensable/client/adapter/ExpandableListAdapter.java",
+    "content": {
+      "structured": {
+        "description": "An expandable list adapter class that extends BaseExpandableListAdapter, providing functionality for displaying data in an expandable list format. The adapter takes a context, a list of header titles, and a map of child data as inputs. It allows users to retrieve and manipulate the child elements within each group in a hierarchical manner.",
+        "diagram": {
+          "gviz": "digraph G {\n    bgcolor=\"#151719\"\n    fontcolor=\"#ECEDED\"\n    splines=ortho\n    fontname=\"Courier New\"\n    edge [color=\"#26de81\"]\n    node [style=filled,color=\"#717D86\", shape=rectangle, fontname=\"Courier New\"]\n    \n    subgraph cluster_1 {\n        label=\"android\"\n        color=\"#33363A\"\n        BaseExpandableListAdapter [label=\"android.widget.BaseExpandableListAdapter\", style=\"rounded,filled\"]\n        LayoutInflater [label=\"android.view.LayoutInflater\", style=\"rounded,filled\"]\n        Context [label=\"android.content.Context\", style=\"rounded,filled\"]\n        ViewGroup [label=\"android.view.ViewGroup\", style=\"rounded,filled\"]\n        View [label=\"android.view.View\", style=\"rounded,filled\"]\n        Typeface [label=\"android.graphics.Typeface\", style=\"rounded,filled\"]\n        TextView [label=\"android.widget.TextView\", style=\"rounded,filled\"]\n    }\n    subgraph cluster_3 {\n        label=\"io/sensable\"\n        color=\"#33363A\"\n        R [label=\"io.sensable.client.R\", style=\"rounded,filled\"]\n        SensableActivity []\n        subgraph cluster_4 {\n            label=\"client\"\n            color=\"#33363A\"\n            subgraph cluster_main {\n                // style=filled\n                color=\"#00000000\"\n                ExpandableListAdapter [] [fontsize=\"20pt\",style=filled,color=\"#26de81\",shape=square, fontname=\"Courier New\"]\n                label = \"\"\n            }\n        }\n    }\n    subgraph cluster_5 {\n        label=\"java\"\n        color=\"#33363A\"\n        List [label=\"java.util.List\", style=\"rounded,filled\"]\n        HashMap [label=\"java.util.HashMap\", style=\"rounded,filled\"]\n    }\n    ExpandableListAdapter -> View [dir=\"both\", penwidth=4]\n    ExpandableListAdapter -> Context [style=\"dashed\"]\n    ExpandableListAdapter -> HashMap [style=\"dashed\"]\n    ExpandableListAdapter -> List [style=\"dashed\"]\n    Context -> ExpandableListAdapter [penwidth=1]\n    SensableActivity -> ExpandableListAdapter [style=\"dashed\"]\n    ExpandableListAdapter -> Typeface [style=\"dashed\"]\n    ViewGroup -> ExpandableListAdapter [penwidth=2]\n    ExpandableListAdapter -> View [style=\"dashed\"]\n    ExpandableListAdapter -> ViewGroup [style=\"dashed\"]\n    ExpandableListAdapter -> LayoutInflater [style=\"dashed\"]\n    ExpandableListAdapter -> TextView [style=\"dashed\"]\n    ExpandableListAdapter -> BaseExpandableListAdapter [style=\"dashed\"]\n    ExpandableListAdapter -> R [style=\"dashed\"]\n}\n",
+          "d2": "<?xml version=\"1.0\" encoding=\"utf-8\"?><svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" d2Version=\"v0.6.5\" preserveAspectRatio=\"xMinYMin meet\" viewBox=\"0 0 2139 1696\"><svg id=\"d2-svg\" class=\"d2-3344683269\" width=\"2139\" height=\"1696\" viewBox=\"11 11 2139 1696\"><rect x=\"11.000000\" y=\"11.000000\" width=\"2139.000000\" height=\"1696.000000\" rx=\"0.000000\" fill=\"#151719\" stroke-width=\"0\" /><style type=\"text/css\"><![CDATA[\n.d2-3344683269 .text {\n\tfont-family: \"d2-3344683269-font-regular\";\n}\n@font-face {\n\tfont-family: d2-3344683269-font-regular;\n\tsrc: url(\"data:application/font-woff;base64,d09GRgABAAAAAA+UAAoAAAAAF8QAAguFAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAAA9AAAAGAAAABgXd/Vo2NtYXAAAAFUAAAAkAAAALYC9gQZZ2x5ZgAAAeQAAAkEAAAMXIw8yK9oZWFkAAAK6AAAADYAAAA2G4Ue32hoZWEAAAsgAAAAJAAAACQKhAXqaG10eAAAC0QAAACYAAAAoErNB8Nsb2NhAAAL3AAAAFIAAABSQaw+vm1heHAAAAwwAAAAIAAAACAAQAD2bmFtZQAADFAAAAMjAAAIFAbDVU1wb3N0AAAPdAAAAB0AAAAg/9EAMgADAgkBkAAFAAACigJYAAAASwKKAlgAAAFeADIBIwAAAgsFAwMEAwICBGAAAvcAAAADAAAAAAAAAABBREJPAEAAIP//Au7/BgAAA9gBESAAAZ8AAAAAAeYClAAAACAAA3icZMy5TsIAGADgr7beVavW+z5exJjGmOhCSHdWwkDYeCWOGQYCvNlP0pXvAT4kUglymRFKhVTmW+XXv7ZaV98wAl8qP/601Dp6BhGxjlUsYxHzmMU0JjFuvm2JnWbetWffgUNHjuVOnDpTOHfhUunKtRu37tx78OjJsxev3rz78MkGAAD//wEAAP//abYdAHicdFZ/bBvlGX6/7y6+pLaTXOzz2Y5/3V3ii+04jn0+XxI7duPYaZrYSXpO2iY06dqmpKWjazOpVbcOtMGg0jTNE6AhDQHamCY0JsaQyiT+A8Gy8WMDTQOmCSEmBSTYGFk2DYHP052dkDDx13c63b3v8z7v8z7vBy2wCIBlfD8Q0AYd0AUMgERzdC8nigKlSIoisIQiIppaRH/VqggdTpKpFBnPf5C/dued6Pgd+P7aV0fuXlt7YeXqVe37m+9rCfTq+4CBAMBeXIU2oAFslCQGg6JgMhE2ySaIAvWS/wV/V6CT7Aj85e2VtxezH+XQ11ZXlduHh2/XlnC1dmljAwCAgCUA3IOrQIMbBB2blHA4GLuJYozDJBBSIiUng4JA7zwsPT9+djgeS0/nLk3dcWp+qlw+u76wsnx0HVcDEyPx2Q7SPFM4eDSMro0khgdr27n86DAAIEjWt3E3fgi8AC18MCgnUykp4WCpYFDgTSbG7nBIiZTCmkxIVb89Xbq7kjnhibrz4eyylLglG5vyD4inLUcevHDbg2o8kPLwY1dU9Vq+j09GE0b8JQD0Nq6C2eCY4RiJERiOWULf0N765BMUx9WJVw/949AuliB+CAJfhkWHIguyRJtM6MTRe0ozN44Vlj0Drnwif1q+fF44aPveG/7zTTiSL+XuGbuiXv8h0/WLovYhF2niwYkdPHrXJVqgOXqpguLz89ofcFX7O7LVLiFZe2kHP/wSV/Xe6t8vVfRGNet6GVehpRmHWaogP67WntFLaeb5Fq7qvEq0ZHM4WCmVUmx6tmRKEShCIETB4WDopdU7LKyFtDCW62dnWgkyeV25niQJCle1n/BFni/yaKV2CZ3vvxB5QHsCzT8QudCv/QgAsJEjgKvQDuxeldgEQqA/V8Yr4+fSc4Wfrzx89WJZVcsXcVU4Uigt09q7iNE+QIu5g2PJBuZwfRt9hB+CqMG/qBi9l5PBoCgO4P3d0IXBsj6syxF1Fq9EEsJJaWzSG/ev+EdD8ko6vSpEfYcHlHEu4V4OjvakVi1y/0hvND3I93naQ9ZwfjAxG432pLxcst8fcpv7OqNj8eRCAhB4ANBnuAqUXpUgc4xAv/sieudFPDUxUbvZwKoTQOAqWAEkYg+/xOuvL57v6raRXR76/MIfcVV7eOTsyMjZEXS6dgmwrjH0FNoCN/QAsLwuMiVplESJRoEMLehDK+pSM0T33OiRH/yYjvSFp7wB/szI4lyBIvgjDiErXDuVsBwem1ug/UNCwD7sCN1+i/bnEU84z/vv7cjEQr2AQa1vo0/xBtiaqhYFSqAlhmrkshuJ9D7xxnSjEH84QFB5FXOzfSdPp09OZGbTRf9BIZCzcN4E3njuuFe853LlSra4tjR3hg/UPWyDj4H6NnoSbencffns6GPcdfBcZuxCdrDoCjMxb39RrIzzI44ebs6SWZ9T1zM8m7I5YwtDlTWvXfFyus5i9W301k4NDc6M4KIs7ZClyLuJ/nvLxfQpJZwNkJUCRXhKroMZ/7BPzAUnLN+9Nvv1rM9debY2NOwJFcc1DxurDB07A9jA/3u0BU7w76tAFzS3a0IEZ1CF2LHbsrlVZfkswtpvWo5NCOlur3/2JUTmhqUjltH12bn17PVzVldb+QRDp+w+FJwqzxo8+QBQDv+p4fmCrMjJJk8Cz+jeRH8lny8eZsOdXd2ewtoa+mm2pTx1rI3KWVbK49qy4c/RegB9iLYgDqNQ3lWRHNxzGEElRmgaNi82etDsObHTc8busDXnlA82vvnP4qUg1+XibU4xMR+391gfX6XZwbmEyFu7euMrCwuZi6XwaCYSyYymJual2Hw71+l2Tr9TyPmHHaS5z+MfsJL2QkSeCVMtuU7ZnyyFaHO3nfUpo9FSDD2Vk+VMRpZz2o3RIO8mSVuYEQcMblQA9AbeALvhJjsa1R3L0CetqoRQTpQPqf2DvelevPHcKhc7tay9jEKFbLBXexTqdSgCwNP4Jg5CLwCYIHgdAOr1+pt1EX5tvBcb77/Z0K1a34Y38QZ0NHikJXpXqo8PhNT2NpKizK0Oy7CMb63db6MRypJkAyv+GG0BZ2DVh19nfB9iavdUCxQRKEWGch3Bmf7pw2r/QKqg9sdSBbQ5IcTi/aHkThnT2qPNY4cPtNXko5ljLx8FihBmdgkxgu3jo6nrf6It6IDufbreP/uM3YE60mu53Fo6c2sud2smVy7nsjMzzZnMrKtz65nCWmX+3Ln5yhoYviKhT9FWcyY/R2eoLSiyjG2vr+hIudnIyun0ySF+nMdXDVvJ9XDZV/DTQ56+ey+rV7I+98JjyPQFX9E5WEFb+o1ml4OmqzQIcE2GvGynxd7hH3ehzeMDqQOTJJnIahuN/z31bXQX2oKw0d+9O8VYKV/YKI2F8lpyRQgFCpHBQU7q5vPhxdnojKfPlQoMRHyD3UIhGpq1iB7FxUX9Lp49YOXkUHo2wCZtzrCH9TJmK6cMiPk+I7+zvo2K+KK+IQ19CbKiSMag7+rsg5nRydKB4l13cWGrz9Jpj1mWJpE123Ljxri2FY23kVnKbMSarm+jV9Gmrod9WqWbNvhOebISGQymeZ0XvmQ5tYyS2huFrBhBi5q71DcICCwA6Ldo8//31rNPLpwws2bSzB44ceQJtKl92DMpCJM9yK659ToA8E20aeh97397IghE475JEY/cOz/Z2k6RrZ1t03OlNrqVbO2gDs18Z3WiraONbO08UECb2nv8OM+P88i158mNWoRCb29R0D4DBO0A6FdoE1wAkiJKbDOVIlGs0LzbUlT7I/ctjpmdVtLsMKeP3vfw4iGru520Oi157f0LtrDdHrZd+Pjflx39DBNhLxs8Wuoxg4PuvZpQlH10tOOlTq+ls9XeFkp1mJ9fOGN2mUmz/cCxuWfoWPE1EzmGW9LRHvSe9i//JM9NBpC1tjVYijY1C4+hzZ07m6qiTZ3D+u/wFCj4pn73ow3PbgyM0+93Ov1+POV1OX0+p8sLgAy/+hnabPrSjm71lpsCjl4r3ea09jjVzFutLVmiRerH3trfpo7/DwAA//8BAAD//1Jnk2kAAQAAAAILhVjFWZVfDzz1AAMD6AAAAADYXaChAAAAAN1mLzb+Ov7bCG8DyAAAAAMAAgAAAAAAAAABAAAD2P7vAAAImP46/joIbwABAAAAAAAAAAAAAAAAAAAAKHicHMshjsIAEEbhN3/Fms2uIxVN0wQMEIqpIQSJAjWO4QTcBU7BPdBgMAg4ARpV6kqKe+J9OrBRQaI1oTmV/gntqLQn7IewJ6E7oRmhHiOlZErAGioNcTtTaszUXpQ2ILeGiQqcmiXv9kGLJwtcfVz593Xb4nYkMydVwcpu/OpKaif+uqbGob10/gMAAP//AQAA///FLyDDAAAALABQAIYAtgDMAP4BFgEiATIBZAGMAdAB4gH+AjYCagKYAsoC/gMgA4wDrgO6A8YD4gQUBDYEYgSWBLYE9gUcBT4FWgWUBcAF8AX8BhIGLgAAAAEAAAAoAIwADABmAAcAAQAAAAAAAAAAAAAAAAAEAAN4nJyU3U4bVxSFPwfbbVQ1FxWKyA06l22VjN0IogSuTAmKVYRTj9Mfqao0eMY/Yjwz8gxQqj5Ar/sWfYtc9Tn6EFWvq7O8DTaqFIEQsM6cvfdZZ6+1D7DJv2xQqz8E/mr+YLjGdnPP8AMeNZ8a3uC48bfh+kpMg7jxm+EmXzb6hj/iff0Pwx+zU//Z8EO26keGP+F5fdPwpxuOfww/Yof3C1yDl/xuuMYWheEHbPKT4Q0eYzVrdR7TNtzgM7YNN9kGBkypSJmSMcYxYsqYc+YklIQkzJkyIiHG0aVDSqWvGZGQY/y/XyNCKuZEqjihwpESkhJRMrGKvyor561OHGk1t70OFRMiTpVxRkSGI2dMTkbCmepUVBTs0aJFyVB8CypKAkqmpATkzBnToscRxwyYMKXEcaRKnllIzoiKSyKd7yzCd2ZIQkZprM7JiMXTiV+i7C7HOHoUil2tfLxW4SmO75TtueWK/YpAv26F2fq5SzYRF+pnqq6k2rmUghPt+nM7fCtcsYe7V3/WmXy4R7H+V6p8yrn0j6VUJiYZzm3RIZSDQvcEx4HWXUJ15Hu6DHhDj3cMtO7Qp0+HEwZ0ea3cHn0cX9PjhENldIUXe0dyzAk/4viGrmJ87cT6s1As4RcKc3cpjnPdY0ahnnvmge6a6IZ3V9jPUL7mjlI5Q82Rj3TSL9OcRYzNFYUYztTLpTdK619sjpjpLl7bm30/DRc2e8spviLXDHu3Ljh55RaMPqRqcMszl/oJiIjJOVXEkJwZLSquxPstEeekOA7VvTeakorOdY4/50ouSZiJQZdMdeYU+huZb0LjPlzzvbO3JFa+Z3p2fav7nOLUqxuN3ql7y73QupysKNAyVfMVNw3FNTPvJ5qpVf6hcku9bjnP6JNI9VQ3uP0OPCegzQ677DPROUPtXNgb0dY70eYV++rBGYmiRnJ1YhV2CXjBLru84sVazQ6HHNBj/w4cF1k9Dnh9a2ddp2UVZ3X+FJu2+DqeXa9e3luvz+/gyy80UTcvY1/a+G5fWLUb/58QMfNc3NbqndwTgv8AAAD//wEAAP//B1tMMAB4nGJgZgCD/+cYjBiwAAAAAAD//wEAAP//LwECAwAAAA==\");\n}\n.d2-3344683269 .text-italic {\n\tfont-family: \"d2-3344683269-font-italic\";\n}\n@font-face {\n\tfont-family: d2-3344683269-font-italic;\n\tsrc: url(\"data:application/font-woff;base64,d09GRgABAAAAAA+sAAoAAAAAGGAAARhRAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAAA9AAAAGAAAABgW1SVeGNtYXAAAAFUAAAAkAAAALYC9gQZZ2x5ZgAAAeQAAAkNAAAM2EjswNxoZWFkAAAK9AAAADYAAAA2G7Ur2mhoZWEAAAssAAAAJAAAACQLeAjMaG10eAAAC1AAAACgAAAAoEhqA81sb2NhAAAL8AAAAFIAAABSQ8xApm1heHAAAAxEAAAAIAAAACAAQAD2bmFtZQAADGQAAAMmAAAIMgntVzNwb3N0AAAPjAAAACAAAAAg/8YAMgADAeEBkAAFAAACigJY//EASwKKAlgARAFeADIBIwAAAgsFAwMEAwkCBCAAAHcAAAADAAAAAAAAAABBREJPAAEAIP//Au7/BgAAA9gBESAAAZMAAAAAAeYClAAAACAAA3icZMy5TsIAGADgr7beVavW+z5exJjGmOhCSHdWwkDYeCWOGQYCvNlP0pXvAT4kUglymRFKhVTmW+XXv7ZaV98wAl8qP/601Dp6BhGxjlUsYxHzmMU0JjFuvm2JnWbetWffgUNHjuVOnDpTOHfhUunKtRu37tx78OjJsxev3rz78MkGAAD//wEAAP//abYdAHicfFZtbFtXGX7PuTf35sNxYl/7unYSO/a5vnbsazvxtX3jOLaTOHG+7GRJmlKaJv1YV9ou60K7dZ22ah9BU4XY8Kb+AU2AxIc27QdSx34goU0wJCJGJ0Ad2oD9YB3p1CJti0KBiVyje+3GThH8cY5udM77PM/7vM850AACAD6LrwAFTdAGZrACyJybomRFITZK9vkIyyo+jmOFZ9HGs9+mc4f+6v/evyQXPf7Mq9N/O/oavrKzip5efuopdenyAw986fZtNYD+cBsAAJffAUDv4RI0gQmAY2WfKPoIwyAkc8RH2BsDbzfTzTTtkNXfoBOHCnPmT06jx9fWYmf6k19R53BpZ+3aNQAKCADuxiUwgUNby5wc5a0WhmFZXv9LKDmaiMdEUluQ9R8fWQ3mBCTnx5+cGVhZOTQ2tfTguZWzxclHcGlqXBqVGmnDcP/ksoQujCuh6M6tsUI0reFGkCxv4xB+GVwADR5RjMcyWI7yNlYUiceIrRael6MJxcYwyDN9KtF76FKhf25fgkuIA0dGBM9Uyp/rJsKyIXdxpnjlsXEl0NPtS5+4OJhajnd3RF0hvYbGqR2XoEXXm3WzMktYN0vW0ZlW9Ubgc+OnMhKNuDT83sidkSqmFH4ZPDqm/wFJIYpMMQySLlzqXXpmLjVnVzjFnzk+JpBCVkhy3sut7yaFFcOLF2euPJbfBTawktjX/saQ+rHTu4vt9F1sMuXmZIpwboqsz/Qjf39xfSarvp/BJfU2su6soX51o7IHtnEJqMoesj6zrjXw7nnoJVyChup5LFmfuYAsrbi0c3WkWu9nuAR2/f+cTVb0iomEQliKUJpnWIqsLyd5Ov/28vp0oclhoGd/LqV5mjE2TuGS+p3Ll9HxnTV0TjoTfEn9ATr8knRaUl8ArJ/twyVoBb7mHJYjFKG4mll+cvirZxfOL6yeU0bvXzkxPXEUl/ILS2dN6g3Eq7fQ4nw+Eal4w1DeRip+GQIANo/oU3Th4zHR59OMkkjsdoVhrBbeZqs49GZuzZ/sWlQG50LeQiAVP5xKHXXJ9nzYG+/qEwqRWOqkYWAgGIyO9gtRPuyYVKLz0Zg/7Oxx9XaIET7UOa4MLMUAwTIAjuMSsBoborhZQv3o0Tdb0Tutbz2Ki7nczusVnPMAeFjnDTIlczxvkxMJhZPR86nZjoZGirbHHW/sV1/FJfVK/KFE/OEYWtXbBRh85W30T7QFFk09W81tsiJTRCEM49O8tmu914cK0tSK7EubaC5zLNtIk4NmcVaQrNFOIRd39RmWFvOPH5b97rTqmPBGhsKRD0RPYHI5mk1X6rnK2+gzvAFWLY00VQlLOJllZV1Oq8WIfdEM1lrl0Wf+li9toizZF4o+Hgv7Q3r5uJCLO3t7PHMkbJENfncab7x5tCt46IBWeigwuSxn0gHvTdEDCLzlbXQVbUHnHna1rlWn+/3ZE1LxWFwa5EOc2NV7IJEc6E7wHkfRcHJ59PxixGPvtVlH13IjeYcpavHuaod9dVxq2v1/8QbMVLtYLFXVm/Heq56v+8ibO/33yod1Lm+hLXCAt76e7nI3s5tUlJzQXKox/PjA6dD04V5l2GloUH/Z1J0LdCVtzq65b5UxZe4h8RXDmWNja/NS+L5op2zM3ue1m2SrC3lb9rV29rkWAUEQAD2Pr4NN92AW17ue1YKMCi5mW4bb22bSjoC5o7nD5O5pNB033L+IXkk2zE0ttLYobHM0uJBRD2qaobKAttAWuCBcP1WKwjBkr/sYhtqj3mt9B4jQOebPTBnt4v5I+r7g5OE+MWOiuOxJ7nySzHmCfF8nGZadkT+LXXGbpzB0SpQOLOYe+XJU8yN15CRyBwO/FT09+YO9qVRldlwA6H28Uc2jmg9ZPZTiMY0m5Xqh2NtO98xLmXhjpjBI0xOdE+ExvHE7TSLD/S5B/TWSLPtapwNh9ZVyWTsTvsBXsaj1CRgQJwCgXC5/reyDf+jffZXvYxUMUnkbvsAbYNYUice0RNS8WW3nQ8PME8VLCJkohkXNvCFrsuMHd15kmygzwima3uWBb6EtLas0HhUatioZZg+bemLHsiwtLogDfQ2Rg950gqYzxTRNj1snpDGNZ56fCI6hzUmhT/FL8nC/yWmp51pb1bREW7CvHsO9UmoVe+bDe5TUK9wrZC2f/oS2oA266j1fCQrd59VBvj67Ik2tRGePSNMrgdCcnIhqP4ZTS2PnF8OV36GRtdGR8dza6Ehef7PcKcvoM7RVmV+2DrEREz2ZWG5PFjV/PctQ3sWwPsZRcZDDZtcP67PoGn59yBWqDrHr1HcRqoaR+InXXfPbk2gL2us0srHiXW1a6K5CyG7taHcIBVcabS5L6abRxmxKvQao/O/yNrqEtjT37L2P7r2OtNuochl9v2/Z3msbEgPpnv5wUpqUwlOdYU52i32J7kysd94Q84suf5g4fC5Hpic47BWcfosj5HKKZs+gFBr1apgHy9voIF7dzdCEoiWBrE9/XYb+dChGo+R4S0EY7njCcClJdXqMjhZTe8SQDbU5WpE52fDccxn1ltnsdDY3KGybdnZ/eRt9ija1+bt7ds39XDVGX9t15kTXuDRW0C4e/37DiGJycSihXufsmmXQQdUxReSKzikA9Be0+d934rPjBYFmaNokcN8sqjtoU71JpokwKSC76qjszQPgX6FNcN+zt7aiCFV537LUaVJoRwjRbR3tT0+bMEa00dH+1MSHR4z61662C2hT/cgz6vGMepCzbuVAzWRCECaIegdQ+ToA+n1FB8L5ZFu1lCKzNlJ9S7Os9MelmUCjkaXbutsWFzbun5UaTc10u4dbQfjjVd5ntfRYV//++Tk+zPOS7TwAKv+iHEE30CY4AFjdM3rY7lHEiJnmbqPdbPYO280LBVF7MZi85m8U1I/sqYnfsWyyKR0l6Kb6qbtISMGDTDufR4rSrp/hGtq8+xZ0HSseR5u6kAjG8TRcxVe1tyWn97YSRhc5J7FZugietvF29z7e3g1Iz8Z30Sa03cXJVw3AMH02YrI3W9o73c0PFx825j5obkoybF8QCzsf5g/8BwAA//8BAAD//16Mpe0AAAAAAQAAAAEYUdx7xglfDzz1AAED6AAAAADYXaDMAAAAAN1mLzf+vf7dCB0DyQACAAMAAgAAAAAAAAABAAAD2P7vAAAIQP69/bwIHQPoAML/0QAAAAAAAAAAAAAAKAJ0ACQB/v/LAkcAIwImADkB9wAjAkwAOQJuACMA/AAjAc4AIwLBACMCKwAjAfoADAH+AF0B8ABSAhkAJwIYAB8BswAlAhcAJwHhACUBGgArAhMAAQILAB8A7QAfAO7/hAD4ACwDHwAfAg0AHwIDACcCF//2AVYAHwGS//wBRQA8AhAAOAHAADsCwwBGAa3/1AHA/8IA7QAfAAAARwDu/4QAAAAuAFIAigC8ANQBCgEkATIBQgFwAZgB2AHsAgoCQgJ6AqgC4AMaA0IDigO0A8ADzAPuBDAEWgSIBMIE4AUcBUoFdgWUBc4F+gYqBjgGTgZsAAAAAQAAACgAjAAMAGYABwABAAAAAAAAAAAAAAAAAAQAA3icnJTbThtXFIY/B9tterqoUERu0L5MpWRMoxAl4cqUoIyKcOpxepCqSoM9PojxzMgzmJIn6HXfom+Rqz5Gn6LqdbV/L4MdRUEgBPx79jr8a61/bWCT/9igVr8L/N2cG66x3fzZ8B2+aB4Z3mC/+ZnhOg8b/xhuMGi8NdzkQaNr+BPe1f80/ClP6r8ZvstW/dDw5zyubxr+csPxr+GveMK7Ba7BM/4wXGOLwvAdNvnV8Ab3sJi1OvfYMdzga7YNN9kGekyoSJmQMcIxZMKIM2YklEQkzJgwJGGAI6RNSqWvGbGQY/TBrzERFTNiRRxT4UiJSIkpGVvEt/LKea2MQ51mdtemYkzMiTxOiclw5IzIyUg4VZyKioIXtGhR0hffgoqSgJIJKQE5M0a06HDIET3GTChxHCqSZxaRM6TinFj5nVn4zvRJyCiN1RkZA/F04pfIO+QIR4dCtquRj9YiPMTxo7w9t1y23xLo160wW8+7ZBMzVz9TdSXVzbkmONatz9vmB+GKF7hb9WedyfU9Guh/pcgnnGn+A00qE5MM57ZoE0lBkbuPY1/nkEgd+YmQHq/o8Iaezm26dGlzTI+Ql/Lt0MXxHR2OOZBHKLy4O5RijvkFx/eEsvGxE+vPYmIJv1OYuktxnKmOKYV67pkHqjVRhTefsN+hfE0dpXz62iNv6TS/THsWMzJVFGI4VS+X2iitfwNTxFS1+Nle3fttmNvuLbf4glw77NW64OQnt2B03VSD9zRzrp+AmAE5J7LokzOlRcWFeL8m5owUx4G690pbUtG+9PF5LqSShKkYhGSKM6PQ39h0Exn3/prunb0lA/l7pqeXVd0mi1Ovrmb0Rt1b3kXW5WRlAi2bar6ipr64Zqb9RDu1yj+Sb6nXLecRoeIudvtDr8AOz9llj7Gy9HUzv7zzr4S32FMHTklkNZSmfQ2PCdgl4Cm77PKcp+/1csnGGR+3xmc1f5sD9umwd201C9sO+7xci/bxzH+J7Y7qcTy6PD279TQf3EC132jfrt7NribnpzG3aFfbcUzM1HNxW6s1ufsE/wMAAP//AQAA//9yoVFAAAAAAwAA//UAAP/OADIAAAAAAAAAAAAAAAAAAAAAAAAAAA==\");\n}\n.d2-3344683269 .text-mono {\n\tfont-family: \"d2-3344683269-font-mono\";\n}\n@font-face {\n\tfont-family: d2-3344683269-font-mono;\n\tsrc: url(\"data:application/font-woff;base64,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\");\n}\n.d2-3344683269 .text-mono-bold {\n\tfont-family: \"d2-3344683269-font-mono-bold\";\n}\n@font-face {\n\tfont-family: d2-3344683269-font-mono-bold;\n\tsrc: url(\"data:application/font-woff;base64,d09GRgABAAAAABHgAAwAAAAAHhwAAQScAAAAAAAAAAAAAAAAAAAAAAAAAABPUy8yAAABHAAAAGAAAABgmKbWhWNtYXAAAAF8AAAAkAAAALYC9gQZZ2FzcAAAAgwAAAAIAAAACAAAABBnbHlmAAACFAAACWsAAAzsLtOX62hlYWQAAAuAAAAANgAAADYbI9ohaGhlYQAAC7gAAAAkAAAAJAYzALxobXR4AAAL3AAAAHUAAACgXcAJVGxvY2EAAAxUAAAAUgAAAFJEIkEKbWF4cAAADKgAAAAgAAAAIABcAmpuYW1lAAAMyAAABO8AAA2sAwZtKnBvc3QAABG4AAAAIAAAACD/uAAzcHJlcAAAEdgAAAAHAAAAB2gGjIUABAJYArwABQAAAooCWAAAAEsCigJYAAABXgAyAR4AAAILAwkDBAMCAgQgAAL3AgA4AwAAAAAAAAAAQURCTwCgACD//wPY/u8AAAQkAcZgAAGfAAAAAAHeApQAAAAgAAN4nGTMuU7CABgA4K+23lWr1vs+XsSYxpjoQkh3VsJA2HgljhkGArzZT9KV7wE+JFIJcpkRSoVU5lvl17+2WlffMAJfKj/+tNQ6egYRsY5VLGMR85jFNCYxbr5tiZ1m3rVn34FDR47lTpw6Uzh34VLpyrUbt+7ce/DoybMXr968+/DJBgAA//8BAAD//2m2HQAAAQAB//8AD3icfFZpbBvHFX4zXJESuaK4IpcrHuK1Sy7va0VSF0mJlmTqtChLkWXZkuNYbRJLqWPKrdLIP9r0cBEmPeSmygmkcIAacNM0QIOmqf80LhAnQBGkCQq0P3okSIAUKBhEvwppWcySlqUU7Z8ZaTg7773vfe97D5qAB8ApfBVU0AI0tAMLUGbcjFcSRV6jyYiclMnwTszwuF1+6ZrfTwU2l5dfokLObeelJXx1b3Vx8uzZ1td/c2G5r+/666gMgKEFAB/DFWgFBqBslIy8yucTebVaoxJTbrblnVfeeW6WttMUbW2dM6BuXNlbR2OJhyTpoYT82rPlMqhgDAAncQUYsBIfy4yUNJtZk1rDKpuaV0nJdKrLx/PMnT/G/jK0mk/3jhQLDx9dHEzHE12FY/29vf3HcKVzJB+eaaPo8UJhLoC+E/IKTvlkOBzyAQCCdG0H9+JtcAAMe6I41ZVOS0kzp/H5eI9azZrMZimZznBqNTqXXZuNH39iPnfOXeIyQrQYDI4nhN6Okn+VDs5dnll9uiS5Fs0WaWnwyHLSZV2IJQDBKQBsxhXQKdiyblZiedbNnkKvyB999hny4crmY48+tan4Eq7tYB5vg5v44vP9D19SfEpi1Go0f/zK9PT3ZgtLzhKbFINDomdEMvLa5Q/da/T4jx9ae3paci2y1ro7Wu2FDfl9Z1yxMwCAO+74JLFSSmJ4hmcGtl7d2noVV3Z399aRQa4qd0ku9I275F7KzfKMxI5tb6Nb29ub6OrmprxK3AcE5wGwC1egSXmXcbPnt5AHV/aqjd97AbADV6BT+Z0j9CIvduVwhtdoeFHkHSqW7X1mwEyZB57ZpNQarEomi1JMhTVqClc+OXnyk731t22lE9PWl59//mXr9ImS7W3ytgpGAHARV4AGFiwHOKPmeXafJcaMkR/5ZPji8PDF4dlibzbbW+z50rsv4Yp3YXJ8KfJPdCYRj/vkfy/LPyD+Jms7WMTbEFHyIWYU/FNdPp8ofpEpJDkc58DEIgoWvpGa8y7EYpGOqHNWGBCz54/2XQyPe4biQtQedx4L5zx9D9Px6IrD57JwNrZV0MeG4+n5VDh42mJzdBqtJtpjiA1F06e6AYETAPfgCmhIXPUM/ONNbH0TGzY396p1bNsA8KhSd1BWSUazmZPS6YxRUr3/++em2jg9ZeD0k0/dwhX53fRKOr2SRvG9dcCQre1gDu2CA4IA83XWZaKYEE4j5rCCIsOTAhYJ9/SYRPq35Kj/J6+oOiKejrhk7/KMl4Ij59IbOsp7Ert7raMlF+Ok/UPB4ye0nIvRsfozJgeTuG9C/qjb7r9oM81QZo+5zawFDMXaDg7gm8CCUEeZ1xB+aSQFXSWDYjKtoM57FAVAM56jDooubzWpOo8K+YV49uyCLWw1ia6OCMdGaI8rjW/emLI5cg9PzD2S33AMSpE+B2u5zRgAwRFSY2iXcPD/1Bip9/mpy6PTj030nXEOdabswYLA5wPioK0vvEZnL83MXMp6HYsmo2cgFBrw2I2nvQIQ/YvVdrAB3wQTeBQLdwxIIqkegmOK4LhvDsFSOXs2FejvoDRbGzqVbdQSMpoCZlvUlqQff6S0nrdbJq/vHZFswgZrud3e5sjGRofrOc80YhEOxaIopTvl1nT9V0hjk5dHx75amLw/1YTlK4jlpISQdghDcU/WnQjdT+IqXcrlzw+ZvC332fuzrkJSGnS1Mws2QkGYUTh2Gwz1TnG4ABiUyrjZD2L3ToUmnPYOqTMWlT+9gnrQXs/pNKNdbdEGIzJGl9fUZVKvXbUI7ke7kIQCHN/3nwBzd0tLSU5i+UYde3yiEo0kJZUD1V1aKEEa6//z+xcRO7jSJ/rYTrfV5uu7tzsq3D7X0po51asX2mltIHTq7JeL355hPSaThzWR1e3v94RDORuvNxqG/mjrDjuSRkrvd1qS7VR7IdQ/7adXdbyxZ1Roamo2tBrbe490laLodrvXZhWMRsFq87bLVw02xtJKqWhOb+us56kIgO0KxxW9bXCbZXhGSZGGKW41q+yl7tnJLbffEbHimzeWOyOrS/IfkDMZtVnkXwFArQZTAOgN/LnaB14AUIMvUj8P1vob5+Ldc0Ag1XawE/+WdGLCRCIdjGmfDI+fPvMsiiYd7V7O5cvTF5bQd8syRPnm5lW6TfmezAc5tEuYTPS67jZ313nF9/0g+K9oKX0y5Io261OhVG/Fpme1Zb1eb9KiatYRCvg9sXvG5GtoJsJZ5F+iGc5M9n180C6YDto5CM+GjnId756dqsODqgVX9DA69boLoF1oI2r5hWo4qCAKVVB4cL1YXB+sr54Ix0U8ytqo7Pr6tXpt11dQtKqo2FC0an7f03168hxrPKxVxQ2dyjnpzxGR6nbnrZRmzn5Xqn6Nf5a08bmLE3Mbebu19EMkHNaqdQAsoF1oP4R/vd40zPoGrfI+0OcOmB2c1x5dcKHqarZPq31Uo0kfkWVAkKrtKLgGD/evKBYVeA7r3p3m5S98M5aPrKQDPp0t5l058fUHj6yJBe9sgHMYuvIT97gza3TEearTYWF0ba10s3miZ2QuZDnBdbQYdSajngn3BCLF0J3+6cNXSD9WMpLiU5mMpExAB0TpW8dOBzcfMz7y3nvmqNAZN1vdx+jM2cFfrKm3t8sve6OstvlBLUPey9V2cCuqEp7MEz5LDTYzDWX969zEljNgD1u2NnSUe5peXUJJ+e/JaIcbjciGo97onV6Kqo0+yTX6ZEZS/fmNq1O0WUfpWHrqiddQ9VPvhN8/4f1UNii1QAHgWVQls9mh7w68wIuNSVczV3rS2aShVE06jfO8S9PaRDU1UfYrEz+3US1NlKpZbUXVj4VRn2+Mv3aN7KPCx7LhRXcx6ByOvajY85IZGFWVWcYoHjCj4e7a8d548QWJDNMtXEv4mZ/eeKFH36mndB26BML/mmZDLBs2Tdc+m2HDLBsyz5B3nbUc7kNVsCkYNjiRyRyCQo+/b/YZrFpTSyhBa//0o+P6DprSduhGH7/FZed+p6YuqFReuxV9+AE/LnonhA9kXW42VNccolHXUZXMgPcqgoPMb6FFdLncwPFtnENP4s/JPDnoabCQNalRONjdHQxlMjiX8AckKeBP1N8j2nZ9P+cNf9MNLdPjN6PjrpAjYRb8hrfQorlr4Zax7YFWHRcV0EpZjkZLedKW/wMAAP//AQAA//818pK4AAABAAAAAQSc3Czvcl8PPPUAAwPoAAAAANwcc6QAAAAA3ZceoP9M/joDDAQkAAEABgACAAAAAAAAAAEAAAPY/u8AAAJY/0z/TAMMAAEAAAAAAAAAAAAAAAAAAAAoeJwsjT0KAlEMBj8GGyuPYCE2Igj+gqAIgjwsLKym8Aa2e8o91fIgVcKQmWBWmDnmjTljfpgt5lHsj7liXpg9ZolZYG6YhnlidpgL5os5Fv9gNphD/Wh11+eAOVXvXs0ZZl17d8fuTwAAAP//AQAA//89SRdlAAAAAAAAKgBMAIIAsgDIAPwBEgEoATgBZgGQAdQB5gICAkICegKqAuADGAM+A7QD2APkA/AEEAREBGYEmATQBPAFMAVYBXoFlgXOBfoGKgY6BlIGdgAAAAEAAAAoAfgAKgBuAAYAAQAAAAAAAAAAAAAAAAADAAN4nJyWTW8b1RfGf2OntsdN+88/lNIUKJcSSholEztKoypFArdpVUNISpxSoVIJx3acUfwme9w2rFmwZMVnAMSqqy4QYpUFC5aIFSvEig+AWCA0Z449Y9ckbVWpee7c8/o8595r4J3Y38SxxmzgABRbnONAcYwUvyuOs8KfiseYsS4oPkbZWlecYNp6pDjJj9YvilMsxb5SbLMU+0nxcRZj/yg+ETfxjOKTLCVuKZ5iOvF5gC1IJ75WbDGe0FxWjInED4rjTCR+VjzG2cRvio8xnvhLcYLJ5JjiJJPJ04pTTCZnFNtMJlcUp5lOrik+jkm2FI8zl/xS8Qkyye8Vn8RJKlfW/1hMnVU8weVUL87/uZDq9TXJ26lvFb8QqfkU51N/KH4x0vvpSO8vRXKdieSa4qSdUnyWcbvX48sR31c4ZZ9X/Cppe1nxuYjva4zb7yo2TNi9+l8PZ8M6z6T9ieI3SNsNxdOROG9GaniLJfuh4ovM2t8pnsWxdWasOebSPY3mI3kdMmmdE2shUkOGmfSniheZTX+h+Fqk31Xh8BsMi2TIksEwr6tFWeUo02SbCoYC+3TwqFCngyFPgxJN2rTk/6LslTHMsIuHR4sVFljggfxzKPajOeJZZ4GLzGF4gIvHLoZNKnSo0Oa+RrtBkwYehnWK1P1azBkKNOnSpkTFTOFE1xiu0aQs6BZtmlylSY0yWRzp9DJXyLHKVTa4MuDb8wz85vueh8c3fbuPpPYOrlRtBjLu0sSTzhvc7+85ZMmyzBXqFNmjIlY7VHgoGRZxuITDMpdYlljPXq8rihUxeKJUWVQs0mYPQ5Od59balS597Xy/2zREyWCvgKeWQfYGZRbE30iPu8KVkchd0biNK9bOc1VziyJdahhWcTDc1Kj+hG0Jr/7frkyeX3eFxjNMqsc+LSpssat8hpNZEA49HginIeM1XFGgITPtc9IVFoK+e6wVyLOGYUPiNwYirw1E8DsZNWFZ6TesbDBvqP99irjUKLJNTXbCk1eUvDk+FOyxghlip0NJFGrhiUYdieWIBlUW2OAGa0OVHM1RWf4G2m/T7U9P0J0/Nf55z1EQ5QtmSk5bTlgrCCN3yLPFTTa4zZasc2yySY51tshzXXw32JSTu8E6q+KRFxzs3ZATsM7HGN4nLzZ+7IryEyjmn8mWVN+R2oNZdqnTEs79yh3ptSIdPrvChh2N2vPtiE8Jlx2xNKJfgypdilR1KlpSYV247M1GeOqCiahLL7624X6Vpty0bTm5flTDvt4d/rQGNQU3hPcUqjrPNTP/faNtyunzuwhRXroIZrzTZ78i3Q6uq/qWuHKfBveV4YLwUZDXxMVY71GS7L6vz4WJP3riy+MnvhyIym22cYMpjR9wjX3JVtPqDNvCinhwN/Yr9+iIfh1R16/oM4ni3013yXBP75kmVbnZWsJ5Sc7ivqyC+bnL/CG2Rb0v26LXntjPjshdlteiJtoZ6a2q0ae5Jxx7OhvBHWto0JU3uC27wSmV3sgeWs9wpI72MKd1Dao4J6/CsCbD2o6yeixfh5QZyw6oPcrvQH55VOX98Nm4Iye/KtN8nYf6bq71v4XoA+HSFV4K8kb591jwCoeevXf5qsQvsTdy5sMZnx+Z9Sifp7cc7PYo68EeD7cd5uAo+1G/WEbbKXP/AgAA//8BAAD///u8HqIAAAMAAAAAAAD/tQAyAAAAAQAAAAAAAAAAAAAAAAAAAAC4Af+FsASNAA==\");\n}]]></style><style type=\"text/css\"><![CDATA[.shape {\n  shape-rendering: geometricPrecision;\n  stroke-linejoin: round;\n}\n.connection {\n  stroke-linecap: round;\n  stroke-linejoin: round;\n}\n.blend {\n  mix-blend-mode: multiply;\n  opacity: 0.5;\n}\n\n\t\t.d2-3344683269 .fill-N1{fill:#ECEDED;}\n\t\t.d2-3344683269 .fill-N2{fill:#676C7E;}\n\t\t.d2-3344683269 .fill-N3{fill:#9499AB;}\n\t\t.d2-3344683269 .fill-N4{fill:#CFD2DD;}\n\t\t.d2-3344683269 .fill-N5{fill:#DEE1EB;}\n\t\t.d2-3344683269 .fill-N6{fill:#EEF1F8;}\n\t\t.d2-3344683269 .fill-N7{fill:#151719;}\n\t\t.d2-3344683269 .fill-B1{fill:#717D86;}\n\t\t.d2-3344683269 .fill-B2{fill:#717D86;}\n\t\t.d2-3344683269 .fill-B3{fill:#ffff00;}\n\t\t.d2-3344683269 .fill-B4{fill:#151719;}\n\t\t.d2-3344683269 .fill-B5{fill:#151719;}\n\t\t.d2-3344683269 .fill-B6{fill:#151719;}\n\t\t.d2-3344683269 .fill-AA2{fill:#ECEDED;}\n\t\t.d2-3344683269 .fill-AA4{fill:#CFD2DD;}\n\t\t.d2-3344683269 .fill-AA5{fill:#DEE1EB;}\n\t\t.d2-3344683269 .fill-AB4{fill:#CFD2DD;}\n\t\t.d2-3344683269 .fill-AB5{fill:#DEE1EB;}\n\t\t.d2-3344683269 .stroke-N1{stroke:#ECEDED;}\n\t\t.d2-3344683269 .stroke-N2{stroke:#676C7E;}\n\t\t.d2-3344683269 .stroke-N3{stroke:#9499AB;}\n\t\t.d2-3344683269 .stroke-N4{stroke:#CFD2DD;}\n\t\t.d2-3344683269 .stroke-N5{stroke:#DEE1EB;}\n\t\t.d2-3344683269 .stroke-N6{stroke:#EEF1F8;}\n\t\t.d2-3344683269 .stroke-N7{stroke:#151719;}\n\t\t.d2-3344683269 .stroke-B1{stroke:#717D86;}\n\t\t.d2-3344683269 .stroke-B2{stroke:#717D86;}\n\t\t.d2-3344683269 .stroke-B3{stroke:#ffff00;}\n\t\t.d2-3344683269 .stroke-B4{stroke:#151719;}\n\t\t.d2-3344683269 .stroke-B5{stroke:#151719;}\n\t\t.d2-3344683269 .stroke-B6{stroke:#151719;}\n\t\t.d2-3344683269 .stroke-AA2{stroke:#ECEDED;}\n\t\t.d2-3344683269 .stroke-AA4{stroke:#CFD2DD;}\n\t\t.d2-3344683269 .stroke-AA5{stroke:#DEE1EB;}\n\t\t.d2-3344683269 .stroke-AB4{stroke:#CFD2DD;}\n\t\t.d2-3344683269 .stroke-AB5{stroke:#DEE1EB;}\n\t\t.d2-3344683269 .background-color-N1{background-color:#ECEDED;}\n\t\t.d2-3344683269 .background-color-N2{background-color:#676C7E;}\n\t\t.d2-3344683269 .background-color-N3{background-color:#9499AB;}\n\t\t.d2-3344683269 .background-color-N4{background-color:#CFD2DD;}\n\t\t.d2-3344683269 .background-color-N5{background-color:#DEE1EB;}\n\t\t.d2-3344683269 .background-color-N6{background-color:#EEF1F8;}\n\t\t.d2-3344683269 .background-color-N7{background-color:#151719;}\n\t\t.d2-3344683269 .background-color-B1{background-color:#717D86;}\n\t\t.d2-3344683269 .background-color-B2{background-color:#717D86;}\n\t\t.d2-3344683269 .background-color-B3{background-color:#ffff00;}\n\t\t.d2-3344683269 .background-color-B4{background-color:#151719;}\n\t\t.d2-3344683269 .background-color-B5{background-color:#151719;}\n\t\t.d2-3344683269 .background-color-B6{background-color:#151719;}\n\t\t.d2-3344683269 .background-color-AA2{background-color:#ECEDED;}\n\t\t.d2-3344683269 .background-color-AA4{background-color:#CFD2DD;}\n\t\t.d2-3344683269 .background-color-AA5{background-color:#DEE1EB;}\n\t\t.d2-3344683269 .background-color-AB4{background-color:#CFD2DD;}\n\t\t.d2-3344683269 .background-color-AB5{background-color:#DEE1EB;}\n\t\t.d2-3344683269 .color-N1{color:#ECEDED;}\n\t\t.d2-3344683269 .color-N2{color:#676C7E;}\n\t\t.d2-3344683269 .color-N3{color:#9499AB;}\n\t\t.d2-3344683269 .color-N4{color:#CFD2DD;}\n\t\t.d2-3344683269 .color-N5{color:#DEE1EB;}\n\t\t.d2-3344683269 .color-N6{color:#EEF1F8;}\n\t\t.d2-3344683269 .color-N7{color:#151719;}\n\t\t.d2-3344683269 .color-B1{color:#717D86;}\n\t\t.d2-3344683269 .color-B2{color:#717D86;}\n\t\t.d2-3344683269 .color-B3{color:#ffff00;}\n\t\t.d2-3344683269 .color-B4{color:#151719;}\n\t\t.d2-3344683269 .color-B5{color:#151719;}\n\t\t.d2-3344683269 .color-B6{color:#151719;}\n\t\t.d2-3344683269 .color-AA2{color:#ECEDED;}\n\t\t.d2-3344683269 .color-AA4{color:#CFD2DD;}\n\t\t.d2-3344683269 .color-AA5{color:#DEE1EB;}\n\t\t.d2-3344683269 .color-AB4{color:#CFD2DD;}\n\t\t.d2-3344683269 .color-AB5{color:#DEE1EB;}.appendix text.text{fill:#ECEDED}.md{--color-fg-default:#ECEDED;--color-fg-muted:#676C7E;--color-fg-subtle:#9499AB;--color-canvas-default:#151719;--color-canvas-subtle:#EEF1F8;--color-border-default:#717D86;--color-border-muted:#717D86;--color-neutral-muted:#EEF1F8;--color-accent-fg:#717D86;--color-accent-emphasis:#717D86;--color-attention-subtle:#676C7E;--color-danger-fg:red;}.sketch-overlay-B1{fill:url(#streaks-dark);mix-blend-mode:overlay}.sketch-overlay-B2{fill:url(#streaks-dark);mix-blend-mode:overlay}.sketch-overlay-B3{fill:url(#streaks-bright);mix-blend-mode:darken}.sketch-overlay-B4{fill:url(#streaks-darker);mix-blend-mode:lighten}.sketch-overlay-B5{fill:url(#streaks-darker);mix-blend-mode:lighten}.sketch-overlay-B6{fill:url(#streaks-darker);mix-blend-mode:lighten}.sketch-overlay-AA2{fill:url(#streaks-bright);mix-blend-mode:darken}.sketch-overlay-AA4{fill:url(#streaks-normal);mix-blend-mode:color-burn}.sketch-overlay-AA5{fill:url(#streaks-bright);mix-blend-mode:darken}.sketch-overlay-AB4{fill:url(#streaks-normal);mix-blend-mode:color-burn}.sketch-overlay-AB5{fill:url(#streaks-bright);mix-blend-mode:darken}.sketch-overlay-N1{fill:url(#streaks-bright);mix-blend-mode:darken}.sketch-overlay-N2{fill:url(#streaks-dark);mix-blend-mode:overlay}.sketch-overlay-N3{fill:url(#streaks-normal);mix-blend-mode:color-burn}.sketch-overlay-N4{fill:url(#streaks-normal);mix-blend-mode:color-burn}.sketch-overlay-N5{fill:url(#streaks-bright);mix-blend-mode:darken}.sketch-overlay-N6{fill:url(#streaks-bright);mix-blend-mode:darken}.sketch-overlay-N7{fill:url(#streaks-darker);mix-blend-mode:lighten}.light-code{display: block}.dark-code{display: none}]]></style><g id=\"io\"><g class=\"shape\" ><rect x=\"1024.000000\" y=\"107.000000\" width=\"840.000000\" height=\"838.000000\" class=\" stroke-B1 fill-B4\" style=\"stroke-width:2;\" /></g><text x=\"1444.000000\" y=\"140.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:28px\">io</text></g><g id=\"android\"><g class=\"shape\" ><rect x=\"62.000000\" y=\"1335.000000\" width=\"1654.000000\" height=\"276.000000\" class=\" stroke-B1 fill-B4\" style=\"stroke-width:2;\" /></g><text x=\"889.000000\" y=\"1368.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:28px\">android</text></g><g id=\"java\"><g class=\"shape\" ><rect x=\"1736.000000\" y=\"1335.000000\" width=\"413.000000\" height=\"271.000000\" class=\" stroke-B1 fill-B4\" style=\"stroke-width:2;\" /></g><text x=\"1942.500000\" y=\"1368.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:28px\">java</text></g><g id=\"io.sensable\"><g class=\"shape\" ><rect x=\"1074.000000\" y=\"162.000000\" width=\"740.000000\" height=\"728.000000\" class=\" stroke-B1 fill-B5\" style=\"stroke-width:2;\" /></g><text x=\"1444.000000\" y=\"191.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:24px\">sensable</text></g><g id=\"android.content\"><g class=\"shape\" ><rect x=\"112.000000\" y=\"1390.000000\" width=\"212.000000\" height=\"166.000000\" class=\" stroke-B1 fill-B5\" style=\"stroke-width:2;\" /></g><text x=\"218.000000\" y=\"1419.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:24px\">content</text></g><g id=\"android.graphics\"><g class=\"shape\" ><rect x=\"344.000000\" y=\"1390.000000\" width=\"222.000000\" height=\"166.000000\" class=\" stroke-B1 fill-B5\" style=\"stroke-width:2;\" /></g><text x=\"455.000000\" y=\"1419.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:24px\">graphics</text></g><g id=\"android.view\"><g class=\"shape\" ><rect x=\"586.000000\" y=\"1390.000000\" width=\"533.000000\" height=\"166.000000\" class=\" stroke-B1 fill-B5\" style=\"stroke-width:2;\" /></g><text x=\"852.500000\" y=\"1419.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:24px\">view</text></g><g id=\"android.widget\"><g class=\"shape\" ><rect x=\"1139.000000\" y=\"1390.000000\" width=\"527.000000\" height=\"166.000000\" class=\" stroke-B1 fill-B5\" style=\"stroke-width:2;\" /></g><text x=\"1402.500000\" y=\"1419.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:24px\">widget</text></g><g id=\"java.util\"><g class=\"shape\" ><rect x=\"1786.000000\" y=\"1390.000000\" width=\"313.000000\" height=\"166.000000\" class=\" stroke-B1 fill-B5\" style=\"stroke-width:2;\" /></g><text x=\"1942.500000\" y=\"1419.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:24px\">util</text></g><g id=\"io.sensable.client\"><g class=\"shape\" ><rect x=\"1124.000000\" y=\"217.000000\" width=\"640.000000\" height=\"618.000000\" class=\" stroke-B1 fill-B6\" style=\"stroke-width:2;\" /></g><text x=\"1444.000000\" y=\"242.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:20px\">client</text></g><g id=\"android.content.Context\"><g class=\"shape\" ><rect x=\"162.000000\" y=\"1440.000000\" width=\"112.000000\" height=\"66.000000\" rx=\"33.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:0;\" /></g><text x=\"218.000000\" y=\"1478.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">Context</text></g><g id=\"android.graphics.Typeface\"><g class=\"shape\" ><rect x=\"394.000000\" y=\"1440.000000\" width=\"122.000000\" height=\"66.000000\" rx=\"33.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:2;\" /></g><text x=\"455.000000\" y=\"1478.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">Typeface</text></g><g id=\"android.view.LayoutInflater\"><g class=\"shape\" ><rect x=\"636.000000\" y=\"1440.000000\" width=\"178.000000\" height=\"66.000000\" rx=\"33.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:2;\" /></g><text x=\"725.000000\" y=\"1478.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">LayoutInflater</text></g><g id=\"android.view.View\"><g class=\"shape\" ><rect x=\"834.000000\" y=\"1440.000000\" width=\"84.000000\" height=\"66.000000\" rx=\"33.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:0;\" /></g><text x=\"876.000000\" y=\"1478.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">View</text></g><g id=\"android.view.ViewGroup\"><g class=\"shape\" ><rect x=\"938.000000\" y=\"1440.000000\" width=\"131.000000\" height=\"66.000000\" rx=\"33.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:0;\" /></g><text x=\"1003.500000\" y=\"1478.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">ViewGroup</text></g><g id=\"android.widget.BaseExpandableListAdapter\"><g class=\"shape\" ><rect x=\"1189.000000\" y=\"1440.000000\" width=\"284.000000\" height=\"66.000000\" rx=\"33.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:2;\" /></g><text x=\"1331.000000\" y=\"1478.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">BaseExpandableListAdapter</text></g><g id=\"android.widget.TextView\"><g class=\"shape\" ><rect x=\"1493.000000\" y=\"1440.000000\" width=\"123.000000\" height=\"66.000000\" rx=\"33.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:2;\" /></g><text x=\"1554.500000\" y=\"1478.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">TextView</text></g><g id=\"java.util.HashMap\"><g class=\"shape\" ><rect x=\"1836.000000\" y=\"1440.000000\" width=\"111.000000\" height=\"66.000000\" rx=\"33.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:2;\" /></g><text x=\"1891.500000\" y=\"1478.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">HashMap</text></g><g id=\"java.util.List\"><g class=\"shape\" ><rect x=\"1967.000000\" y=\"1440.000000\" width=\"82.000000\" height=\"66.000000\" rx=\"33.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:2;\" /></g><text x=\"2008.000000\" y=\"1478.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">List</text></g><g id=\"io.sensable.client.SensableActivity\"><g class=\"shape\" ><rect x=\"1205.000000\" y=\"267.000000\" width=\"199.000000\" height=\"66.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:0;\" /></g><text x=\"1304.500000\" y=\"305.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">SensableActivity</text></g><g id=\"io.sensable.client.adapter\"><g class=\"shape\" ><rect x=\"1174.000000\" y=\"418.000000\" width=\"540.000000\" height=\"166.000000\" class=\" stroke-B1 fill-N7\" style=\"stroke-width:2;\" /></g><text x=\"1444.000000\" y=\"439.000000\" class=\"text fill-N1\" style=\"text-anchor:middle;font-size:16px\">adapter</text></g><g id=\"io.sensable.client.R\"><g class=\"shape\" ><rect x=\"1302.000000\" y=\"719.000000\" width=\"54.000000\" height=\"66.000000\" rx=\"27.000000\" fill=\"#717D86\" class=\" stroke-B1\" style=\"stroke-width:2;\" /></g><text x=\"1329.000000\" y=\"757.500000\" class=\"text-mono-bold fill-N1\" style=\"text-anchor:middle;font-size:16px\">R</text></g><g id=\"io.sensable.client.adapter.ExpandableListAdapter\"><g class=\"shape\" ><rect x=\"1224.000000\" y=\"468.000000\" width=\"440.000000\" height=\"66.000000\" fill=\"#26de81\" class=\" stroke-B1\" style=\"stroke-width:0;\" /></g><text x=\"1444.000000\" y=\"506.500000\" fill=\"#151719\" class=\"text-mono-bold\" style=\"text-anchor:middle;font-size:16px\">ExpandableListAdapter</text></g><g id=\"io.sensable.client.(SensableActivity -&gt; adapter.ExpandableListAdapter)[0]\"><marker id=\"mk-558834944\" markerWidth=\"10.000000\" markerHeight=\"12.000000\" refX=\"7.000000\" refY=\"6.000000\" viewBox=\"0.000000 0.000000 10.000000 12.000000\" orient=\"auto\" markerUnits=\"userSpaceOnUse\"> <polygon points=\"0.000000,0.000000 10.000000,6.000000 0.000000,12.000000\" fill=\"#26de81\" class=\"connection\" stroke-width=\"2\" /> </marker><path d=\"M 1334.500000 334.000000 L 1334.500000 465.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"1369.000000\" y=\"458.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"(io.sensable.client.adapter.ExpandableListAdapter -&gt; android.content.Context)[0]\"><path d=\"M 1243.166016 535.000000 L 1243.166016 980.000000 S 1243.166016 990.000000 1233.166016 990.000000 L 228.000000 990.000000 S 218.000000 990.000000 218.000000 1000.000000 L 218.000000 1437.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"252.000000\" y=\"1430.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"(io.sensable.client.adapter.ExpandableListAdapter -&gt; android.graphics.Typeface)[0]\"><path d=\"M 1297.833008 535.000000 L 1297.833008 669.000000 S 1297.833008 679.000000 1287.833008 679.000000 L 1271.833008 679.000000 S 1261.833008 679.000000 1261.833008 689.000000 L 1261.833008 1030.000000 S 1261.833008 1040.000000 1251.833008 1040.000000 L 465.000000 1040.000000 S 455.000000 1040.000000 455.000000 1050.000000 L 455.000000 1436.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"489.000000\" y=\"1430.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"(io.sensable.client.adapter.ExpandableListAdapter -&gt; android.view.LayoutInflater)[0]\"><path d=\"M 1371.166016 535.000000 L 1371.166016 669.000000 S 1371.166016 679.000000 1381.166016 679.000000 L 1386.833008 679.000000 S 1396.833008 679.000000 1396.833008 689.000000 L 1396.833008 1080.000000 S 1396.833008 1090.000000 1386.833008 1090.000000 L 735.000000 1090.000000 S 725.000000 1090.000000 725.000000 1100.000000 L 725.000000 1436.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"759.000000\" y=\"1430.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"(io.sensable.client.adapter.ExpandableListAdapter -&gt; android.view.View)[0]\"><path d=\"M 1420.666016 535.000000 L 1420.666016 1130.000000 S 1420.666016 1140.000000 1410.666016 1140.000000 L 872.000000 1140.000000 S 862.000000 1140.000000 862.000000 1150.000000 L 862.000000 1437.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"896.000000\" y=\"1430.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"(io.sensable.client.adapter.ExpandableListAdapter -&gt; android.view.ViewGroup)[0]\"><path d=\"M 1481.166016 535.000000 L 1481.166016 1230.000000 S 1481.166016 1240.000000 1471.166016 1240.000000 L 1013.500000 1240.000000 S 1003.500000 1240.000000 1003.500000 1250.000000 L 1003.500000 1437.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"1038.000000\" y=\"1430.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"(io.sensable.client.adapter.ExpandableListAdapter -&gt; android.widget.BaseExpandableListAdapter)[0]\"><path d=\"M 1517.833008 535.000000 L 1517.833008 1280.000000 S 1517.833008 1290.000000 1507.833008 1290.000000 L 1341.000000 1290.000000 S 1331.000000 1290.000000 1331.000000 1300.000000 L 1331.000000 1436.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"1365.000000\" y=\"1430.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"(io.sensable.client.adapter.ExpandableListAdapter -&gt; android.widget.TextView)[0]\"><path d=\"M 1554.500000 535.000000 L 1554.500000 1436.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"1589.000000\" y=\"1430.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"io.sensable.client.(adapter.ExpandableListAdapter -&gt; R)[0]\"><path d=\"M 1329.833008 535.000000 L 1329.833008 715.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"1364.000000\" y=\"709.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"(io.sensable.client.adapter.ExpandableListAdapter -&gt; java.util.HashMap)[0]\"><path d=\"M 1591.166016 535.000000 L 1591.166016 1030.000000 S 1591.166016 1040.000000 1601.166016 1040.000000 L 1881.500000 1040.000000 S 1891.500000 1040.000000 1891.500000 1050.000000 L 1891.500000 1436.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"1926.000000\" y=\"1430.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"(io.sensable.client.adapter.ExpandableListAdapter -&gt; java.util.List)[0]\"><path d=\"M 1627.833008 535.000000 L 1627.833008 980.000000 S 1627.833008 990.000000 1637.833008 990.000000 L 1998.000000 990.000000 S 2008.000000 990.000000 2008.000000 1000.000000 L 2008.000000 1436.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;stroke-dasharray:6.000000,5.919384;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /><text x=\"2042.000000\" y=\"1430.000000\" class=\"text-italic fill-N1\" style=\"text-anchor:middle;font-size:16px\">imports</text></g><g id=\"(android.content.Context -&gt; io.sensable.client.adapter.ExpandableListAdapter)[0]\"><path d=\"M 218.000000 1507.000000 L 218.000000 1646.000000 S 218.000000 1656.000000 208.000000 1656.000000 L 32.000000 1656.000000 S 22.000000 1656.000000 22.000000 1646.000000 L 22.000000 72.000000 S 22.000000 62.000000 32.000000 62.000000 L 1434.500000 62.000000 S 1444.500000 62.000000 1444.500000 72.000000 L 1444.500000 465.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /></g><g id=\"(android.view.ViewGroup -&gt; io.sensable.client.adapter.ExpandableListAdapter)[0]\"><path d=\"M 1003.500000 1507.000000 L 1003.500000 1696.000000 S 1003.500000 1706.000000 993.500000 1706.000000 L 22.000000 1706.000000 S 12.000000 1706.000000 12.000000 1696.000000 L 12.000000 22.000000 S 12.000000 12.000000 22.000000 12.000000 L 1544.500000 12.000000 S 1554.500000 12.000000 1554.500000 22.000000 L 1554.500000 465.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /></g><g id=\"(io.sensable.client.adapter.ExpandableListAdapter &lt;-&gt; android.view.View)[0]\"><marker id=\"mk-3695359059\" markerWidth=\"10.000000\" markerHeight=\"12.000000\" refX=\"3.000000\" refY=\"6.000000\" viewBox=\"0.000000 0.000000 10.000000 12.000000\" orient=\"auto\" markerUnits=\"userSpaceOnUse\"> <polygon points=\"10.000000,0.000000 0.000000,6.000000 10.000000,12.000000\" fill=\"#26de81\" class=\"connection\" stroke-width=\"2\" /> </marker><path d=\"M 1444.500000 537.000000 L 1444.500000 1180.000000 S 1444.500000 1190.000000 1434.500000 1190.000000 L 900.000000 1190.000000 S 890.000000 1190.000000 890.000000 1200.000000 L 890.000000 1437.000000\" stroke=\"#26de81\" fill=\"none\" class=\"connection\" style=\"stroke-width:2;\" marker-start=\"url(#mk-3695359059)\" marker-end=\"url(#mk-558834944)\" mask=\"url(#d2-3344683269)\" /></g><mask id=\"d2-3344683269\" maskUnits=\"userSpaceOnUse\" x=\"11\" y=\"11\" width=\"2139\" height=\"1696\">\n<rect x=\"11\" y=\"11\" width=\"2139\" height=\"1696\" fill=\"white\"></rect>\n<rect x=\"1434.000000\" y=\"112.000000\" width=\"20\" height=\"36\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"844.000000\" y=\"1340.000000\" width=\"90\" height=\"36\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1917.500000\" y=\"1340.000000\" width=\"50\" height=\"36\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1400.000000\" y=\"167.000000\" width=\"88\" height=\"31\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"179.000000\" y=\"1395.000000\" width=\"78\" height=\"31\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"412.500000\" y=\"1395.000000\" width=\"85\" height=\"31\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"829.000000\" y=\"1395.000000\" width=\"47\" height=\"31\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1368.000000\" y=\"1395.000000\" width=\"69\" height=\"31\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1926.000000\" y=\"1395.000000\" width=\"33\" height=\"31\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1420.500000\" y=\"222.000000\" width=\"47\" height=\"26\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"184.500000\" y=\"1462.500000\" width=\"67\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"416.500000\" y=\"1462.500000\" width=\"77\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"658.500000\" y=\"1462.500000\" width=\"133\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"856.500000\" y=\"1462.500000\" width=\"39\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"960.500000\" y=\"1462.500000\" width=\"86\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1211.500000\" y=\"1462.500000\" width=\"239\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1515.500000\" y=\"1462.500000\" width=\"78\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1858.500000\" y=\"1462.500000\" width=\"66\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1989.500000\" y=\"1462.500000\" width=\"37\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1227.500000\" y=\"289.500000\" width=\"154\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1417.000000\" y=\"423.000000\" width=\"54\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1324.500000\" y=\"741.500000\" width=\"9\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n<rect x=\"1344.000000\" y=\"490.500000\" width=\"200\" height=\"21\" fill=\"rgba(0,0,0,0.75)\"></rect>\n</mask></svg></svg>\n",
+          "d2_src": "direction: down\n\nvars: {\n  d2-config: {\n    pad: 0\n    theme-overrides: {\n      B1: \"#717D86\"\n      B2: \"#717D86\"\n      B3: \"#ffff00\"\n      B4: \"#151719\"\n      B5: \"#151719\"\n      B6: \"#151719\"\n      N1: \"#ECEDED\"\n      N7: \"#151719\"\n      AA2: \"#ECEDED\"\n    }\n  }\n}\n\nstyle: {\n  fill: \"#151719\"\n}\nio.sensable.client.SensableActivity -> io.sensable.client.adapter.ExpandableListAdapter: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter -> android.content.Context: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter -> android.graphics.Typeface: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter -> android.view.LayoutInflater: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter -> android.view.View: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter -> android.view.ViewGroup: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter -> android.widget.BaseExpandableListAdapter: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter -> android.widget.TextView: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter -> io.sensable.client.R: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter -> java.util.HashMap: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter -> java.util.List: {\n  target-arrowhead: \"imports\"\n  style: {\n    stroke: \"#26de81\"\n    stroke-dash: 3\n  }\n}\n\nandroid.content.Context -> io.sensable.client.adapter.ExpandableListAdapter: {\n  style: {\n    stroke: \"#26de81\"\n  }\n}\n\nandroid.view.ViewGroup -> io.sensable.client.adapter.ExpandableListAdapter: {\n  style: {\n    stroke: \"#26de81\"\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter <-> android.view.View: {\n  style: {\n    stroke: \"#26de81\"\n  }\n}\n\nandroid.view.View: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    border-radius: 100\n  }\n}\n\nandroid.view.ViewGroup: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    border-radius: 100\n  }\n}\n\nio.sensable.client.R: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    border-radius: 100\n  }\n}\n\nandroid.view.LayoutInflater: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    border-radius: 100\n  }\n}\n\nandroid.graphics.Typeface: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    border-radius: 100\n  }\n}\n\njava.util.List: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    border-radius: 100\n  }\n}\n\njava.util.HashMap: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    border-radius: 100\n  }\n}\n\nandroid.widget.TextView: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    border-radius: 100\n  }\n}\n\nandroid.content.Context: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    border-radius: 100\n  }\n}\n\nandroid.widget.BaseExpandableListAdapter: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    border-radius: 100\n  }\n}\n\nio.sensable.client.SensableActivity: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    stroke-width: 0\n  }\n}\n\nandroid.content.Context: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    stroke-width: 0\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    stroke-width: 0\n  }\n}\n\nandroid.view.ViewGroup: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    stroke-width: 0\n  }\n}\n\nandroid.view.View: {\n  style: {\n    font: mono\n    fill: \"#717D86\"\n    stroke-width: 0\n  }\n}\n\nio.sensable.client.adapter.ExpandableListAdapter: {\n  style: {\n    fill: \"#26de81\"\n    font-color: \"#151719\"\n    stroke-width: 0\n  }\n}\n"
+        },
+        "items": [
+          {
+            "id": "844a070d-d95f-179a-964b-35e576049bf1",
+            "ancestors": [],
+            "description": "Is designed to manage expandable lists in Android applications. It extends BaseExpandableListAdapter and provides functionality for displaying data in an expandable list format. The class retrieves child objects based on group positions, calculates the number of children per group, and inflates views for each item in the list.",
+            "name": "ExpandableListAdapter",
+            "location": {
+              "start": 22,
+              "insert": 15,
+              "offset": " ",
+              "indent": 0,
+              "comment": {
+                "start": 14,
+                "end": 21
+              }
+            },
+            "item_type": "class",
+            "length": 286,
+            "docLength": 7
+          },
+          {
+            "id": "77525d54-52c6-3981-3b47-ee044472fbc0",
+            "ancestors": [
+              "844a070d-d95f-179a-964b-35e576049bf1"
+            ],
+            "description": "Returns an object at a specified position within a sublist associated with a group in a hierarchical list structure. The group is identified by its index, and the child position is determined relative to the sublist.",
+            "params": [
+              {
+                "name": "groupPosition",
+                "type_name": "int",
+                "description": "0-based index of the group or category for which to retrieve child elements, as specified by the `_listDataHeader` map.",
+                "complex_type": false
+              },
+              {
+                "name": "childPosititon",
+                "type_name": "int",
+                "description": "0-based index of the child item to retrieve within the list of child items associated with the specified `groupPosition`.",
+                "complex_type": false
+              }
+            ],
+            "returns": {
+              "type_name": "Object",
+              "description": "an object from a list of child data.",
+              "complex_type": false
+            },
+            "usage": {
+              "language": "java",
+              "code": "int groupPosition = 0;\nint childPosititon = 1;\n\nObject child = (Object) getChild(groupPosition, childPosititon);\n",
+              "description": ""
+            },
+            "name": "getChild",
+            "location": {
+              "start": 66,
+              "insert": 36,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 35,
+                "end": 65
+              }
+            },
+            "item_type": "method",
+            "length": 5,
+            "docLength": 30
+          },
+          {
+            "id": "5f66d328-c16d-dca6-be4f-f8f305eb4113",
+            "ancestors": [
+              "844a070d-d95f-179a-964b-35e576049bf1"
+            ],
+            "description": "Returns a unique identifier for each child element at a given position within a group. The returned ID is based on the child's relative position within the group, with the first child receiving an ID of 0 and subsequent children incrementing accordingly.",
+            "params": [
+              {
+                "name": "groupPosition",
+                "type_name": "int",
+                "description": "0-based index of the group or parent element for which the `getChildId` method is called to retrieve the identifier of its child at the specified `childPosition`.",
+                "complex_type": false
+              },
+              {
+                "name": "childPosition",
+                "type_name": "int",
+                "description": "0-based index of the child element being accessed within a group, and its value is returned as the unique identifier for that child.",
+                "complex_type": false
+              }
+            ],
+            "returns": {
+              "type_name": "long",
+              "description": "a unique long integer representing each child position.",
+              "complex_type": false
+            },
+            "usage": {
+              "language": "java",
+              "code": "long childId = listAdapter.getChildId(0, 1);\n",
+              "description": ""
+            },
+            "name": "getChildId",
+            "location": {
+              "start": 84,
+              "insert": 72,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 71,
+                "end": 83
+              }
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": 12
+          },
+          {
+            "id": "286010e8-cac8-b488-f84a-d70201f3566a",
+            "ancestors": [
+              "844a070d-d95f-179a-964b-35e576049bf1"
+            ],
+            "description": "Inflates a layout for a child view within a group, retrieves the child's text content, and sets it to a TextView widget. It returns the converted view with the set text.",
+            "params": [
+              {
+                "name": "groupPosition",
+                "type_name": "int",
+                "description": "0-based position of the group in the list that contains the child view being inflated, which is used to retrieve the child text from the data source.",
+                "complex_type": false
+              },
+              {
+                "name": "childPosition",
+                "type_name": "int",
+                "description": "0-based index of the child view within its parent group, used to retrieve the corresponding child text and set it in the TextView.",
+                "complex_type": false
+              },
+              {
+                "name": "isLastChild",
+                "type_name": "boolean",
+                "description": "state of whether the child view being accessed is the last one within its group, which can potentially be used to optimize rendering or styling of the child views accordingly.",
+                "complex_type": false
+              },
+              {
+                "name": "convertView",
+                "type_name": "View",
+                "description": "view to be recycled and reused, or null if a new view must be created.\n\nInflates to null initially and then inflated with layout R.layout.list_item when not null.",
+                "complex_type": true
+              },
+              {
+                "name": "parent",
+                "type_name": "ViewGroup",
+                "description": "ViewGroup that this view is being added to, serving as a reference for layout and alignment purposes.\n\nParent is a ViewGroup object representing the parent view group. It has no attributes mentioned in this context.",
+                "complex_type": true
+              }
+            ],
+            "returns": {
+              "type_name": "View",
+              "description": "a custom list item view with child text.\n\nThe output is a view representing a child in an expandable list view group. It has a text value set from the `childText` string and is inflated with the layout resource `R.layout.list_item`.",
+              "complex_type": true
+            },
+            "usage": {
+              "language": "java",
+              "code": "int groupPosition = 0;\nint childPosition = 0;\nboolean isLastChild = false;\nView convertView = null;\nViewGroup parent = null;\n\nView result = getChildView(groupPosition, childPosition, isLastChild, convertView, parent);\n",
+              "description": ""
+            },
+            "name": "getChildView",
+            "location": {
+              "start": 141,
+              "insert": 89,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 88,
+                "end": 140
+              }
+            },
+            "item_type": "method",
+            "length": 17,
+            "docLength": 52
+          },
+          {
+            "id": "94ec0a6d-feae-0787-ba4a-4340b008bc9a",
+            "ancestors": [
+              "844a070d-d95f-179a-964b-35e576049bf1"
+            ],
+            "description": "Returns the number of child elements for a given group position within a list data structure, utilizing a header to index into the child list and retrieve its size.",
+            "params": [
+              {
+                "name": "groupPosition",
+                "type_name": "int",
+                "description": "0-based index of a group in the list data header, used to retrieve the corresponding child data from the `_listDataChild` map.",
+                "complex_type": false
+              }
+            ],
+            "returns": {
+              "type_name": "integer",
+              "description": "an integer representing the size of a list.",
+              "complex_type": false
+            },
+            "usage": {
+              "language": "java",
+              "code": "int childrenCount = expandableListAdapter.getChildrenCount(0);\n",
+              "description": ""
+            },
+            "name": "getChildrenCount",
+            "location": {
+              "start": 170,
+              "insert": 159,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 158,
+                "end": 169
+              }
+            },
+            "item_type": "method",
+            "length": 5,
+            "docLength": 11
+          },
+          {
+            "id": "67442b51-8480-b7b2-4b47-d0b7f247818a",
+            "ancestors": [
+              "844a070d-d95f-179a-964b-35e576049bf1"
+            ],
+            "description": "Returns an object at a specified position from a list data header. The position is provided as an integer parameter, and the function retrieves the corresponding object from the `_listDataHeader` collection.",
+            "params": [
+              {
+                "name": "groupPosition",
+                "type_name": "int",
+                "description": "0-based index of the group to be retrieved from the `_listDataHeader` collection, allowing for specific groups to be accessed and returned.",
+                "complex_type": false
+              }
+            ],
+            "returns": {
+              "type_name": "Object",
+              "description": "an object retrieved from the `_listDataHeader` list.",
+              "complex_type": false
+            },
+            "usage": {
+              "language": "java",
+              "code": "public Object groupData = new ArrayList<>();\nList<String> listDataHeader = new ArrayList<>();\n\n// Assuming listDataHeader contains data for header titles and \n// groupData contains data for child elements.\nExpandableListAdapter adapter = new ExpandableListAdapter(context, listDataHeader, groupData);\nObject group = adapter.getGroup(0); // Returns the object at position 0 in _listDataHeader.",
+              "description": ""
+            },
+            "name": "getGroup",
+            "location": {
+              "start": 193,
+              "insert": 176,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 175,
+                "end": 192
+              }
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": 17
+          },
+          {
+            "id": "ca93ebd6-1609-dda5-0749-acbee953c20d",
+            "ancestors": [
+              "844a070d-d95f-179a-964b-35e576049bf1"
+            ],
+            "description": "Returns an integer representing the number of items in a list referred to as `_listDataHeader`. This count is used for grouping or categorizing data in a hierarchical manner. The function overrides the default implementation and provides custom behavior for getting group counts.",
+            "params": [],
+            "returns": {
+              "type_name": "integer",
+              "description": "an integer representing the size of a list.",
+              "complex_type": false
+            },
+            "usage": {
+              "language": "java",
+              "code": "List<String> listDataHeader = new ArrayList<>();\nlistDataHeader.add(\"Header1\");\nlistDataHeader.add(\"Header2\");\nlistDataHeader.add(\"Header3\");\n\nHashMap<String, List<String>> listDataChild = new HashMap<>();\n// Initialize child data\n\nExpandableListAdapter adapter = new ExpandableListAdapter(context, listDataHeader, listDataChild);\nListView listView = (ListView) findViewById(R.id.listView);\n\nadapter.setGroupCount(listDataHeader.size()); // Using getGroupCount method\nlistView.setAdapter(adapter);\n",
+              "description": ""
+            },
+            "name": "getGroupCount",
+            "location": {
+              "start": 204,
+              "insert": 198,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 197,
+                "end": 203
+              }
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": 6
+          },
+          {
+            "id": "198ab765-8ad3-80a2-4642-ee38088ad033",
+            "ancestors": [
+              "844a070d-d95f-179a-964b-35e576049bf1"
+            ],
+            "description": "Returns a long integer value that corresponds to the specified group position. The group position is provided as an input parameter and is directly returned without any modification or processing. This suggests a simple mapping between group positions and their corresponding IDs.",
+            "params": [
+              {
+                "name": "groupPosition",
+                "type_name": "int",
+                "description": "0-based index of the group for which to retrieve the corresponding ID, which is directly returned as the result.",
+                "complex_type": false
+              }
+            ],
+            "returns": {
+              "type_name": "long",
+              "description": "the integer value of the input `groupPosition`.",
+              "complex_type": false
+            },
+            "usage": {
+              "language": "java",
+              "code": "ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(getBaseContext(), listDataHeader, listChildData);\nlong groupId = expandableListAdapter.getGroupId(0); // Example usage with input groupPosition=0.",
+              "description": ""
+            },
+            "name": "getGroupId",
+            "location": {
+              "start": 217,
+              "insert": 209,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 208,
+                "end": 216
+              }
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": 8
+          },
+          {
+            "id": "f2a0acc7-5040-1e9c-f641-4058f03a3a4c",
+            "ancestors": [
+              "844a070d-d95f-179a-964b-35e576049bf1"
+            ],
+            "description": "Returns a view representing a group in a list. It inflates a layout for each group if necessary, sets the text of a header label to the group's title, and returns the converted view. The returned view is used to display the group's title in the list.",
+            "params": [
+              {
+                "name": "groupPosition",
+                "type_name": "int",
+                "description": "0-based index of the group being rendered, used to retrieve its title and configure the view accordingly.",
+                "complex_type": false
+              },
+              {
+                "name": "isExpanded",
+                "type_name": "boolean",
+                "description": "state of the group at the given position, indicating whether it is currently expanded or not.",
+                "complex_type": false
+              },
+              {
+                "name": "convertView",
+                "type_name": "View",
+                "description": "view that will be used to represent the group at the specified `groupPosition`, and it is reused whenever possible for efficiency.\n\nconvertView is either null or an inflated View object from R.layout.list_group; if convertView is null, it is initialized with the layout inflater; otherwise, its original state remains unchanged.",
+                "complex_type": true
+              },
+              {
+                "name": "parent",
+                "type_name": "ViewGroup",
+                "description": "parent view group that the converted view is being added to or replaced within.\n\nParent is a ViewGroup object representing the parent group to be laid out and shown. It has main properties such as layout_width, layout_height, and layout_margin.",
+                "complex_type": true
+              }
+            ],
+            "returns": {
+              "type_name": "androidviewView",
+              "description": "a customized group view for an expandable list.\n\nIt is a View object, specifically a layout view with an inflated design from R.layout.list_group. The view contains a TextView with the ID lblListHeader, which displays the header title in bold font.",
+              "complex_type": true
+            },
+            "usage": {
+              "language": "java",
+              "code": "getGroupView(0, true, null, parent); \n",
+              "description": ""
+            },
+            "name": "getGroupView",
+            "location": {
+              "start": 263,
+              "insert": 222,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 221,
+                "end": 262
+              }
+            },
+            "item_type": "method",
+            "length": 17,
+            "docLength": 41
+          },
+          {
+            "id": "7292e5b1-06dc-9682-6048-0ff4aebbfb5f",
+            "ancestors": [
+              "844a070d-d95f-179a-964b-35e576049bf1"
+            ],
+            "description": "Returns a boolean value indicating whether the IDs returned by the adapter are stable across different configuration changes or not. In this implementation, it always returns `false`, implying that the IDs may change due to configuration changes.",
+            "params": [],
+            "returns": {
+              "type_name": "boolean",
+              "description": "a boolean value indicating that IDs are not stable.",
+              "complex_type": false
+            },
+            "usage": {
+              "language": "java",
+              "code": "ExpandableListAdapter expandableListAdapter = new ExpandableListAdapter(this, listHeaderData, listChildData);\nexpandableListAdapter.hasStableIds(); // Returns false",
+              "description": ""
+            },
+            "name": "hasStableIds",
+            "location": {
+              "start": 286,
+              "insert": 281,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 280,
+                "end": 285
+              }
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": 5
+          },
+          {
+            "id": "63fb27d2-dfca-41bd-fe4a-113476a122bb",
+            "ancestors": [
+              "844a070d-d95f-179a-964b-35e576049bf1"
+            ],
+            "description": "Returns a boolean value indicating whether the child at the specified position within the group at the specified position can be selected or not. In this implementation, it always returns `true`, allowing any child to be selected.",
+            "params": [
+              {
+                "name": "groupPosition",
+                "type_name": "int",
+                "description": "0-based index of the group within an ExpandableListView that is being checked for selectability of its child at the specified `childPosition`.",
+                "complex_type": false
+              },
+              {
+                "name": "childPosition",
+                "type_name": "int",
+                "description": "0-based position of a child item within its parent group in a hierarchical data structure.",
+                "complex_type": false
+              }
+            ],
+            "returns": {
+              "type_name": "boolean",
+              "description": "a boolean value indicating whether children are selectable.",
+              "complex_type": false
+            },
+            "usage": {
+              "language": "java",
+              "code": "ExpandableListAdapter adapter = new ExpandableListAdapter(this, listDataHeader, \n                                                     listDataChild);\nListView listView = findViewById(R.id.list);\nlistView.setAdapter(adapter);\n\nadapter.isChildSelectable(0, 1);",
+              "description": ""
+            },
+            "name": "isChildSelectable",
+            "location": {
+              "start": 303,
+              "insert": 291,
+              "offset": " ",
+              "indent": 4,
+              "comment": {
+                "start": 290,
+                "end": 302
+              }
+            },
+            "item_type": "method",
+            "length": 4,
+            "docLength": 12
+          }
+        ]
+      }
+    }
+  }
+]

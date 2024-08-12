@@ -13,11 +13,11 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * is an adapter that extends BaseExpandableListAdapter and provides functionality
- * for displaying data in an expandable list format. It takes in a context, a list
- * of header titles, and a map of child data in the format of header title, child
- * title. The adapter provides methods for getting child and group objects, as well
- * as inflating views for each item in the list.
+ * Is designed to manage expandable lists in Android applications. It extends
+ * BaseExpandableListAdapter and provides functionality for displaying data in an
+ * expandable list format. The class retrieves child objects based on group positions,
+ * calculates the number of children per group, and inflates views for each item in
+ * the list.
  */
 public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
@@ -34,34 +34,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * retrieves a child object within a group by providing the group position and child
-     * position as inputs. It returns the requested child object from the `_listDataChild`
-     * array, which is a nested array of child objects, based on the input group and child
-     * positions.
-     * 
-     * @param groupPosition 0-based index of the group within the list data, which is
-     * used to access the corresponding child element within the group's list data.
-     * 
-     * @param childPosititon 2nd index of a inner list within an object, which is being
-     * retrieved from the parent list through the function call.
-     * 
-     * @returns an object of the type specified by its parameter.
-     * 
-     * The output is an object of type `_listDataChild`, which is an inner class of the
-     * outer class `_ListData`. This means that the output is also an inner class, and
-     * its properties can be accessed using the same syntax as the outer class.
-     * 
-     * The output contains a nested list of objects, where each object represents a child
-     * element within the group. The nested list is accessed using the method `get`,
-     * followed by the name of the list (i.e., `_listDataChild`).
-     * 
-     * Each element in the nested list has several properties, including its position
-     * within the group (stored as an integer), its type (stored as a string), and its
-     * value (stored as an object of type `Object`). The properties are accessed using
-     * dot notation, such as `.position`, `.type`, and `.value`.
-     * 
-     * Overall, the output of the `getChild` function provides a way to access and
-     * manipulate the child elements within a group in a hierarchical manner.
+     * Returns an object at a specified position within a sublist associated with a group
+     * in a hierarchical list structure. The group is identified by its index, and the
+     * child position is determined relative to the sublist.
+     *
+     * @param groupPosition 0-based index of the group or category for which to retrieve
+     * child elements, as specified by the `_listDataHeader` map.
+     *
+     * @param childPosititon 0-based index of the child item to retrieve within the list
+     * of child items associated with the specified `groupPosition`.
+     *
+     * @returns an object from a list of child data.
      */
     @Override
     public Object getChild(int groupPosition, int childPosititon) {
@@ -70,16 +53,18 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * returns the position of a child within a group, where the position is the value
-     * of the child's `childPosition` field.
-     * 
-     * @param groupPosition 0-based position of the group within its parent container,
-     * which is used to determine the correct child position for retrieval.
-     * 
-     * @param childPosition 0-based index of a child element within its parent group,
-     * which is used to retrieve the unique identifier of that child element.
-     * 
-     * @returns a long value representing the child position within its group.
+     * Returns a unique identifier for each child element at a given position within a
+     * group. The returned ID is based on the child's relative position within the group,
+     * with the first child receiving an ID of 0 and subsequent children incrementing accordingly.
+     *
+     * @param groupPosition 0-based index of the group or parent element for which the
+     * `getChildId` method is called to retrieve the identifier of its child at the
+     * specified `childPosition`.
+     *
+     * @param childPosition 0-based index of the child element being accessed within a
+     * group, and its value is returned as the unique identifier for that child.
+     *
+     * @returns a unique long integer representing each child position.
      */
     @Override
     public long getChildId(int groupPosition, int childPosition) {
@@ -87,56 +72,38 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * inflates a list item layout, retrieves the child text from the adapter, and sets
-     * it as the text of a TextView within the layout.
-     * 
-     * @param groupPosition 0-based position of the group within its parent container,
-     * which is used to locate the appropriate child view within the group's layout.
-     * 
-     * @param childPosition 0-based index of the current child element within its parent
-     * group, which is used to identify and customize the child view.
-     * 
-     * @param isLastChild status of the current child view in the list, indicating whether
-     * it is the last child in the group or not.
-     * 
-     * @param convertView preview  of the view that will be displayed for the given
-     * groupPosition and childPosition, which is either null or an existing view that has
-     * been inflated from a layout file.
-     * 
-     * 1/ If it is null, then it represents an inflated layout from the specified XML
-     * resource (R.layout.list_item).
-     * 2/ The `findViewById` method is used to find a view with the ID `lblListItem`
-     * within the inflated layout.
-     * 3/ The text view found is referred to as `txtListChild`.
-     * 
-     * @param parent ViewGroup that contains the adapter's layout and provides the context
-     * for inflating the child view.
-     * 
-     * 	- `_context`: The context object for the application.
-     * 	- `convertView`: A variable that holds the view to be modified or created. It is
-     * a null value by default.
-     * 	- `groupPosition`: An integer indicating the group position of the child view
-     * being processed.
-     * 	- `childPosition`: An integer indicating the child position within the group.
-     * 	- `isLastChild`: A boolean value indicating whether the child view is the last
-     * child in the group.
-     * 	- `parent`: The parent ViewGroup object whose child view needs to be retrieved
-     * or created.
-     * 
-     * @returns a customized view for displaying a piece of text at a specific position
-     * in a list.
-     * 
-     * 	- `convertView`: This is the View object that represents the child element to be
-     * displayed in the list. It can be null if no existing view is available, and it
-     * will be inflated a new one if needed.
-     * 	- `childPosition`: This is the position of the child element within its group.
-     * It is an integer value that ranges from 0 to the total number of children in the
-     * group - 1.
-     * 	- `isLastChild`: This is a boolean value that indicates whether the current child
-     * element is the last one in its group. It is set to true if the current element is
-     * the last one, and false otherwise.
-     * 	- `parent`: This is the ViewGroup object that contains the group of children. It
-     * is used to access the parent's layout parameters and other properties.
+     * Inflates a layout for a child view within a group, retrieves the child's text
+     * content, and sets it to a TextView widget. It returns the converted view with the
+     * set text.
+     *
+     * @param groupPosition 0-based position of the group in the list that contains the
+     * child view being inflated, which is used to retrieve the child text from the data
+     * source.
+     *
+     * @param childPosition 0-based index of the child view within its parent group, used
+     * to retrieve the corresponding child text and set it in the TextView.
+     *
+     * @param isLastChild state of whether the child view being accessed is the last one
+     * within its group, which can potentially be used to optimize rendering or styling
+     * of the child views accordingly.
+     *
+     * @param convertView view to be recycled and reused, or null if a new view must be
+     * created.
+     *
+     * Inflates to null initially and then inflated with layout R.layout.list_item when
+     * not null.
+     *
+     * @param parent ViewGroup that this view is being added to, serving as a reference
+     * for layout and alignment purposes.
+     *
+     * Parent is a ViewGroup object representing the parent view group. It has no attributes
+     * mentioned in this context.
+     *
+     * @returns a custom list item view with child text.
+     *
+     * The output is a view representing a child in an expandable list view group. It has
+     * a text value set from the `childText` string and is inflated with the layout
+     * resource `R.layout.list_item`.
      */
     @Override
     public View getChildView(int groupPosition, final int childPosition,
@@ -157,15 +124,13 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * calculates the number of elements in a list of children associated with a specific
-     * group position. It takes the position as an argument and returns the number of
-     * elements in the list.
-     * 
-     * @param groupPosition 0-based index of a group in the list data, which is used to
-     * access the corresponding children in the list.
-     * 
-     * @returns the number of elements in a list of children, calculated by traversing
-     * the list of children and counting their size.
+     * Returns the number of child elements for a given group position within a list data
+     * structure, utilizing a header to index into the child list and retrieve its size.
+     *
+     * @param groupPosition 0-based index of a group in the list data header, used to
+     * retrieve the corresponding child data from the `_listDataChild` map.
+     *
+     * @returns an integer representing the size of a list.
      */
     @Override
     public int getChildrenCount(int groupPosition) {
@@ -174,21 +139,14 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * returns a specified object within a list data header based on its position.
-     * 
-     * @param groupPosition 0-based index of a group within the list data header, which
-     * is used to retrieve the corresponding group element from the list.
-     * 
-     * @returns an object of type `_ListDataHeader`.
-     * 
-     * 	- `_listDataHeader`: This is an instance of a class that represents a list header.
-     * It contains metadata about the list, such as the number of elements it contains
-     * and the type of data it holds.
-     * 	- `groupPosition`: This is an integer parameter that represents the position of
-     * the group within the list.
-     * 
-     * The return value of the function is an object of type `_listDataHeader`, which
-     * contains information about the group at the specified position in the list.
+     * Returns an object at a specified position from a list data header. The position
+     * is provided as an integer parameter, and the function retrieves the corresponding
+     * object from the `_listDataHeader` collection.
+     *
+     * @param groupPosition 0-based index of the group to be retrieved from the
+     * `_listDataHeader` collection, allowing for specific groups to be accessed and returned.
+     *
+     * @returns an object retrieved from the `_listDataHeader` list.
      */
     @Override
     public Object getGroup(int groupPosition) {
@@ -196,10 +154,12 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * returns the number of groups in a list based on the size of its header.
-     * 
-     * @returns the number of groups in the list of data, which is determined by the size
-     * of the `_listDataHeader`.
+     * Returns an integer representing the number of items in a list referred to as
+     * `_listDataHeader`. This count is used for grouping or categorizing data in a
+     * hierarchical manner. The function overrides the default implementation and provides
+     * custom behavior for getting group counts.
+     *
+     * @returns an integer representing the size of a list.
      */
     @Override
     public int getGroupCount() {
@@ -207,12 +167,15 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * returns the group position as a long value.
-     * 
-     * @param groupPosition 0-based position of a group within the underlying data
-     * structure, which is used to retrieve the corresponding group ID returned by the function.
-     * 
-     * @returns the input parameter `groupPosition`.
+     * Returns a long integer value that corresponds to the specified group position. The
+     * group position is provided as an input parameter and is directly returned without
+     * any modification or processing. This suggests a simple mapping between group
+     * positions and their corresponding IDs.
+     *
+     * @param groupPosition 0-based index of the group for which to retrieve the corresponding
+     * ID, which is directly returned as the result.
+     *
+     * @returns the integer value of the input `groupPosition`.
      */
     @Override
     public long getGroupId(int groupPosition) {
@@ -220,45 +183,35 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * inflates a layout for a group in a list, sets the group title as the text of a
-     * header view, and returns the modified view.
-     * 
-     * @param groupPosition 0-based index of the group in the adapter's list, which is
-     * used to inflate the appropriate layout for the group and set the header text.
-     * 
-     * @param isExpanded current expansion state of the group, allowing the function to
-     * display an appropriate header title based on whether the group is expanded or collapsed.
-     * 
-     * @param convertView view that will be reused for the current group if it is not
-     * null, otherwise a new view will be inflated from the `R.layout.list_group` layout
-     * file.
-     * 
-     * 	- `convertView`: If it is null, an instance of the LayoutInflater class is used
-     * to inflate the R.layout.list_group layout file into a new View object.
-     * 	- `parent`: The parent ViewGroup of the newly created View.
-     * 
-     * @param parent ViewGroup that contains the current group being processed, and is
-     * used to position the group correctly within its parent container.
-     * 
-     * 	- `_context`: This represents the context of the class, which is used to access
-     * system services such as the layout inflater.
-     * 	- `convertView`: This is a view that is reused when the same group is encountered
-     * again. If it is null, a new instance of the `R.layout.list_group` layout will be
-     * inflated using the `LayoutInflater` service.
-     * 	- `viewGroup`: This represents the parent view group of the current group being
-     * processed.
-     * 
-     * @returns a customized view for displaying a list group header, with the group title
-     * displayed prominently in bold text.
-     * 
-     * 	- `convertView`: This is the view that will be used to display the group header.
-     * It can be null if no existing view is available.
-     * 	- `isExpanded`: A boolean value indicating whether the group is expanded or collapsed.
-     * 	- `parent`: The parent ViewGroup that contains the group being displayed.
-     * 	- `headerTitle`: The title of the group, which is set as the text of a TextView
-     * in the returned view.
-     * 	- `R.id.lblListHeader`: The ID of the TextView element in the layout file where
-     * the header title is displayed.
+     * Returns a view representing a group in a list. It inflates a layout for each group
+     * if necessary, sets the text of a header label to the group's title, and returns
+     * the converted view. The returned view is used to display the group's title in the
+     * list.
+     *
+     * @param groupPosition 0-based index of the group being rendered, used to retrieve
+     * its title and configure the view accordingly.
+     *
+     * @param isExpanded state of the group at the given position, indicating whether it
+     * is currently expanded or not.
+     *
+     * @param convertView view that will be used to represent the group at the specified
+     * `groupPosition`, and it is reused whenever possible for efficiency.
+     *
+     * convertView is either null or an inflated View object from R.layout.list_group;
+     * if convertView is null, it is initialized with the layout inflater; otherwise, its
+     * original state remains unchanged.
+     *
+     * @param parent parent view group that the converted view is being added to or
+     * replaced within.
+     *
+     * Parent is a ViewGroup object representing the parent group to be laid out and
+     * shown. It has main properties such as layout_width, layout_height, and layout_margin.
+     *
+     * @returns a customized group view for an expandable list.
+     *
+     * It is a View object, specifically a layout view with an inflated design from
+     * R.layout.list_group. The view contains a TextView with the ID lblListHeader, which
+     * displays the header title in bold font.
      */
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
@@ -279,9 +232,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * returns `false`, indicating that no stable IDs are present in the related data.
-     * 
-     * @returns `false`.
+     * Returns a boolean value indicating whether the IDs returned by the adapter are
+     * stable across different configuration changes or not. In this implementation, it
+     * always returns `false`, implying that the IDs may change due to configuration changes.
+     *
+     * @returns a boolean value indicating that IDs are not stable.
      */
     @Override
     public boolean hasStableIds() {
@@ -289,16 +244,17 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     }
 
     /**
-     * determines whether a child can be selected based on its position within a group.
-     * It returns `true` if the child can be selected, and `false` otherwise.
-     * 
-     * @param groupPosition 0-based index of the group within which the `childPosition`
-     * parameter's child is being evaluated for selectability.
-     * 
-     * @param childPosition 0-based index of a child element within its parent group in
-     * the adapter's dataset.
-     * 
-     * @returns `true`.
+     * Returns a boolean value indicating whether the child at the specified position
+     * within the group at the specified position can be selected or not. In this
+     * implementation, it always returns `true`, allowing any child to be selected.
+     *
+     * @param groupPosition 0-based index of the group within an ExpandableListView that
+     * is being checked for selectability of its child at the specified `childPosition`.
+     *
+     * @param childPosition 0-based position of a child item within its parent group in
+     * a hierarchical data structure.
+     *
+     * @returns a boolean value indicating whether children are selectable.
      */
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
