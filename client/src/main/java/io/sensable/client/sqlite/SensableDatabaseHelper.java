@@ -9,9 +9,10 @@ import io.sensable.client.settings.Config;
  * Created by madine on 03/07/14.
  */
 /**
- * is a SQLiteOpenHelper that provides a singleton connection to a SQLite database
- * for content providers. The class creates and manages the database schema and
- * provides a way to access the database through a single instance.
+ * Is a SQLiteOpenHelper that provides a singleton connection to a SQLite database
+ * for content providers. It creates and manages the database schema and provides
+ * access to the database through a single instance, ensuring only one active connection
+ * at a time. The class handles database operations such as creating and upgrading tables.
  */
 public class SensableDatabaseHelper extends SQLiteOpenHelper {
 
@@ -35,29 +36,15 @@ public class SensableDatabaseHelper extends SQLiteOpenHelper {
      * @return
      */
     /**
-     * provides a single instance of `SensableDatabaseHelper` for a given `Context`. If
-     * the instance is null, it creates a new one using the context's application context.
-     * 
-     * @param context Android application context, which is used to create a new instance
-     * of the `SensableDatabaseHelper` class.
-     * 
-     * 	- `Context context`: This is an object that represents the Android application
-     * environment. It provides access to various components and resources within the
-     * app, such as the main activity, the application context, and other utility classes.
-     * 	- `sInstance`: A static instance variable that stores a reference to a
-     * `SensableDatabaseHelper` object. This variable is used to store a single instance
-     * of the helper class, which can be retrieved by calling the `getHelper` function.
-     * 
-     * @returns a `SensableDatabaseHelper` object instance.
-     * 
-     * 	- The output is a `SensableDatabaseHelper`, which is an instance of a class that
-     * provides access to a database.
-     * 	- The `SensableDatabaseHelper` instance is created by calling the
-     * `SensableDatabaseHelper(Context)` constructor, passing in the `Context` object
-     * representing the Android application context.
-     * 	- The instance is stored in a variable called `sInstance`, which is initially set
-     * to `null`. When the function is called, it sets `sInstance` to the newly created
-     * `SensableDatabaseHelper` instance.
+     * Creates a single instance of `SensableDatabaseHelper` if it does not exist, using
+     * the provided `Context`. The instance is stored in a static field for reuse. The
+     * function returns the existing or newly created instance, ensuring thread safety
+     * with the use of the `synchronized` keyword.
+     *
+     * @param context application context that is used to create an instance of the
+     * SensableDatabaseHelper class when it has not been initialized yet.
+     *
+     * @returns a synchronized instance of the `SensableDatabaseHelper`.
      */
     public static synchronized SensableDatabaseHelper getHelper(Context context) {
         if (sInstance == null) {
@@ -71,15 +58,13 @@ public class SensableDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * is responsible for creating the `SavedSensablesTable` and `ScheduledSensablesTable`
-     * in a SQLite database.
-     * 
-     * @param db SQLiteDatabase object that is used to perform database operations.
-     * 
-     * 	- SavedSensablesTable: The table for saved sensibles is created with the `onCreate`
-     * method.
-     * 	- ScheduledSensablesTable: The table for scheduled sensibles is also created using
-     * the `onCreate` method.
+     * Executes tables creation for `SavedSensablesTable` and `ScheduledSensablesTable`
+     * in a database, ensuring their schema is established when the application is initially
+     * installed or updated. This allows for data storage and retrieval operations to be
+     * performed.
+     *
+     * @param db SQLiteDatabase object that is used to create or modify tables and their
+     * structures, such as SavedSensablesTable and ScheduledSensablesTable.
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -90,20 +75,17 @@ public class SensableDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * updates the SavedSensables and ScheduledSensables tables when upgrading the database
-     * version.
-     * 
-     * @param db SQLiteDatabase object that is being upgraded.
-     * 
-     * 	- `SavedSensablesTable`: The table containing sensors' historical data is upgraded
-     * by calling its `onUpgrade` method.
-     * 	- `ScheduledSensablesTable`: The scheduled sensors' data in another table is also
-     * upgraded using the same method.
-     * 
-     * @param oldVersion previous version of the database schema.
-     * 
-     * @param newVersion latest version of the SQLite database schema, which is used to
-     * determine what actions need to be taken during the upgrade process.
+     * Is overridden to handle database schema changes when upgrading from an older version
+     * to a newer one. It calls separate upgrade methods for two tables: `SavedSensablesTable`
+     * and `ScheduledSensablesTable`, indicating that these tables require migration upon
+     * upgrading the database schema.
+     *
+     * @param db SQLiteDatabase object that is being upgraded to a newer version.
+     *
+     * @param oldVersion previous version of the database schema before the upgrade
+     * operation is performed.
+     *
+     * @param newVersion newest database schema version being installed or upgraded to.
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

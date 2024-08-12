@@ -1,14 +1,15 @@
 {
   "meta": {
     "version": "1",
-    "updated_at": "2024-08-12T21:09:35.529Z",
+    "updated_at": "2024-08-12T21:50:07.675Z",
     "created_at": "2024-08-12T18:03:18.789Z",
     "pipelines": [
       "5290e9fb-b07e-4f3a-b1dc-ade204499fa5",
       "6ce8c123-10dc-4848-87ac-c2fd538e4116",
       "e3c5077a-79f2-4dd1-9c80-093fc7876e9c",
       "586cd072-1664-40b6-a86b-eabc588d477a",
-      "7d927ab4-6aa0-44dd-9a21-5bba27f58a29"
+      "7d927ab4-6aa0-44dd-9a21-5bba27f58a29",
+      "92451fc3-3e0e-44b7-ba54-9467bb091828"
     ]
   },
   "lookup": [
@@ -31,7 +32,12 @@
       "client/src/main/java/io/sensable/client/views/SensableListAdapter.java",
       "client/src/main/java/io/sensable/client/views/RemoteSensablesFragment.java",
       "client/src/main/java/io/sensable/client/views/LocalSensablesFragment.java",
-      "client/src/main/java/io/sensable/client/views/FavouriteSensablesFragment.java"
+      "client/src/main/java/io/sensable/client/views/FavouriteSensablesFragment.java",
+      "client/src/main/java/io/sensable/client/sqlite/SavedSensablesTable.java",
+      "client/src/main/java/io/sensable/client/sqlite/ScheduledSensableContentProvider.java",
+      "client/src/main/java/io/sensable/client/sqlite/ScheduledSensablesTable.java",
+      "client/src/main/java/io/sensable/client/sqlite/SensableContentProvider.java",
+      "client/src/main/java/io/sensable/client/sqlite/SensableDatabaseHelper.java"
     ]
   ]
 }

@@ -12,10 +12,10 @@ import org.json.JSONObject;
  * Created by madine on 03/07/14.
  */
 /**
- * is a SQLite database table for storing scheduled sensor data. It has various columns
- * for storing information such as sensor ID, internal sensor ID, sensor name, sensor
- * type, last sample, unit, and pending status. The class also provides methods for
- * serializing and deserializing the scheduled sensors for use in the app.
+ * Is responsible for managing a SQLite database table that stores scheduled sensor
+ * data. It provides methods for creating and upgrading the database schema, serializing
+ * and deserializing scheduled sensors to and from ContentValues objects, and retrieving
+ * scheduled sensor data from a cursor.
  */
 public class ScheduledSensablesTable {
 
@@ -40,34 +40,29 @@ public class ScheduledSensablesTable {
 
 
     /**
-     * executes a SQL query to create the database structure when the app is launched for
-     * the first time.
-     * 
-     * @param database SQLite Database object that is being manipulated by the function.
-     * 
-     * 	- `database`: an instance of SQLiteDatabase, which is a class that provides a way
-     * to interact with a SQLite database.
-     * 	- `execSQL`: a method that executes a SQL statement on the database.
+     * Executes a SQL command on a SQLite database to create tables. The `execSQL` method
+     * is used to execute the SQL command specified by the constant `DATABASE_CREATE`.
+     * This function is typically called when the database is created for the first time.
+     *
+     * @param database SQLiteDatabase object that is being used to execute the SQL command
+     * defined by the `DATABASE_CREATE` constant.
      */
     public static void onCreate(SQLiteDatabase database) {
         database.execSQL(DATABASE_CREATE);
     }
 
     /**
-     * drops an existing table and recreates it according to the new version's schema.
-     * 
-     * @param database SQLiteDatabase object that is being upgraded.
-     * 
-     * 	- `SQLiteDatabase`: This is an instance of the SQLite database class, which
-     * provides methods for managing SQLite databases.
-     * 	- `oldVersion`, `newVersion`: These are integers that represent the old and new
-     * versions of the database, respectively.
-     * 
-     * @param oldVersion version of the database that is being upgraded, which is used
-     * to determine the appropriate action to take during the upgrade process.
-     * 
-     * @param newVersion new version of the SQLite database, which is used to determine
-     * the appropriate actions to take during the upgrade process.
+     * Drops an existing table with name `NAME` from a SQLite database and then creates
+     * it again by calling the `onCreate` function when the database version is upgraded.
+     *
+     * @param database SQLiteDatabase instance that is being upgraded to the new version
+     * specified by the `newVersion`.
+     *
+     * @param oldVersion current version of the database before any upgrade operations
+     * are performed.
+     *
+     * @param newVersion current version of the SQLite database schema, indicating when
+     * changes or updates are made to the table structure.
      */
     public static void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         database.execSQL("DROP TABLE IF EXISTS " + NAME);
@@ -75,43 +70,21 @@ public class ScheduledSensablesTable {
     }
 
     /**
-     * converts a `ScheduledSensable` object into a `ContentValues` instance, which can
-     * be used for database storage in SQLite. It serializes the `ScheduledSensable`
-     * fields and puts them into the `ContentValues` with appropriate column names.
-     * 
-     * @param scheduledSensable sensory data that is scheduled to be saved for SQL Lite.
-     * 
-     * 	- `sensorid`: A unique identifier for the sensor.
-     * 	- `internalSensorId`: The internal ID of the sensor.
-     * 	- `name`: The name of the sensor.
-     * 	- `sensortype`: The type of sensor (e.g., temperature, humidity, etc.).
-     * 	- `lastSample`: The last sample value of the sensor, represented as a JSON string.
-     * 	- `unit`: The unit of measurement for the sensor.
-     * 	- `pending`: A boolean value indicating whether the sensor is pending or not.
-     * 
-     * @returns a ContentValues object containing the scheduled sensory data in a format
-     * suitable for SQL Lite storage.
-     * 
-     * 	- `ContentValues serializedScheduledSensable`: This is an instance of the
-     * `ContentValues` class, which is used to store and manipulate data in a SQLite database.
-     * 	- `put(columnName, columnValue)`: This method is used to add or update a value
-     * for a specific column name in the `serializedScheduledSensable` ContentValues
-     * object. The `columnName` parameter specifies the name of the column, while the
-     * `columnValue` parameter specifies the value to be stored in that column.
-     * 	- `COLUMN_SENSABLE_ID`: This is the name of a column in the `serializedScheduledSensable`
-     * ContentValues object that contains the ID of the sensable being serialized.
-     * 	- `COLUMN_SENSOR_ID`: This is the name of a column in the `serializedScheduledSensable`
-     * ContentValues object that contains the ID of the sensor associated with the sensable.
-     * 	- `COLUMN_SENSOR_NAME`: This is the name of a column in the `serializedScheduledSensable`
-     * ContentValues object that contains the name of the sensor associated with the sensable.
-     * 	- `COLUMN_SENSOR_TYPE`: This is the name of a column in the `serializedScheduledSensable`
-     * ContentValues object that contains the type of the sensor associated with the sensable.
-     * 	- `COLUMN_LAST_SAMPLE`: This is the name of a column in the `serializedScheduledSensable`
-     * ContentValues object that contains the last sample value for the sensable.
-     * 	- `COLUMN_UNIT`: This is the name of a column in the `serializedScheduledSensable`
-     * ContentValues object that contains the unit of measurement for the sensable.
-     * 	- `COLUMN_PENDING`: This is the name of a column in the `serializedScheduledSensable`
-     * ContentValues object that indicates whether the sensable is pending or not.
+     * Converts a `ScheduledSensable` object into a SQL-compatible format using a
+     * `ContentValues` object. It extracts various properties from the input object and
+     * stores them as key-value pairs, preparing the data for storage in a SQLite database.
+     *
+     * @param scheduledSensable data to be serialized into a ContentValues object for
+     * storage in a SQLite database.
+     *
+     * Serialize its sensor ID, internal sensor ID, name, sensor type, last sample as
+     * JSON string, unit and pending status.
+     *
+     * @returns a ContentValues object.
+     *
+     * Serialized content contains sensable ID, internal sensor ID, name, sensor type,
+     * last sample in JSON string format, unit and a pending flag set to false. It is
+     * stored as a ContentValues object.
      */
     public static ContentValues serializeScheduledSensableForSqlLite(ScheduledSensable scheduledSensable) {
         ContentValues serializedScheduledSensable = new ContentValues();
@@ -126,48 +99,24 @@ public class ScheduledSensablesTable {
     }
 
     /**
-     * retrieves a scheduled sensors data from a cursor and creates a new ScheduledSensable
-     * object with the retrieved data.
-     * 
-     * @param cursor result of a query on the `ScheduledSensablesTable`, providing a
-     * cursor pointing to the current row being processed.
-     * 
-     * 	- `cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_ID)` - returns the index
-     * of the column containing the sensor ID
-     * 	- `cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_ID))`
-     * - retrieves the value of the sensor ID column as a string
-     * 	- `cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_ID))`
-     * - retrieves the value of the sensor ID column as an integer
-     * 	- `cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_NAME))`
-     * - retrieves the value of the name column as a string
-     * 	- `cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_SENSOR_TYPE))`
-     * - retrieves the value of the sensor type column as a string
-     * 	- `cursor.getString(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_UNIT))`
-     * - retrieves the value of the unit column as a string
-     * 	- `cursor.getInt(cursor.getColumnIndex(ScheduledSensablesTable.COLUMN_PENDING))`
-     * - retrieves the value of the pending column as an integer
-     * 	- `cursor.getString(cursor.getColumnIndex(SavedSensablesTable.COLUMN_LAST_SAMPLE))`
-     * - retrieves the value of the last sample column as a string (if appropriate)
-     * 
-     * Note: The properties of `cursor` may vary depending on the specific implementation
-     * and usage of the `getScheduledSensable` function.
-     * 
-     * @returns a `ScheduledSensable` object containing the sensor data.
-     * 
-     * 	- `scheduledSensable`: An object of the `ScheduledSensable` class that contains
-     * information about a scheduled sensor.
-     * 	+ `setId()`: The id of the scheduled sensor.
-     * 	+ `setSensorid()`: The ID of the sensor that the scheduled sensor is associated
-     * with.
-     * 	+ `setInternalSensorId()`: The internal ID of the sensor that the scheduled sensor
-     * is associated with.
-     * 	+ `setName()`: The name of the sensor.
-     * 	+ `setSensortype()`: The type of the sensor.
-     * 	+ `setUnit()`: The unit of measurement for the sensor.
-     * 	+ `setPending()`: A boolean value indicating whether the scheduled sensor is
-     * pending or not.
-     * 	+ `setSample()`: A `Sample` object containing the latest sample data from the
-     * associated sensor, or an empty `Sample` object if no sample data is available.
+     * Retrieves data from a database cursor and populates a `ScheduledSensable` object
+     * with its properties, including ID, sensor ID, name, type, unit, and pending status.
+     * It also extracts the last sample from the database as a JSON string and sets it
+     * in the `ScheduledSensable` object.
+     *
+     * @param cursor cursor that is used to retrieve data from the database table and
+     * populate the `ScheduledSensable` object with relevant information.
+     *
+     * Cursor has columns: COLUMN_ID, COLUMN_SENSABLE_ID, COLUMN_SENSOR_ID, COLUMN_SENSOR_NAME,
+     * COLUMN_SENSOR_TYPE, COLUMN_UNIT, COLUMN_PENDING. Additionally, it contains a column
+     * with key COLUMN_LAST_SAMPLE and value type String.
+     *
+     * @returns a populated `ScheduledSensable` object.
+     *
+     * The ScheduledSensable object contains an ID, sensor id, internal sensor ID, name,
+     * sensor type, unit, and pending status. Additionally, it has a sample attribute
+     * that is either populated from JSON data or initialized as empty if no JSON data
+     * is present.
      */
     public static ScheduledSensable getScheduledSensable(Cursor cursor) {
         ScheduledSensable scheduledSensable = new ScheduledSensable();
