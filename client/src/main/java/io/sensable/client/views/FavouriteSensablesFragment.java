@@ -22,10 +22,10 @@ import io.sensable.model.Sensable;
  * Created by simonmadine on 19/07/2014.
  */
 /**
- * is responsible for displaying a list of favourite sensors in a Fragment. It utilizes
- * a CursorLoader to load the data from a content provider and an adapter to display
- * the data in a ListView. The fragment also provides methods for initializing the
- * list and attaching a cursor loader to the ListView.
+ * Is a fragment in an Android application that displays a list of favourite sensors
+ * and allows users to view detailed information about each sensor by clicking on it.
+ * The class uses a CursorLoader to load data from a SQLite database and display it
+ * in a ListView.
  */
 public class FavouriteSensablesFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String TAG = FavouriteSensablesFragment.class.getSimpleName();
@@ -34,41 +34,21 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
     SensableListAdapter mAdapter;
 
     /**
-     * inflates a fragment's layout from a resource file and returns the resulting view.
-     * 
-     * @param layoutInflater inflation API that is used to inflate the layout of the
-     * fragment based on the provided resource ID.
-     * 
-     * 	- `LayoutInflater layoutInflater`: This is an instance of the `LayoutInflater`
-     * class, which is used to inflate XML layouts into Android views.
-     * 	- `ViewGroup container`: This is the parent view group that will contain the newly
-     * inflated view.
-     * 	- `Bundle savedInstanceState`: This is an instance of the `Bundle` class, which
-     * contains any saved state information for this fragment.
-     * 
-     * @param container parent view group where the inflated layout will be added as a child.
-     * 
-     * 	- `R.layout.favourite_sensables_fragment`: The layout file that contains the
-     * elements for this fragment.
-     * 	- `LayoutInflater`: An object used to inflate the layout from the resource file.
-     * 	- `ViewGroup`: A container view group that holds other views.
-     * 	- `Bundle`: A data storage container used to store saved state.
-     * 
-     * @param savedInstanceState saved state of the fragment, which can be used to restore
-     * the fragment's properties if it is recreated due to a configuration change or an
-     * error.
-     * 
-     * 	- `savedInstanceState`: This is a bundle that contains arbitrary data from the
-     * previous state of this fragment, if it was saved by the system. The bundle's
-     * properties include the values of its fields and the references to any objects that
-     * were stored in it.
-     * 
-     * @returns an inflated view of the `R.layout.favourite_sensables_fragment` layout.
-     * 
-     * 	- `LayoutInflater`: The LayoutInflater object that is used to inflate the layout
-     * from the resource file.
-     * 	- `ViewGroup`: The ViewGroup container that holds the fragment's layout.
-     * 	- `Bundle`: The Bundle object that contains any saved instance state, if available.
+     * Inflates a view from an XML layout file into a new instance of the Fragment class.
+     * It specifies the ID of the layout to inflate and returns it as the root view for
+     * the fragment. The container is the parent view group where the inflated view will
+     * be placed.
+     *
+     * @param layoutInflater LayoutInflater object that is used to inflate a view hierarchy
+     * from a XML layout resource file.
+     *
+     * @param container parent view group where the layout is inflated and returned,
+     * allowing for the new view hierarchy to be added to the activity's view tree.
+     *
+     * @param savedInstanceState bundle object that holds the UI state of the fragment
+     * being restored after its process is killed by the Android system.
+     *
+     * @returns a view inflated from the `R.layout.favourite_sensables_fragment` XML layout.
      */
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,7 +56,10 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
     }
 
     /**
-     * initializes a list upon calling the superclass's `onStart` method.
+     * Initializes a list when an application starts. It overrides the `onStart` method
+     * from its superclass, ensuring that the list is set up at the beginning of the
+     * program's lifecycle. The `initialiseList` method is called to complete the
+     * initialization process.
      */
     @Override
     public void onStart() {
@@ -85,8 +68,9 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
     }
 
     /**
-     * initializes a list view with saved sensables and sets an empty view, on item click
-     * listener for the list view.
+     * Initializes a list view and its associated components for displaying sensable data.
+     * It starts a scheduler, attaches a cursor loader to the list view, sets an empty
+     * view, and adds an on-click listener to the list view.
      */
     private void initialiseList() {
         ScheduleHelper scheduleHelper = new ScheduleHelper(getActivity());
@@ -104,57 +88,34 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
     }
 
     /**
-     * creates an `AdapterView.OnItemClickListener` that, when an item is clicked, starts
-     * an intent to display the `SensableActivity` with the corresponding sensable data
-     * extracted from a savable table.
-     * 
-     * @returns an `OnItemClickListener` that handles clicks on list items and starts an
-     * intent to display the `SensableActivity`.
-     * 
-     * 	- `AdapterView.OnItemClickListener`: This interface represents an adapter view's
-     * click listener. It is implemented to handle item clicks on the adapter view.
-     * 	- `onItemClick()`: This method is called when an item in the adapter view is
-     * clicked. It takes four parameters: `parent`, `view`, `position`, and `id`.
-     * 	- `getActivity()`: This method returns the current activity, which is used to
-     * start a new activity when the sensable is clicked.
-     * 	- `SensableActivity.class`: This class represents the activity that is started
-     * when an item in the adapter view is clicked. It takes a single extra parameter,
-     * `sensable`, which is a `Sensable` object obtained from the `getSensable()` method
-     * of the `SavedSensablesTable`.
-     * 	- `Sensable`: This class represents a sensable data object, which contains
-     * information about a specific sensation. It has several attributes, including `id`,
-     * `name`, `description`, and `value`.
+     * Returns an event listener for a list view item click. When an item is clicked, it
+     * creates an intent to open the `SensableActivity`, retrieves the corresponding
+     * sensable object from the database, and passes it as an extra in the intent.
+     *
+     * @returns an `AdapterView.OnItemClickListener`.
+     *
+     * The returned object is an instance of `AdapterView.OnItemClickListener`, which
+     * implements the `onItemClick` method. This method takes four parameters: `parent`,
+     * `view`, `position`, and `id`.
      */
     private AdapterView.OnItemClickListener getSavedSensableListener() {
         return new AdapterView.OnItemClickListener() {
             /**
-             * is called when an item in a list is clicked. It creates an intent to open the
-             * `SensableActivity` class, passing the sensable data as an extra throughput the
-             * `EXTRA_SENSABLE` field.
-             * 
-             * @param parent AdapterView whose item has been clicked and is being passed to the
-             * function as an argument.
-             * 
-             * 	- `AdapterView`: This is the type of the view that triggered the event. It provides
-             * information about the adapter that was used to display the items in the list and
-             * the position of the item that was clicked.
-             * 	- `view`: This is the view that was clicked, which is a `View` object.
-             * 	- `position`: This is the position of the item in the list, which can be used to
-             * determine which item was clicked.
-             * 	- `id`: This is the ID of the item that was clicked, which can be used to identify
-             * the item in the list.
-             * 
-             * @param view View object that was clicked and triggered the onItemClick() method.
-             * 
-             * 1/ `parent`: The parent AdapterView instance that triggered the click event.
-             * 2/ `position`: The position of the item in the adapter view.
-             * 3/ `id`: The ID of the selected item.
-             * 4/ `intent`: An Intent object used to launch the next activity.
-             * 
-             * @param position 0-based index of the selected item in the adapter view.
-             * 
-             * @param id 4-byte unique identifier of the item that was clicked, which is used to
-             * identify the corresponding sensable object in the SavedSensablesTable.
+             * Handles an item click event from an adapter view. It creates an intent to start a
+             * new activity, retrieves the corresponding sensable object from a table using a
+             * cursor, adds it as an extra to the intent, and then starts the activity with the
+             * specified sensable.
+             *
+             * @param parent AdapterView that generated the click event and provides access to
+             * the item at the given position.
+             *
+             * @param view View object that is clicked, allowing for manipulation of its properties
+             * or actions to be performed on it.
+             *
+             * @param position 1-based index of the item within the AdapterView that was clicked,
+             * used to retrieve the corresponding data from the adapter.
+             *
+             * @param id 64-bit row ID of the item at the given position in the adapter's data set.
              */
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -178,19 +139,13 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
     };
 
     /**
-     * attaches a CursorLoader to a ListView, allowing the display of sensable data from
-     * a SQLite database.
-     * 
-     * @param listView ListView that will be populated with data by the adapter created
-     * and set by the function.
-     * 
-     * 	- `listView`: A reference to a ListView object in the activity. Its ID is specified
-     * by `R.id.row_sensable_id`.
-     * 	- `mAdapter`: An instance of SensableListAdapter, which is responsible for
-     * displaying the data in the ListView. The adapter's constructor takes the activity
-     * as an argument and specifies null as the second parameter.
-     * 
-     * The function then sets the adapter for the ListView using the `setAdapter` method.
+     * Initializes and sets a list view adapter to display data from a database table.
+     * It prepares a loader to retrieve data and attaches it to the list view for display.
+     *
+     * @param listView ListView to which an adapter is set, displaying data retrieved
+     * from the database via a CursorLoader.
+     *
+     * Gets or sets the list view's adapter. It is an AdapterView that shows a list of items.
      */
     private void attachCursorLoader(ListView listView) {
         SensableListAdapter.AdapterHolder projection = new SensableListAdapter.AdapterHolder();
@@ -210,35 +165,16 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
     }
 
     /**
-     * creates a `CursorLoader` instance that fetches data from the `SensableContentProvider`
-     * and returns a `Cursor` object for display.
-     * 
-     * @param id identifier of the loader, which is used to uniquely identify the loader
-     * instance across multiple calls to the `onCreateLoader()` method.
-     * 
-     * @param args application-specific data passed to the `onCreateLoader` method by the
-     * caller.
-     * 
-     * The input `args` bundle has a single non-null component named `CONTENT_URI`, which
-     * represents the content provider's URI for displaying data. The `SENSABLE_PROJECTION`
-     * string is defined in the function, and it specifies the columns to be retrieved
-     * from the content provider. Additionally, there are three nullable reference
-     * parameters: `null`, `null`, and `null`.
-     * 
-     * @returns a `CursorLoader` instance that loads data from a content provider.
-     * 
-     * 	- `id`: The unique identifier for the loader, which is an integer value.
-     * 	- `args`: A Bundle object that contains additional data that can be used by the
-     * loader.
-     * 	- `SensableContentProvider.CONTENT_URI`: The content URI of the data being
-     * displayed, which is a string value.
-     * 	- `SENSABLE_PROJECTION`: An array of strings representing the fields to be queried
-     * in the Cursor object returned by the loader, which can be modified or extended
-     * depending on the requirements of the application.
-     * 	- `null`: A null reference that indicates no data is available for the specified
-     * URI.
-     * 	- `null`: A null reference that indicates no additional data is available beyond
-     * what is included in the Cursor object.
+     * Creates and returns a CursorLoader that retrieves data from the Sensable Content
+     * Provider using its CONTENT_URI, SENSABLE_PROJECTION, and query parameters. The
+     * retrieved cursor is then used to display the data.
+     *
+     * @param id 0-based identifier of the Loader to be created or replaced.
+     *
+     * @param args Bundle object that contains additional data and is passed from an
+     * Activity to the LoaderManager for further processing.
+     *
+     * @returns a CursorLoader instance for retrieving data from Sensable Content Provider.
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -249,22 +185,15 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
     }
 
     /**
-     * swaps a new cursor with the existing one in a `Loader` object, allowing the adapter
-     * to display the new data.
-     * 
-     * @param loader Loader object that is responsible for loading the data into the
-     * Cursor that is passed as the second parameter to the `onLoadFinished()` method.
-     * 
-     * 	- `loader`: A `Loader<Cursor>` instance that represents the result of a load
-     * operation. It provides access to the data in the form of a `Cursor`.
-     * 
-     * @param data cursor containing the data to be displayed by the adapter after the
-     * load operation has completed.
-     * 
-     * 	- `mAdapter`: The adapter associated with the loader, which is passed as an
-     * argument to the function.
-     * 	- `data`: The cursor containing the new data, which is swapped in place of the
-     * previous cursor by calling `mAdapter.swapCursor(data)`.
+     * Swaps the loaded cursor into the adapter, replacing any existing cursor. The
+     * framework automatically closes the old cursor after the new one is set. This allows
+     * the data to be displayed in the UI once it has been successfully loaded.
+     *
+     * @param loader Loader object that triggered this callback, providing the Cursor
+     * data as an argument for further processing.
+     *
+     * @param data Cursor object containing the query results, which is swapped with the
+     * existing cursor by calling `mAdapter.swapCursor(data)`.
      */
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
@@ -275,17 +204,12 @@ public class FavouriteSensablesFragment extends Fragment implements LoaderManage
     }
 
     /**
-     * is called when the last Cursor provided to `onLoadFinished()` is about to be closed,
-     * and it ensures that the adapter is no longer using the Cursor by swapping it with
-     * null.
-     * 
-     * @param loader Loader object that provides the Cursor data to be processed by the
-     * onLoadFinished() method.
-     * 
-     * The `onLoaderReset()` method is called when the last Cursor provided to
-     * `onLoadFinished()` is about to be closed. It ensures that the `mAdapter` object
-     * no longer uses the cursor by calling its `swapCursor()` method and passing in a
-     * null value.
+     * Resets the cursor provided by the Loader and swaps it with null, ensuring the
+     * previous cursor is closed and not used further. This is necessary when the last
+     * cursor supplied to `onLoadFinished` is about to be closed.
+     *
+     * @param loader Loader that is being reset, providing information about the previous
+     * cursor data.
      */
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {

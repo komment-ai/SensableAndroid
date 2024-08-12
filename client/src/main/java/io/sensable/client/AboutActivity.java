@@ -19,11 +19,29 @@ import retrofit.client.Response;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+/**
+ * Extends Activity and provides functionality to retrieve sample count from sensable.io
+ * via Rest API and display it in a text view. It also sets formatted text from a
+ * resource string in another text view. The loadStatistics method is responsible for
+ * fetching the statistics.
+ */
 public class AboutActivity extends Activity {
     private static final String TAG = AboutActivity.class.getSimpleName();
 
     private TextView statistics;
 
+    /**
+     * Sets the layout, retrieves a TextView by ID, formats HTML text, and displays it
+     * on the screen. It also loads statistics and assigns them to another TextView. This
+     * is a typical initialization method for an Android activity.
+     *
+     * @param savedInstanceState Bundle object that contains the activity's saved state
+     * from a previous invocation of its lifecycle methods.
+     *
+     * Bundle contains key-value pairs to preserve instance state across process death.
+     * It includes data about fragments that were previously added and removed, as well
+     * as other relevant details.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,8 +59,9 @@ public class AboutActivity extends Activity {
     }
 
     /**
-     * retrieves sample count from sensable.io via Rest API and updates a label with the
-     * count.
+     * Loads statistics from a REST API and updates a text view with the count of samples
+     * processed. It handles successful responses by logging the count and updating the
+     * text view, and failure cases by logging errors and hiding the text view.
      */
     private void loadStatistics() {
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -54,26 +73,15 @@ public class AboutActivity extends Activity {
 
         service.getStatistics(new Callback<Statistics>() {
             /**
-             * is called when the Statistics callback is successful. It logs the number of samples
-             * retrieved to the log cat and sets the text view to display the number of samples.
-             * 
-             * @param statisticsResponse count of samples successfully processed by the Statistics
-             * service, which is returned as an integer value in the success callback function.
-             * 
-             * * `getCount()`: This method returns the total number of samples in the response.
-             * * `Statistics`: This class represents the statistics of the samples, including the
-             * total count and other relevant information.
-             * 
-             * @param response response object that is passed to the `success` method as an
-             * argument, providing additional information about the callback execution result.
-             * 
-             * The input `response` is of type `Response`, which contains information about the
-             * success or failure of the API call.
-             * The `Statistics` object `statisticsResponse` returned by the API is stored in a
-             * variable named `statistics`.
-             * The `count` property of `statisticsResponse` is accessed using the dot notation,
-             * and its value is formatted using `NumberFormat.getInstance()` and appended to a
-             * text view named `textView`.
+             * Logs a debug message and updates the UI component `statistics` with the count from
+             * the received `Statistics` object, formatted as a string. The format includes the
+             * count and a text describing the data source "sensable.io".
+             *
+             * @param statisticsResponse response object that contains the count of samples from
+             * the API, which is then used to set the text of a UI component named `statistics`.
+             *
+             * @param response response object that contains the result of the request, but its
+             * content is not used within the method.
              */
             @Override
             public void success(Statistics statisticsResponse, Response response) {
@@ -83,15 +91,13 @@ public class AboutActivity extends Activity {
             }
 
             /**
-             * handles callback failures by logging an error message and making the `statistics`
-             * view invisible.
-             * 
-             * @param retrofitError error message that occurs when a callback fails, and it is
-             * logged with a tag and its toString method is called to obtain a human-readable
-             * string representation of the error.
-             * 
-             * * `toString()`: Returns a string representation of the error object, which can be
-             * used for debugging or logging purposes.
+             * Logs an error message to the console when a callback request fails. It also hides
+             * a UI component named `statistics`. The function is part of a class that handles
+             * API requests using Retrofit, and it deals with exceptions or errors that occur
+             * during the request process.
+             *
+             * @param retrofitError error that occurred during the network request, providing
+             * information about the failure such as the HTTP status code and any error message.
              */
             @Override
             public void failure(RetrofitError retrofitError) {

@@ -26,9 +26,10 @@ import java.util.List;
  * Created by simonmadine on 20/07/2014.
  */
 /**
- * is a Java file that extends Fragment and provides a list of sensibles retrieved
- * from an API endpoint. The class has methods for initializing the list and adding
- * an onclick listener to the listview.
+ * Extends Fragment and provides a list of sensibles retrieved from an API endpoint.
+ * It initializes a RestAdapter to make API calls and uses a ListView to display the
+ * list of sensibles, with an OnItemClickListener handling item clicks and launching
+ * the SensableActivity.
  */
 public class RemoteSensablesFragment extends Fragment {
 
@@ -40,48 +41,22 @@ public class RemoteSensablesFragment extends Fragment {
 
 
     /**
-     * inflates a layout from a resource file and returns the resulting view instance.
-     * 
-     * @param layoutInflater inflation factory that is used to inflate the remote sensables
-     * fragment layout from the resource file R.layout.remote_sensables_fragment.
-     * 
-     * The `inflate` method is used to inflate a layout from an XML file specified by the
-     * `R.layout.remote_sensables_fragment` constant. The third argument, `container`,
-     * represents the parent view group in which the inflated layout will be added. Setting
-     * `false` as the fourth argument indicates that the parent view group should not be
-     * modified.
-     * 
-     * @param container ViewGroup that the inflated layout will be added to.
-     * 
-     * Returning the inflated layout from `R.layout.remote_sensables_fragment`. The
-     * `inflate` method takes three parameters - the first is the layout resource ID, the
-     * second is the parent view group, and the third is a boolean value indicating whether
-     * the layout should be recreated or not. In this case, `false` means that the existing
-     * layout in the `container` view should be reused instead of recreating a new one.
-     * 
-     * @param savedInstanceState saved state of the fragment, which can be useful in case
-     * the fragment is restored from a previous configuration.
-     * 
-     * The `savedInstanceState` argument is a Bundle object that contains additional
-     * information about the fragment when it is recreated or restored. It may contain
-     * various properties such as the fragment's original state before being saved, the
-     * ID of the fragment, and other attributes specific to the fragment.
-     * 
-     * @returns a View object representing the inflated layout from the
-     * `R.layout.remote_sensables_fragment` file.
-     * 
-     * 	- The output is an inflated layout, specifically one from R.layout.remote_sensables_fragment.
-     * 	- The layout is inflated into the container view group specified in the function
-     * call.
-     * 	- The layout is inflated with false as the third parameter, indicating that it
-     * should not be treated as a new instance of the layout.
-     * 
-     * The properties of the output are:
-     * 
-     * 	- It is an instance of the View class.
-     * 	- It has a reference to the layout defined in R.layout.remote_sensables_fragment.
-     * 	- It has a reference to the container view group, which is used to display the
-     * inflated layout.
+     * Inflates a layout file and returns it as the root view for a fragment. The inflated
+     * layout is specified by the resource ID `R.layout.remote_sensables_fragment`, and
+     * the container is provided as part of the method call.
+     *
+     * @param layoutInflater LayoutInflater object that is used to inflate or create an
+     * instance of the layout specified by R.layout.remote_sensables_fragment and returns
+     * the View object representing the inflated view hierarchy.
+     *
+     * @param container ViewGroup to which the View returned by the method will be added,
+     * and it is used as the parent for the inflated view.
+     *
+     * @param savedInstanceState bundle of data previously saved by the host activity
+     * through the `onSaveInstanceState` method, and is passed to the fragment for
+     * restoration after its process is recreated.
+     *
+     * @returns an inflated view of a specific layout from the given resource.
      */
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState) {
@@ -89,9 +64,9 @@ public class RemoteSensablesFragment extends Fragment {
     }
 
     /**
-     * initializes a `RestAdapter` to make API calls to retrieve a list of sensors, and
-     * then uses the `create` method to create an instance of the `SensableService` class.
-     * The service is then called with a callback to receive the list of sensors in response.
+     * Initializes a list and makes a REST call to retrieve a list of sensibles from an
+     * API. The response is processed and added to an internal list, then notifies an
+     * adapter to update the UI. If the request fails, it logs the error to the console.
      */
     @Override
     public void onStart() {
@@ -106,21 +81,13 @@ public class RemoteSensablesFragment extends Fragment {
 
         service.listSensables(new Callback<List<Sensable>>() {
             /**
-             * is called when a callback operation completes successfully. It adds the list of
-             * sensibles to a internal list and notifies the ListArrayAdapter to update the UI.
-             * 
-             * @param sensables list of sensors that have successfully received data, which is
-             * added to the existing list of sensors stored in the variable `mSensables`.
-             * 
-             * 	- `sensables`: A list of `Sensable` objects, which contain attributes such as
-             * `id`, `name`, `description`, and `value`.
-             * 
-             * @param response response from the API call, which contains the list of sensibles
-             * that will be processed and added to the adapter.
-             * 
-             * 	- `sensables`: A list of `Sensable` objects representing the successful callback
-             * data.
-             * 	- `size`: The number of elements in the `sensables` list.
+             * Processes a list of `sensables`. It logs a message, clears an existing list, updates
+             * it with new elements, and notifies a data adapter to refresh its display.
+             *
+             * @param sensables list of Sensable objects returned by an API or similar operation,
+             * which is then cleared and updated in the local cache.
+             *
+             * @param response result of an operation, which is not utilized in this callback method.
              */
             @Override
             public void success(List<Sensable> sensables, Response response) {
@@ -131,14 +98,12 @@ public class RemoteSensablesFragment extends Fragment {
             }
 
             /**
-             * is called when a callback fails, logging the error to the console with a tag and
-             * including the error details in the log message.
-             * 
-             * @param retrofitError error that occurred during the callback, and its toString()
-             * method is called to log the error message.
-             * 
-             * 	- `toString()`: returns a human-readable representation of the error object in
-             * string format.
+             * Logs an error message to the console when a Retrofit request fails. The error
+             * message includes the details of the RetrofitError object. This allows for debugging
+             * and troubleshooting failed requests.
+             *
+             * @param retrofitError error that occurred during the execution of a Retrofit request,
+             * and its value is passed to the `Log.e` method for debugging purposes.
              */
             @Override
             public void failure(RetrofitError retrofitError) {
@@ -149,9 +114,9 @@ public class RemoteSensablesFragment extends Fragment {
     }
 
     /**
-     * initializes a `ListView` by creating an adapter to display a list of `Sensable`
-     * objects and adding an `OnItemClickListener` to handle item clicks and launch the
-     * `SensableActivity`.
+     * Initializes a list view with an array adapter and sets an on-click listener to
+     * handle item selection events. When an item is clicked, it creates an intent for
+     * the SensableActivity class and passes the selected item as an extra parameter.
      */
     private void initialiseList() {
         final ListView sensableList = (ListView) getView().findViewById(R.id.sensable_list);
@@ -163,30 +128,20 @@ public class RemoteSensablesFragment extends Fragment {
         //add onclick to listview
         sensableList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             /**
-             * is called when an item is clicked on a list, it creates an intent with the Sensable
-             * activity and passes the extra data as a (Sensable) object.
-             * 
-             * @param parent AdapterView object from which the click event occurred.
-             * 
-             * 	- `AdapterView<?>`: This is an interface that represents an adapter view. The
-             * type parameter `<?>` indicates that the view can be any subclass of `AdapterView`.
-             * 	- `parent`: This is the current view being processed, which is an instance of `AdapterView`.
-             * 	- `position`: This is an integer value representing the position of the item in
-             * the list or grid that was clicked.
-             * 	- `id`: This is a long value representing the ID of the item that was clicked.
-             * 
-             * @param view view that was clicked and is used to identify the position of the item
-             * in the adapter.
-             * 
-             * 	- `parent`: The parent `AdapterView` that triggered the click event.
-             * 	- `position`: The position of the item in the adapter.
-             * 	- `id`: The unique identifier for the item.
-             * 
-             * @param position 0-based index of the selected item within the adapter's dataset,
-             * which is passed to the corresponding `Sensable` object as an extra through the
-             * `putExtra()` method when the user clicks on the item.
-             * 
-             * @param id identifier of the selected item.
+             * Handles item clicks in an adapter view. When an item is clicked, it creates an
+             * intent to start a new activity (`SensibleActivity`) with a specific extra parameter
+             * (`EXTRA_SENSABLE`) set to the selected item from the parent adapter view. The
+             * intent then starts the new activity.
+             *
+             * @param parent AdapterView whose item has been clicked, providing information about
+             * the adapter that is being used to populate the view.
+             *
+             * @param view View object that was clicked by the user, providing access to its
+             * properties and methods for further processing.
+             *
+             * @param position 0-based index of the item that was clicked within the AdapterView.
+             *
+             * @param id 64-bit unique identifier of the item at the specified position in the adapter.
              */
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

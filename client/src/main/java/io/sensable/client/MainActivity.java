@@ -34,11 +34,10 @@ import java.util.List;
  * Created by simonmadine on 19/07/2014.
  */
 /**
- * in Android provides a framework for managing user interactions with sensors,
- * including login and create sensable functionality. The class implements the
- * ActionBar.TabListener interface to handle tab selection events and initializes
- * tabs using a TabsPagerAdapter. Additionally, it provides methods for handling
- * options menu items and action bar item clicks.
+ * Implements an ActionBar and ViewPager to manage multiple fragments and tabs,
+ * handling login and logout functionality, displaying a toast message upon login
+ * status update, and creating a new sensable user. It also provides callback interfaces
+ * for login status updates and sensable creation confirmation.
  */
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -56,7 +55,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     //define callback interface
     /**
-     * acts as a callback mechanism for receiving updates on the login status of a user
+     * Provides a callback mechanism for receiving updates on the login status of a user
      * after they have logged in or out.
      */
     public interface CallbackInterface {
@@ -64,19 +63,17 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     /**
-     * sets up the user interface and initializes the SensableUser class, which manages
-     * the user's login state. If the user is logged in, it displays a toast message;
-     * otherwise, it displays another toast message.
-     * 
-     * @param savedInstanceState saved state of the activity, which can be used to restore
-     * the activity's state in case it is restarted or recreated.
-     * 
-     * 	- `super.onCreate(savedInstanceState)` - Calls the superclass's `onCreate` method
-     * to perform any necessary initialization before proceeding with the current method's
-     * code.
-     * 	- `setContentView(R.layout.main_activity)` - Sets the content view of the activity
-     * to the R.layout.main_activity file, which is assumed to contain the main layout
-     * and widgets for the activity.
+     * Sets up the main activity layout, retrieves shared preferences, creates a SensableUser
+     * object, checks login status and displays corresponding toast messages, and then
+     * initializes tabs.
+     *
+     * @param savedInstanceState Bundle object that contains the data while user is
+     * interacting with application and if user has pressed back button then it will show
+     * previous state of activity.
+     *
+     * Bundle savedInstanceState contains key-value pairs representing the application's
+     * state. Its main properties include the key-value pairs themselves and their
+     * respective ordering, allowing for efficient storage and retrieval of data.
      */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,9 +92,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     /**
-     * initializes a ViewPager and ActionBar, sets an adapter for the ViewPager, and adds
-     * tabs to the ActionBar using a tab listener. When the user swipes the ViewPager,
-     * the selected tab is updated in the ActionBar.
+     * Sets up a tabbed interface with a ViewPager and ActionBar, creating tabs from an
+     * array of tab names and setting their corresponding listeners. It also configures
+     * the ViewPager to update the selected tab based on page changes.
      */
     private void initialiseTabs() {
         // Initialization
@@ -120,11 +117,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             /**
-             * updates the selected item in the action bar based on the page number passed as an
-             * argument.
-             * 
-             * @param position 0-based index of the selected tab in the navigation menu, which
-             * is used to set the selected tab in the action bar.
+             * Selects a navigation item in an action bar based on the given position. When a
+             * page is changed, it makes the corresponding tab selected in the action bar.
+             *
+             * @param position 0-based index of the selected item or page, which is used to select
+             * the corresponding navigation item on the action bar.
              */
             @Override
             public void onPageSelected(int position) {
@@ -134,28 +131,31 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             }
 
             /**
-             * is a callback method called when the user scrolls a web page. It receives the
-             * current position of the scroll, the scrolling velocity, and the total scroll range
-             * as arguments.
-             * 
-             * @param arg0 current scroll position of the web page within the viewport.
-             * 
-             * @param arg1 current scroll position of the view in fractional units, such as a
-             * percentage of the total view size.
-             * 
-             * @param arg2 current position of the scrollview, measured in pixels from the top
-             * of the view.
+             * Is overridden to handle page scrolling events in a ViewPager. It takes three
+             * arguments: an integer representing the new current item, a float representing the
+             * position offset within the current item, and an integer representing the action
+             * type (e.g., scrolled horizontally).
+             *
+             * @param arg0 0-based index of the current page being scrolled.
+             *
+             * @param arg1 scroll distance in pixels and is used to calculate the new offset of
+             * the current page.
+             *
+             * @param arg2 position offset during a scroll operation.
              */
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {
             }
 
             /**
-             * is called when the scrolling state of a page changes, and it performs an unspecified
-             * action in response.
-             * 
-             * @param arg0 scroll state of the view pager, which is used to determine the appropriate
-             * action to take in response to changes in the scroll position.
+             * Notifies the client about a change in the scrolling state of the page. It provides
+             * an integer parameter, `arg0`, which indicates whether the scroll is idle, touching,
+             * or flinging. The function does not have any implementation, indicating that it may
+             * be intended to perform some action based on the changed state but has been left
+             * blank for future development.
+             *
+             * @param arg0 new scroll state of the pager, which is an integer value indicating
+             * whether the pager is idle (0), scrolling (1), or sliding to start (2).
              */
             @Override
             public void onPageScrollStateChanged(int arg0) {
@@ -165,8 +165,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     /**
-     * is a override of the superclass `onStart` method, indicating that it performs
-     * additional actions beyond those of the parent class.
+     * Overrides the default onStart method inherited from a superclass and executes when
+     * the activity starts. It calls the superclass's onStart method to perform necessary
+     * initialization. This function is typically used for initialization tasks that
+     * require the activity to be fully started.
      */
     @Override
     public void onStart() {
@@ -175,27 +177,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
     /**
-     * is a method in Android that responds to changes in the device's configuration. It
-     * is called when the device's screen orientation, display density, or other
-     * configurations change. The method updates the UI and other components of the app
-     * based on the new configuration.
-     * 
-     * @param newConfig updated configuration of the device or environment that triggered
-     * the `onConfigurationChanged()` method call, and it is passed to the superclass's
-     * `onConfigurationChanged()` method for further processing.
-     * 
-     * 1/ Screen orientation: The `newConfig` object contains information about the current
-     * screen orientation, including whether it is portrait or landscape, and the specific
-     * orientation (e.g., "portrait-primary").
-     * 2/ Display metric: The `displayMetrics` property of `newConfig` provides information
-     * about the display size and density, such as the width and height of the screen in
-     * pixels, and the pixel density in dots per inch (dpi).
-     * 3/ Resource IDs: The `resources` property of `newConfig` contains a list of resource
-     * IDs that are associated with the configuration change. These resources may include
-     * drawable icons, layout files, or other assets that are relevant to the new configuration.
-     * 4/ Layout: The `layout` property of `newConfig` specifies the current layout of
-     * the application, including the orientation and size of the screen, as well as any
-     * additional layout parameters such as margins or gravity.
+     * Handles changes to the device's configuration, such as screen orientation or
+     * language settings. It is called when a configuration change occurs and invokes its
+     * superclass's implementation. The function takes a new configuration object as input
+     * and performs no specific actions itself.
+     *
+     * @param newConfig updated configuration of the device, which is passed to the method
+     * when the screen's orientation changes or other system settings are modified.
      */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -204,23 +192,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
     /**
-     * inflates a menu with options based on the logged-in status of the sensable user
-     * and sets the visibility of those options accordingly.
-     * 
-     * @param menu menu that will be inflated with additional items based on the logic
-     * within the function.
-     * 
-     * 	- `R.menu.saved_sensables`: The menu resource ID that contains the menu items to
-     * be inflated.
-     * 	- `R.id.action_login`: The resource ID of the login item in the menu.
-     * 	- `R.id.action_logout`: The resource ID of the logout item in the menu.
-     * 	- `R.id.action_create`: The resource ID of the create item in the menu.
-     * 
-     * These properties are used to set the visibility of menu items based on the logged-in
-     * status of the sensable user.
-     * 
-     * @returns a menu with items for logging in, logging out, and creating new sensables,
-     * depending on the user's logged-in status.
+     * Inflates a menu from the `saved_sensables` resource and populates it with items
+     * based on the login status of the `sensableUser`. It shows or hides specific menu
+     * items depending on whether the user is logged in or not.
+     *
+     * @param menu action bar's menu that is being populated with items from the resource
+     * file R.menu.saved_sensables.
+     *
+     * @returns a boolean value indicating the success of menu inflation.
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -233,33 +212,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     /**
-     * handles menu item selections, such as opening the about screen or login dialog,
-     * logging out, and creating a new sensable user. It calls parent class methods and
-     * performs callback interface actions based on menu item IDs.
-     * 
-     * @param item selected menu item and provides its item ID, which is used to determine
-     * the appropriate action to take based on the selected item.
-     * 
-     * 	- `id`: The unique identifier of the menu item, represented as an integer value.
-     * 	- `item.getItemId()`: Returns the identifier of the menu item, which can be used
-     * to determine its type and functionality.
-     * 
-     * The `if` statement checks for specific values of `id`, and performs different
-     * actions based on the selected menu item.
-     * 
-     * @returns a handling of action bar item clicks, including launching an about dialog,
-     * displaying a login dialog, logging out, and creating a new sensable.
-     * 
-     * 	- `id`: This is an integer that represents the ID of the selected item in the
-     * action bar. It takes on the value of the item's ID defined in the `android:id`
-     * attribute in the `menu_item` XML file.
-     * 	- `super.onOptionsItemSelected(item)`: This is a call to the superclass's
-     * implementation of `onOptionsItemSelected`, which handles the default action for
-     * the selected item.
-     * 
-     * The output of the function is a boolean value indicating whether the action bar
-     * item was handled successfully or not. If the item was handled, the method returns
-     * `true`; otherwise, it returns `false`.
+     * Handles clicks on action bar items, including "About", "Login", and "Logout". It
+     * performs corresponding actions such as launching a dialog or updating the login
+     * status and displaying a toast message.
+     *
+     * @param item MenuItem object that was clicked, providing access to its identifier
+     * and other properties.
+     *
+     * Extracted:
+     * - `int id`: The unique ID of the action bar item that was selected.
+     * - `MenuItem item`: Represents an action bar item in the context menu.
+     *
+     * @returns a boolean value indicating whether an action was selected or not.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -274,13 +238,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         } else if (id == R.id.action_logout) {
             sensableUser.deleteSavedUser(new CallbackInterface() {
                 /**
-                 * updates the login status and displays a toast message based on whether the user
-                 * is logged in or not, also invoking the `invalidateOptionsMenu()` method.
-                 * 
-                 * @param loggedIn login status of the user, with a value of `true` indicating that
-                 * the user is logged in and `false` indicating otherwise.
-                 * 
-                 * 	- `loggedIn`: A Boolean value indicating whether the user is logged in or not.
+                 * Updates the login status by displaying a toast message indicating whether the user
+                 * is logged out or logout has failed, and then invalidates the options menu.
+                 *
+                 * @param loggedIn boolean status of user login, determining whether to display a
+                 * logout or logout failure message.
                  */
                 @Override
                 public void loginStatusUpdate(Boolean loggedIn) {
@@ -299,7 +261,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     /**
-     * starts an activity called `AboutActivity`.
+     * Initializes an instance of the `Intent` class with a reference to the current
+     * context and the `AboutActivity` class. The function then starts an activity specified
+     * by the intent, displaying the about activity to the user.
      */
     private void launchAbout() {
         Intent intent = new Intent(this, AboutActivity.class);
@@ -310,40 +274,36 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * Called when the user clicks the Send button
      */
     /**
-     * creates a new instance of the `SensableLoginFragment` and sets a listener to handle
-     * the login confirmation event. When the user confirms the login, the fragment's
-     * listener calls the callback interface with the logged-in status, which in turn
-     * updates the UI and invalidates the options menu.
+     * Displays a login dialog to the user, handles the login status update and displays
+     * a toast message accordingly. It also updates the options menu when the user's login
+     * status changes. The function sets up a callback interface for the login operation
+     * to receive the login status update.
      */
     public void loginDialog() {
         FragmentManager fm = getFragmentManager();
         SensableLoginFragment sensableLoginFragment = new SensableLoginFragment();
         sensableLoginFragment.setSensableLoginListener(new SensableLoginFragment.SensableLoginListener() {
             /**
-             * is called when a user logs in successfully or fails to log in. It passes the login
-             * status to the CallbackInterface, which updates the UI and invalidates the options
-             * menu.
-             * 
-             * @param userLogin user login details that are being confirmed.
-             * 
-             * 	- `sensableUser`: A reference to an object of class `SensableUser`.
-             * 	- `login`: A method that takes a `CallbackInterface` as its parameter and logs
-             * in the user with the provided callback interface.
-             * 	- `invalidateOptionsMenu`: A method that is called when the user's login status
-             * changes, which is used to update the menu options accordingly.
+             * Updates the login status of a user and displays a toast message indicating whether
+             * the login was successful or not. It calls a callback interface to perform this
+             * operation, displaying success or failure messages based on the result.
+             *
+             * @param userLogin credentials of the user attempting to log in, which are passed
+             * to the `sensableUser.login()` method for processing.
+             *
+             * UserLogin has the following attributes - username and password.
              */
             @Override
             public void onConfirmed(UserLogin userLogin) {
                 sensableUser.login(userLogin, new CallbackInterface() {
                     /**
-                     * updates the login status of a user and displays a toast message based on whether
-                     * the login was successful or not.
-                     * 
-                     * @param loggedIn success of the login operation, with a value of `true` indicating
-                     * successful login and `false` indicating failed login.
-                     * 
-                     * 	- `loggedIn`: A boolean value representing whether the user has successfully
-                     * logged in or not.
+                     * Updates the login status of an application. When a user logs in successfully, it
+                     * displays a toast message indicating successful login; otherwise, it displays a
+                     * toast message indicating failed login. It also invalidates the options menu after
+                     * updating the login status.
+                     *
+                     * @param loggedIn status of the user's login attempt, indicating whether it was
+                     * successful or not.
                      */
                     @Override
                     public void loginStatusUpdate(Boolean loggedIn) {
@@ -365,32 +325,28 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      * Called when the user clicks the Create Sensable menu item
      */
     /**
-     * creates a fragment to display a scheduled sensable and sets up a listener for when
-     * the sensable is confirmed. When the sensable is confirmed, it displays a toast
-     * message with the sensable ID.
-     * 
-     * @param view `View` object that contains the sensor ID to be confirmed and is used
-     * to display the resulting sensor ID in a toast message.
-     * 
-     * 	- `getFragmentManager()` returns the Fragment Manager instance for the current activity.
-     * 	- `setCreateSensableListener()` sets a listener interface for the Create Sensable
-     * fragment to receive updates from the sensor.
-     * 	- `getSensorid()` returns the ID of the sensor that was created.
+     * Displays a fragment for creating sensable actions and sets a listener to confirm
+     * scheduled sensing actions. When confirmed, it shows a toast message with the sensor
+     * ID.
+     *
+     * @param view View object passed to the method, which is not utilized within the
+     * method and can be removed.
+     *
+     * View: an object representing a user interface element that can receive events such
+     * as clicks or touches.
      */
     public void createSensable(View view) {
         FragmentManager fm = getFragmentManager();
         CreateSensableFragment createSensableFragment = new CreateSensableFragment();
         createSensableFragment.setCreateSensableListener(new CreateSensableFragment.CreateSensableListener() {
             /**
-             * is called when a scheduled sensing action is confirmed. It displays a toast message
-             * with the sensor ID.
-             * 
-             * @param scheduledSensable sensor ID that will be displayed as a toast message when
-             * the `onConfirmed()` method is called.
-             * 
-             * 	- `scheduledSensable`: A `ScheduledSensable` object containing information about
-             * the sensor and its scheduled time.
-             * 	- `sensorid`: The unique identifier of the sensor.
+             * Displays a toast message with the ID of a sensor when confirmed by the user. It
+             * takes an instance of `ScheduledSensable` as input and uses the `getSensorid` method
+             * to retrieve the sensor ID. The toast is displayed for a short duration using Toast's
+             * `makeText` method.
+             *
+             * @param scheduledSensable object that triggered the confirmation event and provides
+             * access to its sensor ID through the `getSensorid()` method.
              */
             @Override
             public void onConfirmed(ScheduledSensable scheduledSensable) {
@@ -402,22 +358,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
     /**
-     * updates the current item displayed by a `ViewPager` when a tab is selected in an
-     * `ActionBar`.
-     * 
-     * @param tab selected tab that triggered the event, providing information about its
-     * position within the tabs list.
-     * 
-     * 	- `tab`: The selected tab object, containing properties such as its position
-     * (`getPosition()`), and the name or label of the tab (`getTitle()`).
-     * 
-     * @param ft FragmentTransaction object, which is used to manage the fragments displayed
-     * by the ViewPager control.
-     * 
-     * 	- `tab`: The selected tab object containing information about the current tab
-     * selection, such as its position and title.
-     * 	- `viewPager`: A reference to the view pager widget that displays fragments based
-     * on the selected tab.
+     * Switches to a specific fragment when an action bar tab is selected, based on the
+     * tab's position. It sets the current item of a view pager to match the selected
+     * tab, effectively displaying the corresponding fragment.
+     *
+     * @param tab selected ActionBar Tab, which is used to determine the position of the
+     * tab and subsequently set the current item in the ViewPager.
+     *
+     * @param ft FragmentTransaction object that manages the addition or removal of
+     * fragments from the activity's layout, allowing for dynamic changes to be made to
+     * the UI.
      */
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -427,21 +377,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     /**
-     * is called when a tab is unselected from an action bar. It does not perform any
-     * specific task and is typically used for cleanup or customization purposes.
-     * 
-     * @param tab Tab that was just selected or deselected, providing information about
-     * its current state.
-     * 
-     * 	- `tab`: The unselected tab for which the onTabUnselected method was called. It
-     * has various attributes such as `getTag()`, `getTitle()`, and `getIcon()`.
-     * 
-     * @param ft FragmentTransaction object that provides the necessary methods for
-     * managing and updating the fragments associated with the action bar.
-     * 
-     * 	- `tab`: Represents the tab that was unselected.
-     * 	- `ft`: Stands for Fragment Transaction, which contains information regarding the
-     * fragments involved in the transaction.
+     * Specifies actions to be performed when a tab is unselected in an Android application's
+     * ActionBar. This method is part of a callback interface and overrides a default
+     * implementation, allowing customization of the tab selection process. No specific
+     * actions are defined for this tab.
+     *
+     * @param tab Action Bar Tab that is being unselected and provides information about
+     * its configuration and state.
+     *
+     * @param ft FragmentTransaction object that is used to manage changes to the fragment's
+     * state.
      */
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
@@ -449,19 +394,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     /**
-     * is called when a previously selected tab is re-selected in the action bar. It has
-     * no opemon functionality and simply ignores the event.
-     * 
-     * @param tab Tab that was reselected.
-     * 
-     * 	- `tab`: A `Tab` object that represents the tab being reselected. It has various
-     * attributes such as its label, icon, and fragment.
-     * 
-     * @param ft transaction that is being performed when the tab is reselected.
-     * 
-     * 	- `tab`: The selected tab that triggered the event.
-     * 	- `ft`: A fragment transaction object containing information about the fragments
-     * involved in the transaction, such as their IDs and the current state of the fragments.
+     * Handles the event when a tab is reselected within an action bar. It receives the
+     * selected tab and a fragment transaction as parameters, but does not perform any
+     * specific actions or operations.
+     *
+     * @param tab ActionBar.Tab object that was just reselected by the user and is passed
+     * to this method for processing.
+     *
+     * @param ft FragmentTransaction object that allows to commit or reverse operations
+     * on fragment's state.
      */
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
