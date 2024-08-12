@@ -19,10 +19,10 @@ import java.net.CookiePolicy;
  * Created by simonmadine on 12/07/2014.
  */
 /**
- * is responsible for handling user authentication and settings retrieval in an Android
- * application. It provides functions to login, logout, retrieve user settings, and
- * save the user's information to preferences. Additionally, it offers methods to
- * delete the saved user information and update the login status.
+ * Is responsible for handling user authentication and settings retrieval in an Android
+ * application. It provides functionality to login, logout, retrieve user settings,
+ * save user information to preferences, and delete saved user information. The class
+ * utilizes Retrofit library for making HTTP requests and managing user data.
  */
 public class SensableUser {
 
@@ -57,10 +57,11 @@ public class SensableUser {
     }
 
     /**
-     * retrieves user information from shared preferences and sets it to a `User` object,
-     * returning `true` if successful or `false` otherwise.
-     * 
-     * @returns a boolean value indicating whether the user is logged in or not.
+     * Retrieves username, email, and access token from shared preferences and sets them
+     * on a user object. If any of these values are missing, it returns `false`, otherwise,
+     * it returns `true`.
+     *
+     * @returns a boolean value indicating user login status.
      */
     private boolean readUserFromPreferences() {
         String username = sharedPreferences.getString(context.getString(R.string.saved_username), "");
@@ -85,78 +86,39 @@ public class SensableUser {
     }
 
     /**
-     * takes a `UserLogin` object and a `CallbackInterface` object as inputs, calls the
-     * service's login method to authenticate the user, and updates the user's data and
-     * saves it to preferences upon success.
-     * 
-     * @param userLogin UserLogin object containing the login credentials of the user to
-     * be authenticated.
-     * 
-     * 	- `userLogin`: This is an instance of the `UserLogin` class, which contains
-     * information about the user attempting to log in.
-     * 	+ `username`: The username of the user attempting to log in.
-     * 	+ `email`: The email address of the user attempting to log in.
-     * 
-     * The function call is made to the `service` object's `login` method, passing in
-     * `userLogin` and a callback interface `cb`. The callback interface has two methods:
-     * `success` and `failure`.
-     * 
-     * In the `success` method, if the login attempt is successful, the `User` object's
-     * properties are set to the deserialized response data, including the `username` and
-     * `email`. Additionally, the `loggedIn` flag is set to `true`, and the `accessToken`
-     * property is set to the `accessToken` property of the `User` object. Finally, the
-     * `saveUserToPreferences()` method is called to save the user's data to preferences.
-     * 
-     * In the `failure` method, an error message is logged to the console if the login
-     * attempt fails.
-     * 
-     * @param cb `CallbackInterface` that will receive updates on the login status.
-     * 
-     * The `CallbackInterface cb` is an interface with two methods: `loginStatusUpdate(loggedIn)`
-     * and `failure(RetrofitError retrofitError)`. The `loginStatusUpdate` method is
-     * invoked when the login callback is successful, and it takes a boolean parameter
-     * `loggedIn` indicating whether the user is logged in or not. The `failure` method
-     * is invoked when there is an error during the login process, and it takes a
-     * `RetrofitError` object as its parameter.
+     * Initiates a login process using an authentication service and notifies a callback
+     * interface when completed. It sets user preferences, updates the login status, and
+     * persists user data if successful, or logs an error message if not.
+     *
+     * @param userLogin user's login credentials to be sent to the authentication service
+     * for processing and verification.
+     *
+     * - The object `UserLogin` has a username and a password as its main properties.
+     *
+     * @param cb CallbackInterface of the MainActivity, which is notified about the login
+     * status update using the `loginStatusUpdate(loggedIn)` method.
+     *
+     * - `CallbackInterface`: This is an interface with a single method `loginStatusUpdate(loggedIn)`.
      */
     public void login(UserLogin userLogin, final MainActivity.CallbackInterface cb) {
 
         service.login(userLogin, new Callback<User>() {
             /**
-             * handles a successful login callback from the authentication service. It sets the
-             * user's username, email, and access token (if available), updates the user's
-             * preferences, and notifies the login status update to the callback interface.
-             * 
-             * @param user login result, containing the user's username and email address.
-             * 
-             * 	- `username`: The username of the user.
-             * 	- `email`: The email address of the user.
-             * 	- `accessToken`: An access token for the user.
-             * 
-             * The `mUser` object is set to the deserialized `user` object, and various attributes
-             * of `mUser` are updated. Additionally, a call to `saveUserToPreferences()` is made
-             * to persist the user's data to preferences. Finally, the login status is updated
-             * using `cb.loginStatusUpdate(loggedIn)`.
-             * 
-             * @param response response from the login API, which provides the user's authentication
-             * information.
-             * 
-             * 	- `user`: A `User` object representing the authenticated user.
-             * 	- `accessToken`: The access token obtained from the authentication process, which
-             * can be used for further requests.
-             * 
-             * The function performs the following actions:
-             * 
-             * 1/ Logs a message to the debug log with the username of the successfully authenticated
-             * user.
-             * 2/ Sets the `username` and `email` properties of the `mUser` object to those of
-             * the `user` object.
-             * 3/ Sets the `loggedIn` property of the `mUser` object to `true`.
-             * 4/ Checks if an access token was obtained and, if so, sets the `accessToken`
-             * property of the `mUser` object to the obtained value.
-             * 5/ Calls the `saveUserToPreferences()` function to save the `mUser` object to user
-             * preferences.
-             * 6/ Updates the login status in the caller with the newly set `loggedIn` property.
+             * Updates a local user object with username and email from a response, sets login
+             * status to true, retrieves an access token if present, saves it to preferences or
+             * proceeds to settings otherwise, and notifies a callback about the login status update.
+             *
+             * @param user authenticated user, providing access to their username, email, and
+             * access token, which are then used to update the local user object and preferences.
+             *
+             * Decompose user into:
+             * username and email.
+             *
+             * @param response callback response from the login request, which is not utilized
+             * within the provided method implementation.
+             *
+             * GetContent: The content returned by the request; getRawBody: Returns an input
+             * stream for reading the raw response body.
              */
             @Override
             public void success(User user, Response response) {
@@ -182,14 +144,12 @@ public class SensableUser {
             }
 
             /**
-             * is called when a login request fails, and it logs an error message to the console
-             * using the `Log.e()` method.
-             * 
-             * @param retrofitError error that occurred during the login callback, which is then
-             * logged with a message indicating the nature of the error.
-             * 
-             * 	- `toString()`: Returns a string representation of the error object, which can
-             * be used for logging or display to the user.
+             * Handles failures when making a request using Retrofit. It logs an error message
+             * to the console with the provided Retrofit error, indicating that the login attempt
+             * has failed. The error details are included in the log output.
+             *
+             * @param retrofitError error that occurred during the execution of the Retrofit API
+             * request.
              */
             @Override
             public void failure(RetrofitError retrofitError) {
@@ -199,33 +159,29 @@ public class SensableUser {
     }
 
     /**
-     * sets user's settings by calling API with given username and returns access token
-     * if successful.
+     * Retrieves user settings from a service and updates a local user object with the
+     * received information. It saves the updated user details to preferences if an access
+     * token is provided, indicating successful login. It also handles error cases by
+     * logging error messages to the console.
      */
     public void userSettings() {
 
         service.settings(mUser.getUsername(), new Callback<User>() {
             /**
-             * handles the callback response from the login API, updates the user object with the
-             * received information, and saves it to preferences if an access token is provided.
-             * 
-             * @param user authenticated user returned by the authentication service, providing
-             * the user's username and email address, as well as an access token if available.
-             * 
-             * 	- `username`: The username of the user.
-             * 	- `email`: The email address of the user.
-             * 	- `accessToken`: The access token of the user.
-             * 
-             * @param response result of the login API call, providing the user's authentication
-             * status and other relevant information.
-             * 
-             * 	- `user`: A `User` object representing the user who has successfully logged in.
-             * 	- `accessToken`: The access token obtained through the login process, which can
-             * be used for further authenticated API requests.
-             * 
-             * The function then updates the `mUser` field with the values of `user`, sets
-             * `loggedIn` to `true`, and saves the user details to the preferences file if
-             * `hasAccessToken` is set to `true`.
+             * Updates local user information with data from a successful login response, sets
+             * the `loggedIn` flag to `true`, and saves the user's access token if present. It
+             * also logs various success messages using `Log.d`. The updated user details are
+             * then saved to preferences.
+             *
+             * @param user authenticated user, providing access to their username, email, and
+             * access token, which are then used to update local user data and preferences.
+             *
+             * User has username, email and access token.
+             *
+             * @param response result of an API request and is ignored in this method, as it is
+             * not utilized for any operations.
+             *
+             * * The response object has no further decomposition.
              */
             @Override
             public void success(User user, Response response) {
@@ -247,17 +203,12 @@ public class SensableUser {
             }
 
             /**
-             * is called when a Retrofit error occurs during the login callback. It logs an error
-             * message to the console using the `Log.e()` method, including the error details in
-             * the message.
-             * 
-             * @param retrofitError error object generated by the Retrofit API call, which contains
-             * information about the failure of the login callback.
-             * 
-             * 	- `retrofitError.message`: String value representing the error message in
-             * human-readable form.
-             * 	- `retrofitError.statusCode`: Integer value representing the HTTP status code
-             * associated with the error, if applicable.
+             * Logs an error message with a Retrofit error and the tag `TAG`. It is called when
+             * a login request fails. The error message includes information about the Retrofit
+             * error, which can be used for debugging purposes.
+             *
+             * @param retrofitError exception that occurred during the Retrofit call execution
+             * and is passed to the `failure` method for logging or further error handling purposes.
              */
             @Override
             public void failure(RetrofitError retrofitError) {
@@ -267,8 +218,8 @@ public class SensableUser {
     }
 
     /**
-     * saves user information to shared preferences, including username, email, and access
-     * token.
+     * Logs user information to the debug log and saves it to shared preferences,
+     * specifically storing username, email, and access token.
      */
     private void saveUserToPreferences() {
         Log.d(TAG, "Saving: " + mUser.getUsername() + ", " + mUser.getEmail() + ", " + mUser.getAccessToken());
@@ -280,15 +231,15 @@ public class SensableUser {
     }
 
     /**
-     * removes saved user information from SharedPreferences and updates login status,
-     * access token, and user data to empty values.
-     * 
-     * @param cb CallbackInterface, which is an interface that provides a method for
-     * updating the login status of the user after the save operation is completed.
-     * 
-     * 	- `CallbackInterface cb`: This is an interface that provides methods for updating
-     * the login status of the user. It has one method, `loginStatusUpdate`, which takes
-     * a boolean parameter indicating whether the user is logged in or not.
+     * Removes stored user data from SharedPreferences, resets `mUser`, `loggedIn`, and
+     * `hasAccessToken` variables to default values, and notifies the callback interface
+     * about the updated login status by calling `loginStatusUpdate(loggedIn)`.
+     *
+     * @param cb CallbackInterface, which is used to update the login status with the
+     * callback method `loginStatusUpdate(loggedIn)`.
+     *
+     * Cb is an instance of `MainActivity.CallbackInterface`. It has a method named
+     * `loginStatusUpdate` with one argument of boolean type.
      */
     public void deleteSavedUser(final MainActivity.CallbackInterface cb) {
         SharedPreferences.Editor editor = sharedPreferences.edit();

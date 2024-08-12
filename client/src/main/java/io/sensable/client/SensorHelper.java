@@ -6,24 +6,24 @@ import android.hardware.Sensor;
  * Created by madine on 16/07/14.
  */
 /**
- * provides a way to determine the type of sensor based on its name, and return an
- * appropriate image resource for that sensor. The class includes methods to determine
- * the image for different types of sensors, such as accelerometer, magnetic field,
- * orientation, light, pressure, proximity, gravity, linear acceleration, rotation,
- * humidity, temperature, and CO2.
+ * Provides utility functions to determine the unit of measurement for various sensors
+ * and retrieve corresponding image resources based on sensor types. It contains three
+ * main functions: `determineUnit` which returns the unit of measurement,
+ * `determineImage(int)` which retrieves an integer representing a drawable resource
+ * ID for a given sensor type, and `determineImage(String)` which does the same but
+ * takes a string parameter.
  */
 public class SensorHelper {
 
     /**
-     * takes an integer input parameter representing a sensor type, and returns a string
-     * indicating the appropriate unit for that sensor type.
-     * 
-     * @param sensorType 16-bit value of the sensor type, which determines the unit of
-     * measurement for the accelerometer, magnetic field, gyroscope, light, pressure,
-     * proximity, gravity, linear acceleration, rotation vector, orientation, relative
-     * humidity, ambient temperature, or uncalibrated magnetic field, gyroscope, or game
-     * rotation vector output.
-     * 
+     * Takes an integer `sensorType` as input and returns a corresponding unit string for
+     * the sensor type. The function uses a switch statement to map the sensor type to
+     * its respective unit, covering various types of sensors such as accelerometer,
+     * magnetometer, gyroscope, and others.
+     *
+     * @param sensorType type of sensor being used, which determines the corresponding
+     * unit to be returned by the function.
+     *
      * @returns a string representing the unit of measurement for a given sensor type.
      */
     public static String determineUnit(int sensorType) {
@@ -81,15 +81,18 @@ public class SensorHelper {
     }
 
     /**
-     * determines an image resource based on a sensor type, using a switch statement to
-     * map the sensor type to a corresponding image resource ID.
-     * 
-     * @param sensorType 16-bit integer value returned by the Android sensor API, which
-     * determines the type of sensor data to be fetched and displayed in the `determineImage()`
-     * function.
-     * 
-     * @returns an integer representing the drawable resource ID for the corresponding
-     * sensor type.
+     * Determines which image resource to display based on the type of sensor specified
+     * by the input parameter `sensorType`. It uses a switch statement to map each sensor
+     * type to a corresponding image resource and returns the selected image.
+     *
+     * @param sensorType type of sensor and determines which corresponding image resource
+     * to be returned based on its value.
+     *
+     * @returns an integer value representing a specific sensor type.
+     *
+     * The output is an integer value representing a drawable image resource ID. The value
+     * can be one of several predefined constants such as R.drawable.type_lux,
+     * R.drawable.type_accelerometer, and so on.
      */
     public static int determineImage(int sensorType) {
 
@@ -146,14 +149,18 @@ public class SensorHelper {
     }
 
     /**
-     * determines the appropriate drawable resource for a given sensor type based on a
-     * case-insensitive match of the sensor name.
-     * 
-     * @param sensorType type of sensor, and based on its value, the function returns a
-     * different drawable resource ID for the image to be displayed.
-     * 
-     * @returns an integer representing the drawable resource ID for the corresponding
-     * sensor type.
+     * Determines an image based on a given sensor type. It converts the sensor type to
+     * lowercase and checks for various conditions, assigning a corresponding image
+     * resource ID. The function returns the determined image ID as an integer.
+     *
+     * @param sensorType type of sensor that is being used, and its value determines which
+     * image to return based on a series of conditional checks.
+     *
+     * @returns an integer value representing a drawable resource ID.
+     *
+     * The output is an integer representing a drawable image resource ID from R.drawable.
+     * The value of this integer determines which image is displayed based on the input
+     * sensorType parameter.
      */
     public static int determineImage(String sensorType) {
 
