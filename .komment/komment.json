@@ -1,12 +1,13 @@
 {
   "meta": {
     "version": "1",
-    "updated_at": "2024-08-12T20:40:50.231Z",
+    "updated_at": "2024-08-12T20:46:27.381Z",
     "created_at": "2024-08-12T18:03:18.789Z",
     "pipelines": [
       "5290e9fb-b07e-4f3a-b1dc-ade204499fa5",
       "6ce8c123-10dc-4848-87ac-c2fd538e4116",
-      "e3c5077a-79f2-4dd1-9c80-093fc7876e9c"
+      "e3c5077a-79f2-4dd1-9c80-093fc7876e9c",
+      "586cd072-1664-40b6-a86b-eabc588d477a"
     ]
   },
   "lookup": [
@@ -16,7 +17,11 @@
       "client/src/main/java/io/sensable/client/adapter/TabsPagerAdapter.java",
       "client/src/main/java/io/sensable/client/SensorHelper.java",
       "client/src/main/java/io/sensable/client/SensableUser.java",
-      "client/src/main/java/io/sensable/client/SensorListActivity.java"
+      "client/src/main/java/io/sensable/client/SensorListActivity.java",
+      "client/src/main/java/io/sensable/client/scheduler/BootReceiver.java",
+      "client/src/main/java/io/sensable/client/scheduler/ScheduledSensableService.java",
+      "client/src/main/java/io/sensable/client/scheduler/ScheduleHelper.java",
+      "client/src/main/java/io/sensable/client/settings/Config.java"
     ]
   ]
 }

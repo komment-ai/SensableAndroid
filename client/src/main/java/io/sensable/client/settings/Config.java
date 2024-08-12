@@ -11,15 +11,16 @@ package io.sensable.client.settings;
  * @author mmarcon
  */
 /**
- * provides static final strings for filenames of an SQLite database and a dump of
- * the database, as well as a version number for the database.
- * Fields:
- * 	- SENSABLE_STORAGE_DB (String): the filename of an on-disk SQLite database where
- * rule repository, item cache, and potentially other structured data will be stored.
- * 	- SENSABLE_STORAGE_DB_DUMP (String): the filename for an on-disk SQLite database
- * dump used for debugging purposes.
- * 	- SENSABLE_STORAGE_DB_VERSION (int): the current version of the SQLite database
- * used by the sensable client settings.
+ * Holds static final variables for SQLite database filename, its dump filename and
+ * version number.
+ *
+ * - SENSABLE_STORAGE_DB (String): represents the filename for an on-disk SQLite database.
+ *
+ * - SENSABLE_STORAGE_DB_DUMP (String): specifies the filename for an on-disk dump
+ * of the SQLite database used for debugging purposes.
+ *
+ * - SENSABLE_STORAGE_DB_VERSION (int): represents the current version of the SQLite
+ * database used by the sensable client settings.
  */
 public class Config {
 
