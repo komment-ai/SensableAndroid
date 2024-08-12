@@ -1,15 +1,17 @@
 {
   "meta": {
     "version": "1",
-    "updated_at": "2024-08-12T18:03:17.776Z",
+    "updated_at": "2024-08-12T19:47:47.827Z",
     "created_at": "2024-08-12T18:03:18.789Z",
     "pipelines": [
-      "5290e9fb-b07e-4f3a-b1dc-ade204499fa5"
+      "5290e9fb-b07e-4f3a-b1dc-ade204499fa5",
+      "6ce8c123-10dc-4848-87ac-c2fd538e4116"
     ]
   },
   "lookup": [
     [
-      "client/src/main/java/io/sensable/client/adapter/ExpandableListAdapter.java"
+      "client/src/main/java/io/sensable/client/adapter/ExpandableListAdapter.java",
+      "client/src/main/java/io/sensable/client/component/FontFitTextView.java"
     ]
   ]
 }
