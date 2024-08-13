@@ -30,11 +30,10 @@ import retrofit.client.Response;
 import java.util.List;
 
 /**
- * Is an Android Service that schedules and collects sensor data from various sensors
- * in the device based on a schedule. It retrieves scheduled tasks from a database,
- * registers listeners for each task, and sends the collected data to a remote service
- * for analysis. The service also handles errors, updates the scheduled sensables
- * with new sample values, and stops itself when there are no more pending tasks.
+ * Is an Android service responsible for sampling sensors based on scheduled tasks
+ * and sending sensor data to a remote server for analysis. It uses the SensorManager
+ * API to register listeners on sensors, retrieves user location using the LocationManager
+ * API, and stores user access tokens in shared preferences.
  */
 public class ScheduledSensableService extends Service {
 
@@ -44,27 +43,27 @@ public class ScheduledSensableService extends Service {
     private Sensor sensor = null;
 
     /**
-     * Registers sensor listeners for scheduled sensables, retrieves and processes data
-     * from the database, and marks sensables as pending or stops scheduling if necessary.
-     * It also logs messages and returns a sticky service start result.
+     * Initializes and starts a service that schedules sensors to monitor specific tasks
+     * based on data retrieved from a database. It registers listeners for each sensor,
+     * marks scheduled tasks as pending, and stops unnecessary scheduling processes.
      *
-     * @param intent Intent object that was used to start the service and contains any
-     * data or commands intended for the service.
+     * @param intent Intent that was used to start the service, allowing it to retrieve
+     * any data or commands that were included with the Intent when it was started.
      *
-     * intent is an instance of Intent class that contains information about action to
-     * be performed. It has three parameters - intent, flags and startId.
+     * The `intent` object has no specific deconstruction as its usage is not relevant
+     * in this context.
      *
-     * @param flags flags used to start the service, which can be one or more of the
-     * following: START_FLAG_REDELIVERY, START_FLAG_RETRY, or other flags that are not
-     * yet documented.
+     * @param flags flags associated with the start command, which can be used to control
+     * the behavior of the service's lifecycle management and interaction with other components.
      *
-     * @param startId identifier of the service instance, which can be used to restart
-     * the service if it is terminated by the system.
+     * @param startId 32-bit identifier that uniquely identifies the service, allowing
+     * it to be restarted if terminated by the system.
      *
-     * @returns a service start state code of START_STICKY.
+     * @returns a code indicating the service's status.
      *
-     * Returns START_STICKY as an integer, indicating that the service should restart
-     * itself after being stopped.
+     * The function returns an integer value indicating the state of the service's command.
+     * The START_STICKY constant is used to indicate that this service will be restarted
+     * if the system terminates it while it is in the foreground.
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -93,40 +92,47 @@ public class ScheduledSensableService extends Service {
     }
 
     /**
-     * Returns a SensorEventListener that handles sensor data by creating a sample object
-     * from the sensor values and attaching location data. It then sends the sample to a
-     * remote service for analysis, updates a Scheduled object with sensor metadata, and
-     * stops the sensor and service if no more tasks are pending.
+     * Returns a `SensorEventListener` that handles sensor data changes and saves them
+     * to a remote service for analysis. It creates a sample object, formats values,
+     * attaches location data, and updates a Scheduled object before stopping the sensor
+     * and service if no more tasks are pending.
      *
      * @param scheduledSensable Scheduled object that is updated with the sensor ID,
      * sample values, and other metadata before stopping the sensor and service if no
      * more tasks are pending.
      *
-     * Set internal sensor ID.
-     * Set unit based on sensor type.
-     * Set private sensor status to false.
-     * Set access token.
+     * - Location: double array representing longitude and latitude.
+     * - Sample: an object with timestamp, values (event.values[0]), location, and other
+     * metadata.
+     * - Sensor type: name of the sensor.
+     * - Internal Sensor ID: the type of internal sensor.
+     * - Unit: determined by SensorHelper.
+     * - Private Sensor: a boolean indicating whether it is private or not.
+     * - Access token: obtained from getUserAccessToken.
      *
-     * @returns a `SensorEventListener` object.
+     * @returns a `SensorEventListener`.
      *
-     * Returns an instance of SensorEventListener with methods to handle sensor data
-     * received from a listener and save it to a remote service for analysis. The
-     * onSensorChanged method creates a sample object, formats its values, attaches
-     * location data before sending it to the service for storage.
+     * It returns an instance of SensorEventListener, which includes two methods:
+     * onSensorChanged() and onAccuracyChanged(). The onSensorChanged() method handles
+     * sensor data received from a listener and saves it to a remote service for analysis.
+     * It creates a sample object, formats its values, and attaches location data before
+     * sending it to the service for storage.
      */
     private SensorEventListener getListener(final ScheduledSensable scheduledSensable) {
         return new SensorEventListener() {
             /**
-             * Handles changes in sensor values, updates a scheduled sensable object with sensor
-             * data and location information, and sends the updated data to a RESTful API using
-             * Retrofit for further processing or storage.
+             * Handles sensor data changes by logging the event, creating a sample object and
+             * sending it to a remote server using Retrofit, and then unregisters the sensor
+             * listener and stops the service if there are no more pending tasks.
              *
-             * @param event SensorEvent that has been changed, containing information about the
-             * sensor type and its values, which is used to update the scheduled object and send
-             * samples to the server.
+             * @param event 3D sensor data changed event, which contains information about the
+             * sensor type and its values.
              *
-             * Event has sensor type and name, which are accessed using event.sensor.getType()
-             * and event.sensor.getName(). It also contains an array of values, accessible via event.values[0].
+             * - `SensorEvent event`: The event contains sensor data and information about the
+             * sensor that triggered the event. The main properties include:
+             *   - `values`: An array of float values representing the raw sensor data.
+             *   - `sensor`: A `Sensor` object providing metadata about the sensor that triggered
+             * this event, such as its name and type.
              */
             @Override
             public void onSensorChanged(SensorEvent event) {
@@ -168,14 +174,13 @@ public class ScheduledSensableService extends Service {
                 Log.d(TAG, "Saving sample: " + event.sensor.getName() + " : " + event.values[0]);
                 service.saveSample(scheduledSensable.getSensorid(), sampleSender, new Callback<SampleResponse>() {
                     /**
-                     * Logs a debug message to the console with the tag `TAG`, indicating that a successful
-                     * post operation has been completed for a `SampleResponse`. The response object is
-                     * also passed as an argument, but not used within the function.
+                     * Logs a debug message indicating successful posting of a sample to the Android
+                     * logcat with the specified TAG.
                      *
-                     * @param success response returned by the server when the request is successful.
+                     * @param success SampleResponse object returned as a result of successful posting operation.
                      *
-                     * @param response HTTP response received from the server after successfully posting
-                     * the sample.
+                     * @param response HTTP response object that contains information about the HTTP
+                     * request, including its status code and headers.
                      */
                     @Override
                     public void success(SampleResponse success, Response response) {
@@ -183,12 +188,13 @@ public class ScheduledSensableService extends Service {
                     }
 
                     /**
-                     * Captures and logs an error that occurs when a request fails. It takes a `RetrofitError`
-                     * object as input, converts it to a string, and logs the resulting error message at
-                     * the error level with the tag `TAG`.
+                     * Logs an error message when a request made by Retrofit fails to complete successfully.
+                     * It takes a `RetrofitError` object as input, which provides information about the
+                     * failure. The error message includes the `TAG` and a string representation of the
+                     * `retrofitError`.
                      *
-                     * @param retrofitError error occurred during the request processing and provides
-                     * details about the failure, which is then logged by the function.
+                     * @param retrofitError exception or error that occurred during the execution of the
+                     * Retrofit request, providing detailed information about the failure.
                      */
                     @Override
                     public void failure(RetrofitError retrofitError) {
@@ -208,16 +214,16 @@ public class ScheduledSensableService extends Service {
             }
 
             /**
-             * Is called when the accuracy of a sensor changes. It takes two parameters: the
-             * sensor that has changed accuracy and the new accuracy value. The function does not
-             * perform any specific actions, but it provides information about the change in
-             * sensor accuracy.
+             * Monitors changes to the accuracy level of a sensor. It is triggered when the
+             * accuracy level of a sensor varies, providing information about the sensor's current
+             * accuracy status. The function takes two parameters: the sensor that has experienced
+             * an accuracy change and the new accuracy level.
              *
-             * @param sensor Sensor object that is being monitored for changes in its accuracy.
+             * @param sensor sensor whose accuracy has changed, providing information about the
+             * specific sensor being monitored.
              *
-             * @param accuracy current accuracy level of the sensor, which can be one of three
-             * values: SensorManager.SENSOR_STATUS_UNRELIABLE, SensorManager.SENSOR_STATUS_ACCURACY_HIGH,
-             * or SensorManager.SENSOR_STATUS_ACCURACY_LOW.
+             * @param accuracy level of accuracy reported by the sensor, with higher values
+             * indicating better accuracy and lower values indicating worse accuracy.
              */
             @Override
             public void onAccuracyChanged(Sensor sensor, int accuracy) {
@@ -227,14 +233,15 @@ public class ScheduledSensableService extends Service {
     }
 
     /**
-     * Returns an instance of `IBinder`, which is a reference to the interface that can
-     * be used by clients to communicate with the service. The returned object is null,
-     * indicating that no binding is being established between the client and the service.
+     * Binds a client to a specific interface of a service and returns an `IBinder` object
+     * representing that interface. This implementation returns null, indicating that the
+     * service does not provide any binding interfaces. The client will be unable to bind
+     * to this service.
      *
-     * @param intent Intent object that is being bound to the Service, providing information
-     * about the action requested by the client application.
+     * @param intent Intent object that contains the action to be performed and any
+     * additional data required for processing.
      *
-     * @returns a null instance of `IBinder`.
+     * @returns a null object of type `IBinder`.
      */
     @Override
     public IBinder onBind(Intent intent) {
@@ -243,11 +250,16 @@ public class ScheduledSensableService extends Service {
 
 
     /**
-     * Retrieves a user's access token from the device's shared preferences if they are
-     * logged in and have an access token stored. If not, it returns an empty string. It
-     * also logs various messages to the debug log for debugging purposes.
+     * Retrieves the user's access token from shared preferences if the user is logged
+     * in and has an access token. If not, it returns an empty string. The function logs
+     * debug messages with user credentials for verification purposes.
      *
-     * @returns a string representing the user's access token or an empty string.
+     * @returns either an access token or an empty string.
+     *
+     * Returns a String representing the user's access token if logged in and has an
+     * access token; otherwise, returns an empty string. The output can be further
+     * deconstructed into two possible cases: either it contains the actual access token
+     * or it is an empty string.
      */
     private String getUserAccessToken() {
         SensableUser user = new SensableUser(this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE), this);
@@ -274,11 +286,11 @@ public class ScheduledSensableService extends Service {
     }
 
     /**
-     * Retrieves the last known location from a network provider using a LocationManager.
-     * It obtains a reference to the current application context and a location manager,
-     * then requests the last known location from the network provider.
+     * Retrieves the last known location from a network provider using a Location Manager
+     * service provided by the Android system. It returns the current location, which may
+     * not be accurate or up-to-date. The result is passed as an object of type `Location`.
      *
-     * @returns a `Location` object representing the device's last known geographical position.
+     * @returns a `Location` object containing the last known location.
      */
     private Location getLocation() {
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
