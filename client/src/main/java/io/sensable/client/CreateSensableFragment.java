@@ -34,10 +34,11 @@ import java.util.List;
 
 
 /**
- * Is responsible for creating and scheduling sensables (sensors) in a Sensable API,
- * allowing users to create favorite bookmarks and receive notifications when sensory
- * data is created. It utilizes a Retrofit service to interact with the Sensable API,
- * handles callbacks, and saves sensables locally using a SQLite database.
+ * Manages the creation of new sensables and their scheduling for repeated execution
+ * at a later time. It sets up a UI with a spinner to select sensor types, a text
+ * field for inputting sensable IDs, and a button to create new sensables. Upon
+ * clicking the button, it creates a new ScheduledSensable object, schedules it, saves
+ * it locally, and displays a notification to the user.
  */
 public class CreateSensableFragment extends DialogFragment {
 
@@ -50,7 +51,7 @@ public class CreateSensableFragment extends DialogFragment {
     private CreateSensableListener createSensableListener;
 
     /**
-     * Allows for listeners to receive notifications when a scheduled sensable is confirmed.
+     * Provides a notification callback for when a scheduled sensable is confirmed.
      */
     public static interface CreateSensableListener {
         public void onConfirmed(ScheduledSensable scheduledSensable);
@@ -60,35 +61,33 @@ public class CreateSensableFragment extends DialogFragment {
     }
 
     /**
-     * Inflates a layout, retrieves a list of sensors from the device's SensorManager,
-     * and populates a Spinner with their names. It also initializes an EditText field
-     * for user input and sets up a button listener. The returned View represents the UI
-     * component of this fragment.
+     * Inflates a layout and initializes UI components for creating a sensable entity,
+     * including a spinner listing all available sensors and an edit text field for
+     * entering a unique ID. It also sets up an adapter for the sensor spinner and adds
+     * an event listener to a button.
      *
-     * @param inflater LayoutInflater object that is used to inflate the layout file
-     * R.layout.create_sensable_layout into a View.
+     * @param inflater LayoutInflater object that inflates (or creates) the layout from
+     * the resource file R.layout.create_sensable_layout into a View object.
      *
-     * Inflate is an object of type `LayoutInflater`, which takes three parameters -
-     * `context`, `viewGroup`, and `savedInstanceState`. Its main property is that it
-     * inflates a layout file into a `View` object.
+     * Inflate. The inflater is an instance of LayoutInflater.
      *
-     * @param container 2D grid or stack that the newly created view is to be added to,
-     * allowing it to be part of the user interface hierarchy.
+     * @param container 2D ViewGroup that this new View is to be added to, and serves as
+     * the parent ViewGroup for the inflated layout.
      *
-     * Container is an object of type `ViewGroup`. Its main properties include its layout
-     * parameters and the children views attached to it.
+     * Passed as a `ViewGroup`, containing the view hierarchy to be inflated into.
      *
-     * @param savedInstanceState Bundle object containing the activity's previous state,
-     * which is not used in this code.
+     * @param savedInstanceState Bundle object that contains the activity's previously
+     * frozen state from an earlier lifecycle, which is not utilized in this method.
      *
-     * Bundle object, contains data that was previously saved with ` onSaveInstanceState`.
+     * Bundle object containing the activity's state at the time that the user touches
+     * back button or presses Home key to save its state and restore later. It does not
+     * contain any specific information in this case.
      *
-     * @returns a custom dialog with a spinner and text field.
+     * @returns a View object representing the create sensable layout.
      *
-     * A View object is created by inflating the layout create_sensable_layout with null
-     * parent. The title of the dialog is set to a string resource from the activity
-     * context. A Spinner widget is populated with a list of sensor names retrieved from
-     * a SensorManager instance. An EditText widget is used to input sensable ID.
+     * The output is a `View`, which represents the layout of the dialog. The view consists
+     * of a sensor spinner and an edit text field for creating sensable objects. It also
+     * contains a title set to "dialogTitleCreateSensable" from the string resource.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -117,27 +116,27 @@ public class CreateSensableFragment extends DialogFragment {
     }
 
     /**
-     * Assigns a specified instance to a private field. It takes an object of type
-     * `CreateSensableListener` as its parameter and updates the internal state by setting
-     * it equal to the received value.
+     * Assigns a specified `CreateSensableListener` object to an instance variable,
+     * allowing other parts of the program to interact with it as needed. This enables
+     * event handling or notification mechanisms within the class. The assigned listener
+     * is responsible for responding to events triggered by this class.
      *
-     * @param createSensableListener object to be assigned as the listener for creating
-     * sensable events.
+     * @param createSensableListener listener to be set for creating sensable entities,
+     * which is stored as an instance variable of the class.
      */
     public void setCreateSensableListener(CreateSensableListener createSensableListener) {
         this.createSensableListener = createSensableListener;
     }
 
     /**
-     * Creates a new scheduled sensable object and sets its sensor ID based on user input
-     * from a spinner. It then schedules the sensable using a listener, creates a bookmark
-     * for it, and dismisses the fragment.
+     * Creates a new scheduled sensable object based on user input and schedules it using
+     * a listener, creates a bookmark for the sensable, and dismisses the fragment. It
+     * also handles Retrofit errors and displays error messages to the user.
      *
-     * @param view View that was clicked, providing the event trigger for the function
-     * to execute.
+     * @param view View object that contains the submit button and sensor spinner, allowing
+     * the code to find and manipulate these views within the method.
      *
-     * • sensorSpinner: A Spinner object that is found by its ID in the view.
-     * • submitButton: A Button object that is found by its ID in the view.
+     * Find: `sensorSpinner`, `submitButton`.
      */
     public void addListenerOnButton(View view) {
 
@@ -148,14 +147,20 @@ public class CreateSensableFragment extends DialogFragment {
         submitButton.setOnClickListener(new View.OnClickListener() {
 
             /**
-             * Creates a new scheduled sensable and its corresponding bookmark when a user clicks
-             * a button, provided that a sensable ID is entered. The function interacts with a
-             * RESTful API to create the objects and save them, also handling errors if they occur.
+             * Creates a scheduled sensable object and schedules it, then creates a favorite
+             * bookmark. It retrieves sensor ID from spinner, location from last known location,
+             * and unit from SensorHelper. The function uses Retrofit to create the sensable
+             * object and schedule it.
              *
-             * @param v View that triggered the onClick event, which is not used explicitly in
-             * this function.
+             * @param v View object that triggered the onClick event, which is not used in this
+             * function.
              *
-             * View v: A View object passed as an argument to this method.
+             * View v - An object representing the View that was clicked. The main properties include:
+             *
+             * - getId(): Returns the unique integer ID of the view.
+             * - getClass(): Returns the runtime class of this Object.
+             * - hashCode(): Returns a hash code value for the object.
+             * - toString(): Returns a string representation of the object.
              */
             @Override
             public void onClick(View v) {
@@ -193,18 +198,22 @@ public class CreateSensableFragment extends DialogFragment {
 
                     service.createSensable(sensable, new Callback<SampleResponse>() {
                         /**
-                         * Processes a successful callback response by logging the result and setting IDs for
-                         * sensors. It schedules the sensable, creates a favourite bookmark, and triggers an
-                         * onConfirmed event before dismissing the current view.
+                         * Logs a callback success message and updates sensor IDs for two objects. It then
+                         * schedules an object creation, notifies a listener about confirmation, and dismisses
+                         * the current state.
                          *
-                         * @param sampleResponse response from the service that contains data to be processed,
-                         * such as the sensor ID and message.
+                         * @param sampleResponse response returned by the service that contains the sensor
+                         * ID and message, which is then used to set the sensor ID for the sensable objects
+                         * and log the callback success.
                          *
-                         * Has a getter for message and sensorid.
+                         * Get the message from the response and log it;
+                         * Extract sensorid from sampleResponse.
                          *
-                         * @param response response from the service and is not used within the method.
+                         * @param response response from the service call and is not used explicitly within
+                         * the method.
                          *
-                         * It has no significant properties mentioned in the provided code snippet.
+                         * The `response` has no direct explanation, as it is not explicitly utilized within
+                         * this method.
                          */
                         @Override
                         public void success(SampleResponse sampleResponse, Response response) {
@@ -221,12 +230,11 @@ public class CreateSensableFragment extends DialogFragment {
                         }
 
                         /**
-                         * Handles errors that occur during a Retrofit request. It logs an error message with
-                         * a tag and displays a toast notification to the user with a custom error message
-                         * when the request fails.
+                         * Handles an error occurred during a Retrofit request, logs the error and displays
+                         * a toast message to the user with a failure message "Could not create that Sensable".
                          *
-                         * @param retrofitError Retrofit error object that provides information about the
-                         * failure of the request.
+                         * @param retrofitError error that occurred during the Retrofit request and provides
+                         * information about the failure.
                          */
                         @Override
                         public void failure(RetrofitError retrofitError) {
@@ -246,10 +254,11 @@ public class CreateSensableFragment extends DialogFragment {
     }
 
     /**
-     * Retrieves a user's access token from preferences if they are logged in and have
-     * an existing token. If not, it returns an empty string.
+     * Retrieves a user's access token from shared preferences if they are logged in and
+     * have an existing token. If not, it returns an empty string. It logs debug messages
+     * for the preference file key, saved username, and access token to the console.
      *
-     * @returns a valid access token or an empty string.
+     * @returns either an existing user's access token or an empty string.
      */
     private String getUserAccessToken() {
         SensableUser user = new SensableUser(getActivity().getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE), getActivity());
@@ -277,20 +286,20 @@ public class CreateSensableFragment extends DialogFragment {
 
 
     /**
-     * Attempts to create a scheduled entry for a `Sensable` object and a local bookmark.
-     * It uses a `ScheduleHelper` to add the `Sensable` to the scheduler, starts the
-     * scheduler if necessary, and then saves the `Sensable` locally.
+     * Creates a scheduled entry for a given `sensable` object using an instance of
+     * `ScheduleHelper`. It adds the sensable to the scheduler, starts it if necessary,
+     * and saves a local bookmark to the sensable. The function returns a boolean indicating
+     * success or failure.
      *
-     * @param scheduledSensable scheduled entry to be added to the scheduler.
+     * @param scheduledSensable object that is being scheduled and added to the scheduler,
+     * facilitating the creation of a schedule entry.
      *
-     * ScheduledSensable has no separate explanation since there's nothing more to add
-     * about its properties.
+     * Has properties of type.
      *
-     * @param sensable object to be created as a schedule entry and saved as a local bookmark.
+     * @param sensable object that is being saved and added to the scheduler, which
+     * requires a corresponding local bookmark to be created.
      *
-     * Sensable has no explicitly declared properties, as it appears to be an object that
-     * is passed in through the method parameters. However, its type suggests it may have
-     * properties related to sensing or sensibility.
+     * Deserialized and stored in a Sensable object, its main properties include:
      *
      * @returns a boolean value indicating success or failure.
      */
@@ -313,14 +322,15 @@ public class CreateSensableFragment extends DialogFragment {
     }
 
     /**
-     * Inserts a new sensable object into the SQLite database by serializing it and using
-     * it as ContentValues, then inserting it into the SensableContentProvider's CONTENT_URI
-     * through the ContentResolver.
+     * Inserts a new Sensable object into the SQLite database using the ContentResolver's
+     * insert method. It serializes the Sensable object into ContentValues and then inserts
+     * these values into the user dictionary content URI, returning true upon successful
+     * insertion.
      *
-     * @param sensable object that needs to be saved, which is serialized into ContentValues
-     * for subsequent insertion into the SQLite database.
+     * @param sensable object that is being serialized and inserted into a SQLite database
+     * via the `ContentResolver` interface.
      *
-     * @returns a boolean value indicating successful insertion into the database.
+     * @returns a boolean value indicating successful insertion of data into SQLite database.
      */
     private boolean saveSensable(Sensable sensable) {
         ContentValues mNewValues = SavedSensablesTable.serializeSensableForSqlLite(sensable);
@@ -333,17 +343,17 @@ public class CreateSensableFragment extends DialogFragment {
     }
 
     /**
-     * Searches for a sensor with a given name in a list and returns its type if found,
-     * or -1 if not. It iterates through the list and checks each sensor's name against
-     * the provided name, returning the first match.
+     * Retrieves an object representing a sensor from a list based on its name, and then
+     * returns the type of that sensor if found; otherwise, it returns -1. It iterates
+     * through the list to find a match for the given sensor name.
      *
-     * @param sensorName name of a sensor for which an object from the `sensorList` needs
-     * to be found and its type returned.
+     * @param sensorName name of the sensor to be searched for in the `sensorList`,
+     * allowing the function to retrieve its corresponding type.
      *
-     * @returns an integer value representing the type of a sensor or -1 if not found.
+     * @returns an integer value representing the sensor type.
      *
-     * The output is an integer, representing the type of the chosen sensor. If no matching
-     * sensor name is found in the list, -1 is returned as a default value.
+     * The output is an integer value representing the sensor ID or -1 if no matching
+     * sensor name is found in the list.
      */
     private int getSensorId(String sensorName) {
         Sensor chosenSensor = null;
@@ -360,10 +370,8 @@ public class CreateSensableFragment extends DialogFragment {
     }
 
     /**
-     * Retrieves the last known location using a network provider. It first obtains a
-     * reference to the location manager service and then requests the last known location
-     * from the specified provider. The obtained location is returned as an object of
-     * type `Location`.
+     * Retrieves the last known location from a network provider using a location manager,
+     * which is obtained through the activity's system service.
      *
      * @returns a `Location` object representing the last known location.
      */
