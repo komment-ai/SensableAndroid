@@ -20,10 +20,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
- * Extends Activity and provides functionality to retrieve sample count from sensable.io
- * via Rest API and display it in a text view. It also sets formatted text from a
- * resource string in another text view. The loadStatistics method is responsible for
- * fetching the statistics.
+ * Is designed to display about page information and load statistics from a Rest API
+ * endpoint. It extends Android's Activity class and uses Retrofit for making HTTP
+ * requests. The activity loads text from HTML strings and displays it in a TextView,
+ * while also loading sample count data that is displayed on the same view.
  */
 public class AboutActivity extends Activity {
     private static final String TAG = AboutActivity.class.getSimpleName();
@@ -31,16 +31,18 @@ public class AboutActivity extends Activity {
     private TextView statistics;
 
     /**
-     * Sets the layout, retrieves a TextView by ID, formats HTML text, and displays it
-     * on the screen. It also loads statistics and assigns them to another TextView. This
-     * is a typical initialization method for an Android activity.
+     * Initializes the "About" activity by inflating its layout, populating a text view
+     * with formatted HTML content, and loading statistics data from an unspecified method.
+     * The function also retrieves a string resource for display in the text view.
      *
-     * @param savedInstanceState Bundle object that contains the activity's saved state
-     * from a previous invocation of its lifecycle methods.
+     * @param savedInstanceState Bundle object that contains the data of all the saved
+     * instances when an activity is recreated, typically after a configuration change
+     * or process death.
      *
-     * Bundle contains key-value pairs to preserve instance state across process death.
-     * It includes data about fragments that were previously added and removed, as well
-     * as other relevant details.
+     * Bundle savedInstanceState has one primary property - its key-value pair mapping.
+     * This mapping associates keys with saved values such as states or data. The Bundle's
+     * primary purpose is to persist and restore state information across application
+     * lifecycle events.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +61,9 @@ public class AboutActivity extends Activity {
     }
 
     /**
-     * Loads statistics from a REST API and updates a text view with the count of samples
-     * processed. It handles successful responses by logging the count and updating the
-     * text view, and failure cases by logging errors and hiding the text view.
+     * Retrieves statistics from a remote service via HTTP requests, logging successful
+     * responses and displaying the count to the user, while handling failures by logging
+     * errors and hiding the view.
      */
     private void loadStatistics() {
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -73,15 +75,18 @@ public class AboutActivity extends Activity {
 
         service.getStatistics(new Callback<Statistics>() {
             /**
-             * Logs a debug message and updates the UI component `statistics` with the count from
-             * the received `Statistics` object, formatted as a string. The format includes the
-             * count and a text describing the data source "sensable.io".
+             * Displays a message and updates a UI component with data from a statistics response.
+             * The message logs the count to the console, while the component displays the formatted
+             * count alongside a string. The formatting uses the locale's default number format.
              *
-             * @param statisticsResponse response object that contains the count of samples from
-             * the API, which is then used to set the text of a UI component named `statistics`.
+             * @param statisticsResponse response from a server call, containing statistical data
+             * such as the count of samples.
              *
-             * @param response response object that contains the result of the request, but its
-             * content is not used within the method.
+             * Retrieves statistical data from the server and updates UI with the count of samples.
+             * Formats the count of samples for display using NumberFormat.
+             *
+             * @param response response object from an API call, but its value is not used within
+             * the function.
              */
             @Override
             public void success(Statistics statisticsResponse, Response response) {
@@ -91,13 +96,12 @@ public class AboutActivity extends Activity {
             }
 
             /**
-             * Logs an error message to the console when a callback request fails. It also hides
-             * a UI component named `statistics`. The function is part of a class that handles
-             * API requests using Retrofit, and it deals with exceptions or errors that occur
-             * during the request process.
+             * Logs an error message when a Retrofit request fails, including details about the
+             * error. It then hides a view named `statistics`. The failure handling is triggered
+             * by a callback mechanism in the Retrofit library.
              *
-             * @param retrofitError error that occurred during the network request, providing
-             * information about the failure such as the HTTP status code and any error message.
+             * @param retrofitError error that occurred during the Retrofit request and provides
+             * information about the failure.
              */
             @Override
             public void failure(RetrofitError retrofitError) {
