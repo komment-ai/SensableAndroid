@@ -20,10 +20,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
- * Is designed to display about page information and load statistics from a Rest API
- * endpoint. It extends Android's Activity class and uses Retrofit for making HTTP
- * requests. The activity loads text from HTML strings and displays it in a TextView,
- * while also loading sample count data that is displayed on the same view.
+ * Displays information about the application, including a formatted text view and
+ * retrieves sample count from sensable.io via Rest API.
  */
 public class AboutActivity extends Activity {
     private static final String TAG = AboutActivity.class.getSimpleName();
@@ -31,18 +29,16 @@ public class AboutActivity extends Activity {
     private TextView statistics;
 
     /**
-     * Initializes the "About" activity by inflating its layout, populating a text view
-     * with formatted HTML content, and loading statistics data from an unspecified method.
-     * The function also retrieves a string resource for display in the text view.
+     * Initializes the activity's layout and displays formatted text from a string resource,
+     * along with loading additional statistics.
      *
-     * @param savedInstanceState Bundle object that contains the data of all the saved
-     * instances when an activity is recreated, typically after a configuration change
-     * or process death.
+     * @param savedInstanceState bundle of information previously saved by the activity,
+     * allowing it to restore its state after being destroyed.
      *
-     * Bundle savedInstanceState has one primary property - its key-value pair mapping.
-     * This mapping associates keys with saved values such as states or data. The Bundle's
-     * primary purpose is to persist and restore state information across application
-     * lifecycle events.
+     * Destructure `savedInstanceState` into its main properties:
+     * - `boolean isRestored`
+     * - `Bundle` `state`
+     * - `ClassLoader` `loader`
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +57,8 @@ public class AboutActivity extends Activity {
     }
 
     /**
-     * Retrieves statistics from a remote service via HTTP requests, logging successful
-     * responses and displaying the count to the user, while handling failures by logging
-     * errors and hiding the view.
+     * retrieves sample count from sensable.io via Rest API and updates a label with the
+     * count.
      */
     private void loadStatistics() {
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -75,18 +70,26 @@ public class AboutActivity extends Activity {
 
         service.getStatistics(new Callback<Statistics>() {
             /**
-             * Displays a message and updates a UI component with data from a statistics response.
-             * The message logs the count to the console, while the component displays the formatted
-             * count alongside a string. The formatting uses the locale's default number format.
-             *
-             * @param statisticsResponse response from a server call, containing statistical data
-             * such as the count of samples.
-             *
-             * Retrieves statistical data from the server and updates UI with the count of samples.
-             * Formats the count of samples for display using NumberFormat.
-             *
-             * @param response response object from an API call, but its value is not used within
-             * the function.
+             * is called when the Statistics callback is successful. It logs the number of samples
+             * retrieved to the log cat and sets the text view to display the number of samples.
+             * 
+             * @param statisticsResponse count of samples successfully processed by the Statistics
+             * service, which is returned as an integer value in the success callback function.
+             * 
+             * * `getCount()`: This method returns the total number of samples in the response.
+             * * `Statistics`: This class represents the statistics of the samples, including the
+             * total count and other relevant information.
+             * 
+             * @param response response object that is passed to the `success` method as an
+             * argument, providing additional information about the callback execution result.
+             * 
+             * The input `response` is of type `Response`, which contains information about the
+             * success or failure of the API call.
+             * The `Statistics` object `statisticsResponse` returned by the API is stored in a
+             * variable named `statistics`.
+             * The `count` property of `statisticsResponse` is accessed using the dot notation,
+             * and its value is formatted using `NumberFormat.getInstance()` and appended to a
+             * text view named `textView`.
              */
             @Override
             public void success(Statistics statisticsResponse, Response response) {
@@ -96,12 +99,15 @@ public class AboutActivity extends Activity {
             }
 
             /**
-             * Logs an error message when a Retrofit request fails, including details about the
-             * error. It then hides a view named `statistics`. The failure handling is triggered
-             * by a callback mechanism in the Retrofit library.
-             *
-             * @param retrofitError error that occurred during the Retrofit request and provides
-             * information about the failure.
+             * handles callback failures by logging an error message and making the `statistics`
+             * view invisible.
+             * 
+             * @param retrofitError error message that occurs when a callback fails, and it is
+             * logged with a tag and its toString method is called to obtain a human-readable
+             * string representation of the error.
+             * 
+             * * `toString()`: Returns a string representation of the error object, which can be
+             * used for debugging or logging purposes.
              */
             @Override
             public void failure(RetrofitError retrofitError) {
