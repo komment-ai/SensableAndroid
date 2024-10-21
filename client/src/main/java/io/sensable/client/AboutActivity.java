@@ -19,11 +19,27 @@ import retrofit.client.Response;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
+/**
+ * Displays information about the application, including a formatted text view and
+ * retrieves sample count from sensable.io via Rest API.
+ */
 public class AboutActivity extends Activity {
     private static final String TAG = AboutActivity.class.getSimpleName();
 
     private TextView statistics;
 
+    /**
+     * Initializes the activity's layout and displays formatted text from a string resource,
+     * along with loading additional statistics.
+     *
+     * @param savedInstanceState bundle of information previously saved by the activity,
+     * allowing it to restore its state after being destroyed.
+     *
+     * Destructure `savedInstanceState` into its main properties:
+     * - `boolean isRestored`
+     * - `Bundle` `state`
+     * - `ClassLoader` `loader`
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

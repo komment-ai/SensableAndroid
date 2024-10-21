@@ -15,9 +15,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 /**
- * is responsible for managing data related to scheduled sensables. It provides
- * functions for querying, inserting, updating, and deleting data in the database.
- * The provider also handles notifications of changes to the data.
+ * Provides CRUD (Create, Read, Update, Delete) operations for managing scheduled
+ * sensables in a SQLite database. It extends the ContentProvider class and implements
+ * the necessary methods to interact with the database. The provider uses a UriMatcher
+ * to match incoming URIs and perform the corresponding operations on the database.
  */
 public class ScheduledSensableContentProvider extends ContentProvider {
 
@@ -43,10 +44,11 @@ public class ScheduledSensableContentProvider extends ContentProvider {
     private SensableDatabaseHelper dbHelper;
 
     /**
-     * retrieves a database helper instance and logs its details to the console.
-     * 
-     * @returns a message indicating the successful creation of a database helper object
-     * and its associated log entry.
+     * Initializes a database helper object from the context and logs its string
+     * representation to the debug log. It then returns `false`, indicating that the
+     * activity has not been successfully created.
+     *
+     * @returns a log message with the string representation of the `SensibleDatabaseHelper`.
      */
     @Override
     public boolean onCreate() {
@@ -56,78 +58,39 @@ public class ScheduledSensableContentProvider extends ContentProvider {
     }
 
     /**
-     * queries the scheduled sensables table based on a given URI and filters the results
-     * using a selection clause. It returns a cursor object representing the result set.
-     * 
-     * @param uri URI that the query will be executed for, and it is used to determine
-     * which table to query and which rows to retrieve.
-     * 
-     * 	- `sURIMatcher.match(uri)` returns an integer value that identifies the URI type,
-     * which is used to switch between different queries.
-     * 	- `ScheduledSensablesTable.NAME` refers to the name of the table in the database
-     * where scheduled sensibles are stored.
-     * 	- `ScheduledSensablesTable.COLUMN_SENSABLE_ID` and `ScheduledSensablesTable.COLUMN_PENDING`
-     * refer to specific columns in the `ScheduledSensablesTable`.
-     * 	- `projection` is an array of strings that specify which columns from the table
-     * are needed in the cursor returned by the function.
-     * 	- `selection` is a string that specifies a condition for filtering the rows in
-     * the table, based on the values in the specified columns.
-     * 	- `selectionArgs` is an array of strings that contain the actual values to be
-     * used in the selection clause.
-     * 	- `sortOrder` is a string that specifies the sort order of the results returned
-     * by the function.
-     * 
-     * @param projection list of columns to be returned by the query.
-     * 
-     * 	- `ScheduledSensablesTable.NAME`: The table name where the data is stored.
-     * 	- `COLUMN_SENSABLE_ID`: The column name for the sensable ID.
-     * 	- `COLUMN_PENDING`: The column name for the pending status.
-     * 	- `selection`: An optional selection clause that filters the rows based on a condition.
-     * 	- `selectionArgs`: An array of selection arguments that are used in the selection
-     * clause.
-     * 	- `sortOrder`: The sort order of the query results, which determines the order
-     * in which the results are returned.
-     * 
-     * @param selection condition for which rows to retrieve from the database, and it
-     * is appended to the WHERE clause of the SQL query built by the `SQLiteQueryBuilder`.
-     * 
-     * @param selectionArgs values that are used to modify the selection clause of the
-     * SQL query, allowing for more complex filtering of data based on the value of the
-     * `uri` parameter.
-     * 
-     * 	- `selectionArgs`: A string array containing the arguments for the SQL query's
-     * WHERE clause. The values in this array will be used as the parameters in the WHERE
-     * clause, separated by commas.
-     * 	- `sortOrder`: A string representing the sort order for the returned data. This
-     * can be one of the following: "ASC" (ascending) or "DESC" (descending).
-     * 
-     * @param sortOrder 1-based index of the sort column, which determines the order of
-     * the sorted results returned by the query.
-     * 
-     * @returns a Cursor object containing data from the scheduled sensables table based
-     * on the provided Uri and selection criteria.
-     * 
-     * 	- `cursor`: A Cursor object that represents a result set from the query. It
-     * contains information about the rows in the result set, such as the column names
-     * and values.
-     * 	- `projection`: An array of strings that specify which columns to include in the
-     * result set.
-     * 	- `selection`: A string that specifies a filter or condition for selecting rows
-     * from the table.
-     * 	- `selectionArgs`: An array of strings that contain values for the selection criteria.
-     * 	- `sortOrder`: A string that specifies the order of the results, such as "ascending"
-     * or "descending".
-     * 
-     * The function first constructs a SQLiteQueryBuilder object to build the query. It
-     * then sets the tables to be queried and appends a filter clause based on the `uriType`
-     * variable. The filter clause is constructed using the `ScheduledSensablesTable`
-     * columns and the value of `uri.getLastPathSegment()`.
-     * 
-     * Next, the function creates a writable SQLite database instance and builds the query
-     * using the query builder. The resulting SQL query is logged to the debug log.
-     * Finally, the function returns a Cursor object that represents the result set of
-     * the query. The Cursor has a notification URI set to the content resolver of the
-     * activity, which allows it to be notified when the data changes.
+     * Executes a SQL query on a SQLite database based on the provided URI and parameters.
+     * It retrieves data from the `ScheduledSensablesTable` table, filters it according
+     * to the given selection criteria, and returns the result as a `Cursor`.
+     *
+     * @param uri URI of the data to be queried and is used to determine which specific
+     * rows to retrieve from the database based on its path segment, allowing for filtering
+     * by sender ID or pending status.
+     *
+     * Matches a specific URI pattern based on the authority and path. The matched result
+     * is stored in `uriType`.
+     *
+     * @param projection list of columns to include in the query results, which determines
+     * what data is returned by the SQLite database.
+     *
+     * String array containing column names from the database that should be included in
+     * the query result.
+     *
+     * @param selection WHERE clause of the SQL query that filters the data to be retrieved
+     * from the database based on specific conditions or constraints.
+     *
+     * @param selectionArgs values to replace any '?' wildcard characters in the selection
+     * string, allowing for flexible query conditions.
+     *
+     * It is an array of strings that can be used to fill-in '?' placeholders in the
+     * selection string. The length of the array must match the number of '?' placeholders.
+     *
+     * @param sortOrder SQL statement used to sort the query results, allowing for
+     * customized sorting of the data returned by the query.
+     *
+     * @returns a Cursor object containing data from the ScheduledSensablesTable.
+     *
+     * Cursor contains a query result set for ScheduledSensablesTable based on the specified
+     * Uri, projection, selection, and sort order.
      */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
@@ -160,16 +123,16 @@ public class ScheduledSensableContentProvider extends ContentProvider {
     }
 
     /**
-     * returns a `String` representing the type of a given `Uri`. It returns `null` if
-     * the `Uri` cannot be determined.
-     * 
-     * @param uri Android package's Uri object that is passed to the function, providing
-     * the information for the getType method to return the appropriate type.
-     * 
-     * 	- `Uri`: This is the input parameter for this function. It represents a Uri object
-     * containing information about a resource on the web or in a specific protocol.
-     * 
-     * @returns null.
+     * Returns a string representing the type of a given URI. It overrides an abstract
+     * method from its superclass, implying it is part of a class implementing a specific
+     * interface or abstract class. The function always returns null, suggesting it may
+     * not be fully implemented or has no meaningful return value.
+     *
+     * @param uri Uniform Resource Identifier of the resource being queried, and its value
+     * is not utilized within the provided implementation of the `getType` method as it
+     * returns null regardless of the URI.
+     *
+     * @returns a null string.
      */
     @Override
     public String getType(Uri uri) {
@@ -177,65 +140,22 @@ public class ScheduledSensableContentProvider extends ContentProvider {
     }
 
     /**
-     * inserts new data into a database table based on the URI provided. It first determines
-     * the type of the URI, then inserts the data into the appropriate table using a
-     * SQLiteDatabase. Finally, it notifies the content resolver of the change and returns
-     * the inserted ID as a Uri.
-     * 
-     * @param uri URI to be inserted into the database.
-     * 
-     * 	- `sURIMatcher.match(uri)`: This method returns the match type of the given `Uri`,
-     * which can be one of the constants defined in the `SENSER_URI_MATCHER` class.
-     * 	- `dbHelper`: This is an instance of `SensableDatabaseHelper`, which is a subclass
-     * of `ContentObserver`. It is used to interact with the database.
-     * 	- `sqlDB`: This is an instance of `SQLiteDatabase`, which is used to perform
-     * database operations.
-     * 	- `ScheduledSensablesTable.NAME`: This is the name of the table in the database
-     * where scheduled sensables are stored.
-     * 	- `id`: This variable holds the unique identifier of the newly inserted row in
-     * the database.
-     * 	- `getContext()`: This method returns an instance of `Context`, which provides
-     * access to the application's resources and functionality.
-     * 	- `CONTENT_URI`: This is a constant that represents the content provider's base
-     * URI. It is used to construct the final insertion result.
-     * 
-     * @param values content of the sensable to be inserted, which contains the data for
-     * the specific field types defined in the SQLite database table.
-     * 
-     * 	- `values`: A `ContentValues` object containing data to be inserted into the
-     * database. The values in the object correspond to columns in the database table.
-     * 	- `uri`: The original URI of the insertion request, which serves as a reference
-     * point for the operation.
-     * 	- `dbHelper`: An instance of `SensableDatabaseHelper`, providing access to the
-     * underlying database.
-     * 	- `sqlDB`: A SQLite Database object representing the writable database for the
-     * specified table.
-     * 	- `id`: The unique identifier generated by the database upon successful insertion,
-     * indicating the newly created row in the table.
-     * 
-     * @returns a new Uri object representing the inserted data.
-     * 
-     * 	- `Uri`: The inserted Uri is returned as a `Uri` object.
-     * 	- `id`: The unique identifier of the newly inserted row in the database is returned
-     * as a long value.
-     * 	- `getContext()`: A reference to the current activity's `Context` object is
-     * returned, which can be used to access various resources and functionality within
-     * the application.
-     * 	- `CONTENT_URI`: The content resolver's Uri for the inserted row is returned as
-     * a string.
-     * 
-     * The properties of the output are explained as follows:
-     * 
-     * 	- `Uri`: The inserted Uri is returned as a `Uri` object, which can be used to
-     * represent the newly inserted data in the application.
-     * 	- `id`: The unique identifier of the newly inserted row in the database is returned
-     * as a long value, which can be used to identify the specific row that was inserted.
-     * 	- `getContext()`: A reference to the current activity's `Context` object is
-     * returned, which can be used to access various resources and functionality within
-     * the application.
-     * 	- `CONTENT_URI`: The content resolver's Uri for the inserted row is returned as
-     * a string, which can be used to locate the specific row in the database using the
-     * content resolver.
+     * Inserts a new row into the database table corresponding to the provided `Uri`. It
+     * retrieves the `ContentValues` from the `ContentResolver`, matches the `Uri` with
+     * a specific table, and then inserts the values into the matched table.
+     *
+     * @param uri URI of the data to be inserted into the database, which is matched
+     * against the defined URIs to determine the correct table for insertion.
+     *
+     * @param values key-value pairs to be inserted into the database's ScheduledSensablesTable
+     * when matching the URI type to SENDERS.
+     *
+     * Contains key-value pairs represented as a ContentValues object.
+     *
+     * @returns a new Uri representing the inserted row with its ID.
+     *
+     * The output is an instance of Uri class representing the newly inserted data. It
+     * contains the CONTENT_URI and id of the inserted data.
      */
     @Override
     public Uri insert(Uri uri, ContentValues values) {
@@ -259,36 +179,27 @@ public class ScheduledSensableContentProvider extends ContentProvider {
     }
 
     /**
-     * deletes data from a SQLite database based on a given URI and selection criteria.
-     * It matches the URI to a specific table name and column(s), then deletes rows based
-     * on the selection and selection arguments.
-     * 
-     * @param uri Android content provider's Uri object that identifies the table and row
-     * to be deleted.
-     * 
-     * 	- `sURIMatcher.match(uri)` - This method returns the type of the URI based on its
-     * structure and contents.
-     * 	- `ScheduledSensablesTable.NAME` - The name of the table where the data is stored.
-     * 	- `ScheduledSensablesTable.COLUMN_ID` - The column in the table that stores the
-     * ID of each row.
-     * 	- `selection` and `selectionArgs` - These are the selection criteria and any
-     * arguments to use when deleting rows from the table.
-     * 
-     * @param selection condition for which rows to delete from the `ScheduledSensablesTable`.
-     * 
-     * @param selectionArgs 0th column of the selected rows in the `SQLiteDatabase`, which
-     * is used to filter the rows that are deleted based on the selection criteria.
-     * 
-     * 	- `selectionArgs`: An array of strings containing additional criteria for filtering
-     * or sorting the data in the database.
-     * 	- `ScheduledSensablesTable.NAME`: The name of the table in the database where the
-     * data is stored.
-     * 	- `ScheduledSensablesTable.COLUMN_ID`: The column name for the primary key id in
-     * the `ScheduledSensablesTable`.
-     * 	- `ScheduledSensablesTable.COLUMN_ID + "=" + id`: The SQL syntax for filtering
-     * rows based on the value of the `id` column.
-     * 
-     * @returns the number of rows deleted from the database.
+     * Deletes data from a SQLite database based on a provided Uri and selection criteria.
+     * It matches the Uri to determine which table to delete from and executes the deletion
+     * query using SQLiteDatabase's `delete` method.
+     *
+     * @param uri URI of the data to be deleted, which determines the type of deletion
+     * operation to perform based on its match with predefined URI patterns.
+     *
+     * Matches with `sURIMatcher` and returns an integer value representing the type of
+     * URI. It can be either SENDERS or SENDER_ID.
+     *
+     * @param selection SQL selection clause that is used to determine which rows to
+     * delete from the database table when executing a DELETE query.
+     *
+     * @param selectionArgs replacement placeholders for the selection clause and is used
+     * to bind actual values from the selection string to replace the placeholders.
+     *
+     * @returns an integer representing the number of rows deleted.
+     *
+     * The function returns an integer value representing the number of rows successfully
+     * deleted from the database. If no rows are affected by the deletion operation, the
+     * function returns zero.
      */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
@@ -317,43 +228,38 @@ public class ScheduledSensableContentProvider extends ContentProvider {
     }
 
     /**
-     * updates the values in a database table based on the given URI and selection criteria.
-     * It returns the number of rows updated.
-     * 
-     * @param uri URI of the row to be updated in the database.
-     * 
-     * 	- `sURIMatcher.match(uri)` returns an integer representing the match type of `uri`.
-     * 	- `ScheduledSensablesTable.NAME` is the name of the table where data is updated.
-     * 	- `selection` and `selectionArgs` are used to filter or update specific rows in
-     * the table based on their ID or other attributes.
-     * 	- `id` is a column in the table that represents the unique identifier for each row.
-     * 
-     * @param values update data to be applied to the database.
-     * 
-     * 	- `ScheduledSensablesTable.NAME`: The table name where the data will be updated.
-     * 	- `ScheduledSensablesTable.COLUMN_ID`: The column name for the unique identifier
-     * of the sensable.
-     * 	- `ScheduledSensablesTable.COLUMN_ID + "=" + id`: The selection criteria for
-     * updating the data, where `id` is the unique identifier of the sensable.
-     * 	- `selectionArgs`: An array of strings containing additional selection criteria
-     * for the update operation.
-     * 
-     * Note that `values` may contain other properties or attributes depending on how it
-     * was deserialized from the input.
-     * 
-     * @param selection condition that determines which rows to update in the database
-     * based on the provided `values`.
-     * 
-     * @param selectionArgs 2nd argument of the `update()` method and is used to specify
-     * additional arguments for the WHERE clause of the SQL query when updating rows in
-     * the database based on the specified URI type.
-     * 
-     * 	- `selectionArgs`: an array of String values that represent the selection criteria
-     * for the database query. Each element in the array corresponds to a separate condition
-     * in the WHERE clause of the query.
-     * 
-     * @returns the number of rows updated in a database table based on a given URI and
-     * parameters.
+     * Updates a specific row or all rows in a database table based on the provided URI
+     * and selection criteria. It uses a switch statement to determine which type of
+     * update operation is required, either updating all rows matching a selection or
+     * updating a single row by its ID.
+     *
+     * @param uri URI of the data to be updated and is used to determine the type of
+     * update operation based on its match with predefined URIs.
+     *
+     * Matches with `sURIMatcher` to identify the type of URI; contains a path segment
+     * for SENDER_ID type URI.
+     *
+     * @param values ContentValues object containing new column values to be updated in
+     * the database.
+     *
+     * Contains ContentValues object that holds key-value pairs.
+     *
+     * @param selection WHERE clause for the SQL update query, allowing to specify a
+     * condition for which rows to update.
+     *
+     * @param selectionArgs values to be matched against the selection clause specified
+     * by the `selection` parameter in the SQL query executed for updating data.
+     *
+     * An array of strings that contain values to be inserted into selection. The length
+     * of this array must be equal to the number of '?' in the selection string. Each
+     * value is bound with a '?' in the SQL query.
+     *
+     * @returns an integer representing the number of updated rows.
+     *
+     * The returned value is an integer representing the number of rows updated in the
+     * database table. The update operation may involve matching specific conditions
+     * specified by the `selection` and `selectionArgs` parameters or a single row with
+     * a specific ID.
      */
     @Override
     public int update(Uri uri, ContentValues values, String selection,

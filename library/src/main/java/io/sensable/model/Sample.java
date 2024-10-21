@@ -12,10 +12,10 @@ import java.util.ArrayList;
  * Created by madine on 01/07/14.
  */
 /**
- * is a Java class that represents a sample data point with timestamp, value, and
- * location information. The class implements the Parcelable interface for serialization
- * and deserialization purposes. It also provides methods for getting and setting the
- * timestamp, value, and location fields.
+ * Represents a data point with timestamp, value, and location information for
+ * serialization and deserialization purposes. It implements the Parcelable interface
+ * to facilitate data transfer between applications. The class also provides methods
+ * for converting instances to JSON objects and string representations.
  */
 public class Sample implements Parcelable {
     private long timestamp;
@@ -38,47 +38,59 @@ public class Sample implements Parcelable {
     }
 
     /**
-     * returns the value of a `timestamp` field.
-     * 
-     * @returns a long value representing the current timestamp.
+     * Returns a value representing time. The returned value is accessed through a variable
+     * named `timestamp`. It is possible to obtain the current system time using this method.
+     *
+     * @returns a non-negative integer value representing seconds since epoch.
      */
     public long getTimestamp() {
         return timestamp;
     }
 
     /**
-     * sets the value of a class instance field named `timestamp`.
-     * 
-     * @param timestamp 64-bit value of the timestamp that is used to update the value
-     * of the `timestamp` field of the current object.
+     * Assigns a specified value to the object's `timestamp` field. This method takes a
+     * single long integer parameter representing the new timestamp and stores it within
+     * the object. The timestamp is then available for retrieval or further processing
+     * as required.
+     *
+     * @param timestamp 64-bit long value that is being assigned to the class's internal
+     * `timestamp` variable, updating its current value.
      */
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
 
     /**
-     * returns the value of a variable named `value`.
-     * 
-     * @returns a double value representing the variable `value`.
+     * Returns a double-precision floating-point number representing the current state
+     * of the object's value attribute. This method provides read-only access to the
+     * stored value. It does not modify the state of the object.
+     *
+     * @returns a double representing an internal state variable known as `value`.
      */
     public double getValue() {
         return value;
     }
 
     /**
-     * sets the value field of its instance to the given double value.
-     * 
-     * @param value double value that will be assigned to the `value` field of the
-     * function's caller.
+     * Accepts a double data type as an argument and assigns it to the instance variable
+     * 'value' within the class. This allows the property to be set or modified with any
+     * valid numeric value. The assigned value is then stored internally for further use.
+     *
+     * @param value new double value to be assigned to the object's property with the
+     * same name.
      */
     public void setValue(double value) {
         this.value = value;
     }
 
     /**
-     * returns an integer value of 0, indicating that no contents are present or needed.
-     * 
-     * @returns an integer value of 0.
+     * Returns an integer value indicating which types of data are contained within the
+     * object being serialized or de-serialized by a Parcelable implementation. The method
+     * is called internally during serialization and deserialization processes. A return
+     * value of 0 indicates that there are no file descriptors, file paths, or other
+     * file-related resources.
+     *
+     * @returns an integer indicating the object's serializable state, which is always 0.
      */
     @Override
     public int describeContents() {
@@ -86,18 +98,16 @@ public class Sample implements Parcelable {
     }
 
     /**
-     * writes the `timestamp` and `value` parameters to a Parcel object, using the specified
-     * flags for formatting.
-     * 
-     * @param dest parcel that will be written to.
-     * 
-     * 	- `dest`: The Parcel object that represents the destination buffer for writing
-     * data. It has a `writeLong()` and `writeDouble()` method for writing timestamp and
-     * value respectively in this case.
-     * 
-     * @param flags 32-bit integer value that specifies the type of data being written
-     * to the Parcel, with possible values ranging from 0 to 7, and it is used to determine
-     * the format of the data being written.
+     * Serializes object data into a Parcel for storage or transmission. It writes two
+     * values to the parcel: a long integer timestamp and a double value, both retrieved
+     * from the object's internal state. The data is written in a format that can be
+     * reconstructed later.
+     *
+     * @param dest parcel object where the data is being written to.
+     *
+     * @param flags bitmask of parceling options and is used to specify additional
+     * instructions for parceling objects, such as whether to use its own class loader
+     * or not.
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -108,44 +118,30 @@ public class Sample implements Parcelable {
     public static final Parcelable.Creator<Sample> CREATOR
             = new Parcelable.Creator<Sample>() {
         /**
-         * creates a new instance of the `Sample` class from a provided Parcel object.
-         * 
-         * @param in `Parcel` object that contains data to be used in creating a new instance
-         * of the `Sample` class.
-         * 
-         * The `Parcel in` received is a container for a `Sample` object, which contains
-         * details about a sample such as its ID, name, and dimensions. The `in` parameter
-         * can be decoded or deserialized to create an instance of the `Sample` class.
-         * 
-         * @returns a new instance of the `Sample` class initialized with the values from the
-         * provided Parcel.
-         * 
-         * 	- The input Parcel is used to create a new instance of the `Sample` class.
-         * 	- The `Sample` class represents a sample object with unspecified attributes and
-         * methods.
-         * 	- The `new Sample(in)` syntax creates an instance of the `Sample` class using the
-         * values from the input Parcel.
+         * Recreates an instance of `Sample` from a parcel, which is a data container used
+         * for inter-process communication. It does so by creating a new `Sample` object and
+         * passing the parcel to its constructor. The resulting object contains the deserialized
+         * data from the parcel.
+         *
+         * @param in Parcel object from which the Sample object is being reconstructed or
+         * created from serialized data.
+         *
+         * @returns a new instance of the `Sample` class.
          */
         public Sample createFromParcel(Parcel in) {
             return new Sample(in);
         }
 
         /**
-         * returns an array of `Sample` objects with the specified size.
-         * 
-         * @param size amount of space to be allocated for an array of `Sample` objects, which
-         * is then returned as a new array.
-         * 
-         * @returns an array of `Sample` objects with the specified size.
-         * 
-         * 	- The `Sample` array returned by the function has a fixed size specified by the
-         * `size` parameter passed to the function.
-         * 	- The array is initialized with a default value for each element, which is `null`
-         * in this case.
-         * 	- The array is immutable once it is created and cannot be modified after initialization.
-         * 	- The function does not perform any error handling or validation of the input
-         * parameters, so it is possible for the function to create an invalid or incomplete
-         * array if the input parameters are incorrect.
+         * Creates a new array of objects, each instance being an instance of the `Sample`
+         * class, with the specified `size`. The returned array is initialized but not populated
+         * with any data. It has no bounds checking, which means it can throw an exception
+         * if passed an invalid size.
+         *
+         * @param size umber of elements to be allocated in the newly created array of type
+         * `Sample`.
+         *
+         * @returns an array of `Sample` objects with a specified length.
          */
         public Sample[] newArray(int size) {
             return new Sample[size];
@@ -158,10 +154,11 @@ public class Sample implements Parcelable {
     }
 
     /**
-     * returns a string representation of an object by combining its `timestamp` and `value`.
-     * 
-     * @returns a string representation of the object, consisting of the current timestamp
-     * and the value of the object.
+     * Returns a string representation of an object, concatenating its timestamp and
+     * value. The returned string is in the format "timestamp: value". It appears to be
+     * used for debugging or logging purposes.
+     *
+     * @returns a string combining timestamp and value.
      */
     @Override
     public String toString() {
@@ -169,15 +166,12 @@ public class Sample implements Parcelable {
     }
 
     /**
-     * converts an object of type `MyObject` into a JSON object, including the timestamp
-     * and value properties.
-     * 
-     * @returns a JSONObject containing the current timestamp and value of the given object.
-     * 
-     * 	- `json`: A JSONObject representing the timestamp and value of the object in a
-     * JSON format.
-     * 	- `timestamp`: The timestamp value represented as a string.
-     * 	- `value`: The value of the object represented as a string.
+     * Creates a JSONObject representing data, including timestamp and value. The JSONObject
+     * is populated with values obtained from the object's `getTimestamp` and `getValue`
+     * methods. If an error occurs during creation, it is silently discarded and the
+     * function returns null.
+     *
+     * @returns a JSONObject containing timestamp and value properties.
      */
     public JSONObject toJson() {
         JSONObject json = null;
@@ -190,23 +184,22 @@ public class Sample implements Parcelable {
     }
 
     /**
-     * returns an array of doubles representing the location of an object.
-     * 
-     * @returns a double array containing the location of an object.
+     * Returns an array of doubles representing a geographical location. The returned
+     * value is retrieved from a previously initialized variable named `location`. This
+     * allows other parts of the program to access and utilize the stored location data.
+     *
+     * @returns a double array representing the current location.
      */
     public double[] getLocation() {
         return location;
     }
 
     /**
-     * sets the location of an object to a provided double array.
-     * 
-     * @param location 3D coordinates of an object or entity in a program, and by assigning
-     * it to the `this.location` field, the function sets the location of the object or
-     * entity.
-     * 
-     * 	- This parameter is of type double[], indicating an array of double values.
-     * 	- The function assigns the input `location` to the field `location` of this class.
+     * Assigns a new location to the object's internal state. It takes an array of double
+     * values representing coordinates as input and updates the corresponding instance
+     * variable. This allows the object's location to be changed dynamically.
+     *
+     * @param location 1D array of doubles that is assigned to the instance variable `location`.
      */
     public void setLocation(double[] location) {
         this.location = location;

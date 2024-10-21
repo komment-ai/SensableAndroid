@@ -19,10 +19,11 @@ import io.sensable.model.Sensable;
  * Created by madine on 15/07/14.
  */
 /**
- * is a utility class that assists in managing scheduled tasks for a sensory system.
- * It provides methods for creating and removing scheduled tasks, as well as querying
- * the number of scheduled tasks and pending tasks. Additionally, it includes a method
- * for updating the favourite object if available.
+ * Manages scheduled tasks for a sensory system, allowing for creation, deletion, and
+ * updating of scheduled sensables. It utilizes Android's AlarmManager to schedule
+ * tasks at specific intervals and ContentResolver to interact with the device's data
+ * storage. The class provides methods for checking the status of scheduled tasks,
+ * stopping or canceling schedules, and updating favourite objects.
  */
 public class ScheduleHelper {
 
@@ -37,8 +38,9 @@ public class ScheduleHelper {
     }
 
     /**
-     * sets up a scheduled task using AlarmManager if it doesn't already exist, or updates
-     * the existing one if it does.
+     * Starts or resumes a recurring task on an Android device using AlarmManager. If an
+     * existing alarm is found, it exits without recreating it; otherwise, it creates and
+     * schedules the task to run every 15 minutes.
      */
     public void startScheduler() {
         Intent intent = new Intent(context.getApplicationContext(), ScheduledSensableService.class);
@@ -55,24 +57,12 @@ public class ScheduleHelper {
     }
 
     /**
-     * queries the content resolver for scheduled tasks and returns a cursor containing
-     * the results.
-     * 
-     * @returns a cursor object containing the scheduled tasks.
-     * 
-     * 	- `Cursor count`: This is a cursor object that represents a query result set
-     * containing information about scheduled tasks.
-     * 	- `context`: The context object refers to the application context in which the
-     * function was called.
-     * 	- `ContentResolver`: The content resolver is an interface used to interact with
-     * the device's data storage, and it is being used to query the ScheduledSensableContentProvider
-     * for information about scheduled tasks.
-     * 	- `Uri.parse(ScheduledSensableContentProvider.CONTENT_URI.toString())`: This line
-     * of code constructs a Uri object that represents the content provider's URI for
-     * querying scheduled tasks.
-     * 	- `new String[]{"*"}`: This line of code defines an array of strings containing
-     * the fields to be queried in the result set returned by the content provider. The
-     * `"*"` field is used to indicate that all fields should be queried.
+     * Queries the content resolver for a cursor containing all scheduled tasks, returning
+     * it as a result. It uses the `Uri.parse` method to obtain the URI for the
+     * ScheduledSensableContentProvider and then passes this URI along with an empty
+     * projection, null selection criteria, and null sort order to the query method.
+     *
+     * @returns a cursor object representing scheduled tasks.
      */
     public Cursor getScheduledTasks() {
         Cursor count = context.getApplicationContext().getContentResolver().query(Uri.parse(ScheduledSensableContentProvider.CONTENT_URI.toString()), new String[]{"*"}, null, null, null, null);
@@ -80,20 +70,23 @@ public class ScheduleHelper {
     }
 
     /**
-     * retrieves the number of scheduled tasks from a `ScheduledTasks` collection and
-     * returns it as an integer value.
-     * 
-     * @returns the number of scheduled tasks.
+     * Retrieves and returns the count of scheduled tasks from a designated source using
+     * the `getSchedueldTasks` method. The returned value represents the number of tasks
+     * that are currently scheduled for execution. This function encapsulates the logic
+     * to retrieve task count in a concise manner.
+     *
+     * @returns an integer value representing the number of scheduled tasks.
      */
     public int countScheduledTasks() {
         return getScheduledTasks().getCount();
     }
 
     /**
-     * queries the ContentResolver for the number of pending scheduled tasks stored in
-     * the ScheduledSensableContentProvider and returns that count.
-     * 
-     * @returns the number of pending scheduled tasks.
+     * Queries a content provider for a URI related to pending scheduled tasks. It returns
+     * the number of rows in the result set, representing the count of pending scheduled
+     * tasks. The query uses a cursor to retrieve data from the content resolver.
+     *
+     * @returns an integer value representing the number of pending scheduled tasks.
      */
     public int countPendingScheduledTasks() {
         Cursor count = context.getApplicationContext().getContentResolver().query(Uri.parse(ScheduledSensableContentProvider.CONTENT_URI + "/pending"), new String[]{"*"}, null, null, null, null);
@@ -102,10 +95,11 @@ public class ScheduleHelper {
 
     // Call this when removing a scheduled task to find out if we can remove the scheduler
     /**
-     * cancels a scheduler's pending intent if no tasks are scheduled, effectively stopping
-     * the scheduler.
-     * 
-     * @returns a boolean value indicating whether the scheduler was successfully canceled.
+     * Cancels a scheduled task if no tasks are pending. It checks the count of scheduled
+     * tasks and, if zero, stops the scheduler by canceling a pending intent that triggers
+     * the ScheduledSensableService class. The function then returns true.
+     *
+     * @returns a boolean value indicating successful cancellation of scheduled tasks.
      */
     public boolean stopSchedulerIfNotNeeded() {
         if (countScheduledTasks() == 0) {
@@ -117,27 +111,14 @@ public class ScheduleHelper {
     }
 
     /**
-     * inserts a new scheduled sensory data into the database through Content Resolver.
-     * 
-     * @param scheduledSensable sensable that will be added to the scheduler, and it is
-     * used to create a ContentValues object that contains the data to be inserted into
-     * the database.
-     * 
-     * 	- `context`: This represents the context in which the function is being executed,
-     * and is used to get a content resolver for inserting the scheduled sensable into
-     * the database.
-     * 	- `ScheduledSensablesTable`: This represents the table where the scheduled sensable
-     * will be inserted into the database.
-     * 	- `serializeScheduledSensableForSqlLite`: This function serializes the input
-     * `scheduledSensable` into a ContentValues object, which is then used to insert the
-     * sensable into the database.
-     * 	- `mNewUri`: This represents the Uri object that contains the new scheduled
-     * sensable data after insertion.
-     * 	- `getContentResolver()`: This function gets a content resolver for inserting the
-     * scheduled sensable into the database.
-     * 
-     * @returns a boolean value indicating whether the scheduled sensable was successfully
-     * added to the scheduler.
+     * Inserts a new scheduled sensable into the SQLite database, using the provided
+     * ScheduledSensableContentProvider and ContentValues for serialization. It returns
+     * true upon successful insertion.
+     *
+     * @param scheduledSensable ScheduledSensable object that needs to be added to the
+     * SQLite database through the content provider.
+     *
+     * @returns a boolean value indicating successful insertion of data.
      */
     public boolean addSensableToScheduler(ScheduledSensable scheduledSensable) {
         ContentValues mNewValues = ScheduledSensablesTable.serializeScheduledSensableForSqlLite(scheduledSensable);
@@ -150,33 +131,14 @@ public class ScheduleHelper {
     }
 
     /**
-     * deletes a ScheduledSensable object from the database by calling the `delete` method
-     * on the content resolver with the ScheduledSensable's ID as the URI and null as the
-     * selection and selection arguments. It returns `true` if any rows were deleted,
-     * otherwise `false`.
-     * 
-     * @param scheduledSensable ScheduledSensable object to be removed from the scheduler.
-     * 
-     * 	- `Context`: This is an instance of `android.content.Context`, which is used to
-     * access the content resolver for deleting rows from the database.
-     * 	- `Uri`: This is a `Uri` object that represents the content provider for schedules,
-     * with the path `/$1`. The number after the `$` is the ID of the scheduled sensable.
-     * 	- `ScheduledSensableContentProvider`: This is a class that provides access to the
-     * content resolver for deleting rows from the database.
-     * 	- `getContentResolver()`: This is a method that returns an instance of
-     * `android.content.ContentResolver`, which is used to access the content provider
-     * for deleting rows from the database.
-     * 	- `delete()`: This is a method that deletes rows from the database based on the
-     * provided `Uri`.
-     * 	- `null`: This is a null object that is passed as the first parameter to the
-     * `delete()` method.
-     * 	- `null`: This is a null object that is passed as the second parameter to the
-     * `delete()` method.
-     * 
-     * The function returns a boolean value indicating whether the rows were deleted successfully.
-     * 
-     * @returns a boolean value indicating whether the scheduled sensable was successfully
-     * deleted.
+     * Removes a scheduled sensable from the scheduler by deleting its corresponding entry
+     * from the content provider. It returns true if the deletion is successful, and false
+     * otherwise.
+     *
+     * @param scheduledSensable ScheduledSensable object whose ID is used to delete the
+     * corresponding row from the content provider.
+     *
+     * @returns a boolean value indicating deletion success.
      */
     public boolean removeSensableFromScheduler(ScheduledSensable scheduledSensable) {
         int rowsDeleted = context.getContentResolver().delete(Uri.parse(ScheduledSensableContentProvider.CONTENT_URI + "/" + scheduledSensable.getId()), null, null);
@@ -184,18 +146,13 @@ public class ScheduleHelper {
     }
 
     /**
-     * sets the "pending" status of a `ScheduledSensable` object to 1 and then updates
-     * the sensors sender with the new status.
-     * 
-     * @param scheduledSensable sensable that is marked as pending to be sent, and its
-     * value of 1 indicates that it is currently pending.
-     * 
-     * 	- `setPending(1)`: Sets the `pending` attribute of the object to `1`.
-     * 	- `updateSensableSender()`: Calls the `updateSensableSender` function, which is
-     * not provided in the code snippet.
-     * 
-     * @returns a boolean value indicating whether the scheduled sensable was successfully
-     * updated.
+     * Sets the `pending` field of a `ScheduledSensable` object to 1 and updates a `sensable
+     * sender`. It returns a boolean value indicating whether the update was successful.
+     *
+     * @param scheduledSensable object that needs to have its pending status set and then
+     * updated by calling the `updateSensableSender` method.
+     *
+     * @returns a boolean value indicating successful or unsuccessful processing.
      */
     public boolean setSensablePending(ScheduledSensable scheduledSensable) {
         scheduledSensable.setPending(1);
@@ -203,19 +160,13 @@ public class ScheduleHelper {
     }
 
     /**
-     * updates a scheduled sensory and sets its pending to zero, after which it sends the
-     * update to the sensory sender.
-     * 
-     * @param scheduledSensable sensibility that is being unset, and it is passed to the
-     * `updateSensableSender()` method for further processing.
-     * 
-     * 	- `scheduledSensable`: This is an instance of the class `ScheduledSensable`, which
-     * contains a single attribute called `pending`. The value of this attribute can be
-     * either 0 or 1, representing whether the sensation is pending or not.
-     * 	- `setPending(int newValue)`: This method sets the value of the `pending` attribute
-     * to the argument `newValue`.
-     * 
-     * @returns a boolean value indicating whether the sensable was successfully updated.
+     * Sets the pending value of a ScheduledSensable object to 0 and then calls the
+     * `updateSensableSender` method with the updated object, returning its result.
+     *
+     * @param scheduledSensable object whose pending status is being unset and updated
+     * for sending to a sensable sender.
+     *
+     * @returns a boolean value indicating the result of updating the sensable sender.
      */
     public boolean unsetSensablePending(ScheduledSensable scheduledSensable) {
         scheduledSensable.setPending(0);
@@ -223,24 +174,18 @@ public class ScheduleHelper {
     }
 
     /**
-     * updates a scheduled sensation's row in a SQL Lite database and also updates a
-     * related favourite object if available.
-     * 
-     * @param scheduledSensable content to be updated in the database, which is serialized
-     * and passed as a ContentValues object to the update method.
-     * 
-     * 	- `Uri updateUri`: The content URI for the scheduled sensables table, which is
-     * used as the update target in the database.
-     * 	- `ContentValues mNewValues`: A serialized representation of the `scheduledSensable`
-     * object, created using `ScheduledSensablesTable.serializeScheduledSensableForSqlLite()`.
-     * This value is used to update the scheduled sensable record in the database.
-     * 	- `int rowsUpdated`: The number of rows updated in the database after executing
-     * the `update()` method.
-     * 	- `context`: A reference to the context object, which provides access to the
-     * content resolver and other resources needed for the update operation.
-     * 
-     * @returns a boolean value indicating whether the scheduled sensable was successfully
-     * updated.
+     * Updates a scheduled sensable record in a SQLite database by serializing the object
+     * into ContentValues, then updating the corresponding Uri with these values. The
+     * function returns true if the update is successful and false otherwise.
+     *
+     * @param scheduledSensable scheduled sensable object to be updated in the SQLite
+     * database and its serialized values are used to update the corresponding record in
+     * the database.
+     *
+     * SerializeScheduledSensableForSqlLite returns ContentValues with serialized data
+     * from ScheduledSensable.
+     *
+     * @returns a boolean indicating whether any rows were updated.
      */
     private boolean updateSensableSender(ScheduledSensable scheduledSensable) {
         ContentValues mNewValues = ScheduledSensablesTable.serializeScheduledSensableForSqlLite(scheduledSensable);
@@ -260,30 +205,17 @@ public class ScheduleHelper {
     }
 
     /**
-     * updates a scheduled sensable's favorite status by checking if it is already
-     * favourited and updating its favorite sample if necessary.
-     * 
-     * @param scheduledSensable sensable that needs to be updated as the user's favourite.
-     * 
-     * 	- `getSensorid()`: returns the sensor ID of the scheduled sensing event
-     * 	- `getSample()`: returns the sample data associated with the scheduled sensing event
-     * 
-     * The function then performs the following operations:
-     * 
-     * 1/ Retrieves the count of favourited samples for the specified sensor ID using a
-     * query on the `SavedSensablesTable` content resolver.
-     * 2/ If the count is greater than 0, it means that the sensor ID is already favourited.
-     * 3/ Creates a new `Sensable` object with the same sensor ID and sample data as the
-     * input `scheduledSensable`.
-     * 4/ Serializes the `Sensable` object into a `ContentValues` object for storage in
-     * the SQL Lite database.
-     * 5/ Updates the favourite sample using the `update()` method of the content resolver,
-     * passing in the favourite URI, the serialized `ContentValues` object, and the null
-     * values array.
-     * 6/ Returns the number of rows updated successfully.
-     * 
-     * @returns a boolean value indicating whether the specified sensor was updated as a
-     * favourite.
+     * Checks if a scheduled sensable is also favourited. If it is, updates the favourite
+     * sample and returns true; otherwise, returns false.
+     *
+     * @param scheduledSensable sensor data to be processed and potentially updated as a
+     * favourite sample in the system.
+     *
+     * Extracted from `scheduledSensable`:
+     * - Sensorid
+     * - Sample
+     *
+     * @returns a boolean value indicating update success.
      */
     private boolean updateFavouriteIfAvailable(ScheduledSensable scheduledSensable) {
 

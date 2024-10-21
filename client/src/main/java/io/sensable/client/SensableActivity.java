@@ -36,14 +36,10 @@ import java.util.*;
 
 
 /**
- * manages data display and sensory data saving for Android applications. It includes
- * functions like retrieving sensor data, preparing list data, updating user interface
- * components, calling the callback function when an API call fails, updating a
- * sensable object's fields and database, and updating a save button based on the
- * number of samples in the list. Additionally, it provides methods to update a sensory
- * device in a database by serializing and inserting it into the Sensables table using
- * content resolvers and to retrieve a sensor sender from a scheduled database through
- * the getContentResolver method.
+ * Is responsible for managing sensory data from a device and updating its corresponding
+ * views in an Android application. It fetches data from a REST API, updates the
+ * sensable object and view, and allows users to save or remove the sensable data
+ * from a local database.
  */
 public class SensableActivity extends Activity {
 
@@ -68,24 +64,16 @@ public class SensableActivity extends Activity {
     private ArrayList<Sample> mSamples;
 
     /**
-     * sets up the UI for the sensable activity, including displaying a list of sensables
-     * and their locations, and adding an button to save or unsave a sensable.
-     * 
-     * @param savedInstanceState previous saved state of the activity, which can be used
-     * to restore the activity's UI and data if it was launched from a different task or
-     * process.
-     * 
-     * * `sensable`: A `Sensable` object containing information about the sensable that
-     * was saved previously. It has fields for `name`, `location`, `samples`, and `id`.
-     * * `listDataHeader`: An array of headers representing the columns of data to be
-     * displayed in the expandable list. Each header is a `String` object.
-     * * `listDataChild`: An array of child objects representing the rows of data to be
-     * displayed in the expandable list. Each child object is a `String` object.
-     * * `localSender`: A `Cursor` object representing the local sender of the sensable.
-     * It has fields for `id`, `name`, and `count`.
-     * 
-     * Note that these properties are not necessarily present in every instance of the
-     * `SensableActivity`, as they depend on the specific input data provided in `savedInstanceState`.
+     * Initializes a Sensable activity by setting up UI elements, retrieving data from
+     * intent and updating views. It also sets up buttons for saving, unfavouriting and
+     * deleting sensables, and handles their click events.
+     *
+     * @param savedInstanceState Bundle object that contains the data to be used when the
+     * activity is recreated, such as its previous state and data.
+     *
+     * Bundle object with data saved previously when the activity was paused or stopped.
+     * It contains key-value pairs where keys are strings and values can be any type of
+     * serializable objects (e.g., primitive types, arrays, lists).
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,15 +115,11 @@ public class SensableActivity extends Activity {
 
         favouriteButton.setOnClickListener(new View.OnClickListener() {
             /**
-             * saves unspecified data, likely crucial to the application's operation, using the
-             * `saveThisSensable()` method.
-             * 
-             * @param v view that was clicked, and it is passed to the `saveThisSensable()` method
-             * as a way to trigger the saving of data.
-             * 
-             * * `View v`: The object that was clicked.
-             * * `saveThisSensable()`: A method that is called when the view is clicked, which
-             * performs some action related to saving something sensable.
+             * Is overridden and triggered when a View is clicked. It calls the `saveThisSensable()`
+             * method, which saves or updates data related to sensory information. This action
+             * is performed when a user interacts with a GUI element.
+             *
+             * @param v View that was clicked, allowing the function to identify and respond accordingly.
              */
             @Override
             public void onClick(View v) {
@@ -145,17 +129,13 @@ public class SensableActivity extends Activity {
 
         unFavouriteButton.setOnClickListener(new View.OnClickListener() {
             /**
-             * calls the `unsaveThisSensable()` method, which is not specified in the provided
-             * code snippet. Therefore, the exact functionality of this function cannot be
-             * determined with certainty.
-             * 
-             * @param v button that was clicked and triggers the `unsaveThisSensable()` method
-             * to perform its functionality.
-             * 
-             * * `v`: This is an instance of the `View` class, which contains information about
-             * the widget that was clicked.
-             * * `unsaveThisSensable()`: This is a method that has been overridden in a subclass
-             * and does not have any meaning on its own.
+             * Handles a click event on a View object, triggering an execution of the
+             * `unsaveThisSensable` method when invoked. This method appears to undo or reverse
+             * some action related to saving data or information that is considered sensible. The
+             * purpose of this functionality is unknown without further context.
+             *
+             * @param v View that triggered the click event, allowing the method to access and
+             * manipulate the view's properties or actions.
              */
             @Override
             public void onClick(View v) {
@@ -169,23 +149,15 @@ public class SensableActivity extends Activity {
             deleteLocal.setVisibility(View.VISIBLE);
             deleteLocal.setOnClickListener(new View.OnClickListener() {
                 /**
-                 * builds an alert dialog asking if the user wants to stop sampling a sensable. It
-                 * removes the sensable from the scheduler and makes the delete local button invisible
-                 * when the positive button is clicked, or cancels the dialog when the negative button
-                 * is clicked.
-                 * 
-                 * @param v view that was clicked, and it is used to identify which button was pressed
-                 * within the dialog box.
-                 * 
-                 * * `v`: This is the View object that triggered the `onClick` method. It represents
-                 * the button that was clicked by the user.
-                 * * `DialogInterface dialog`: This is an Android Dialog Interface object that contains
-                 * information about the button that was clicked within the dialog. The `dialog`
-                 * parameter is passed as a reference to the `onClick` method, allowing for easy
-                 * access to its properties and methods.
-                 * * `which`: This is an integer value representing the button that was clicked within
-                 * the dialog. It can take on values between 0 and -1, with 0 indicating the positive
-                 * button and -1 indicating the negative button.
+                 * Creates a confirmation dialog to stop sampling with a sensable when a button is
+                 * clicked. If the user confirms, it removes the sensable from the scheduler and hides
+                 * a delete local view; otherwise, it cancels the dialog. A toast message indicates
+                 * "Sensable stopped" after removal.
+                 *
+                 * @param v View that was clicked, triggering the execution of the function's code.
+                 *
+                 * View: The primary class for working with views and view hierarchies.
+                 * Has no other main properties.
                  */
                 @Override
                 public void onClick(View v) {
@@ -195,17 +167,15 @@ public class SensableActivity extends Activity {
 
                     builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         /**
-                         * removes a sensable from a scheduler when the button is clicked.
-                         * 
-                         * @param dialog dialog window that triggered the event and whose options should be
-                         * processed by the function.
-                         * 
-                         * * `dialog`: A DialogInterface object representing the click event.
-                         * * `which`: An integer value representing the position of the click event within
-                         * the dialog (optional).
-                         * 
-                         * @param which button index that was clicked and is used to identify the specific
-                         * sensable to be removed from the scheduler.
+                         * Stops a sensable by removing it from a scheduler and hiding a delete button. It
+                         * shows a toast message indicating the successful stop. The function uses a helper
+                         * class, a table to retrieve scheduled sensables, and a cursor to access local data.
+                         *
+                         * @param dialog DialogInterface that triggered the execution of this code when an
+                         * item is selected from its list.
+                         *
+                         * @param which 0-based index of the item that was clicked or selected from a list
+                         * of items displayed by a DialogFragment.
                          */
                         public void onClick(DialogInterface dialog, int which) {
                             ScheduleHelper scheduleHelper = new ScheduleHelper(SensableActivity.this);
@@ -220,16 +190,15 @@ public class SensableActivity extends Activity {
 
                     builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                         /**
-                         * cancels a dialog box when the user clicks on it.
-                         * 
-                         * @param dialog cancelled dialog box that the function is called on.
-                         * 
-                         * * `dialog`: This is an instance of the `DialogInterface` class, which represents
-                         * a dialog box or other UI component that can be shown to the user.
-                         * * `which`: This is an integer value representing the position of the button in the
-                         * dialog box that was clicked.
-                         * 
-                         * @param which event that triggered the cancelation of the dialog.
+                         * Cancels a dialog when an event occurs. It receives a `DialogInterface` and an
+                         * integer representing the selected item as parameters. When called, it immediately
+                         * stops the execution of the dialog's remaining tasks.
+                         *
+                         * @param dialog DialogInterface that initiated the callback, allowing the function
+                         * to interact with it and cancel its instance.
+                         *
+                         * @param which 0-based index of the selected item from the DialogInterface if it's
+                         * a ListView or Spinner, but it is not used in this specific implementation.
                          */
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
@@ -247,9 +216,10 @@ public class SensableActivity extends Activity {
     }
 
     /**
-     * sets up a REST API client to fetch sensory data from a server, and calls the
-     * `getSensorData` method to retrieve the data. It then updates the `sensable` object
-     * and related views with the obtained data.
+     * Initializes a REST adapter to interact with a Sensable service and makes a request
+     * for sensor data using the provided sensor ID. On successful response, it updates
+     * a Sensable object and a view component; otherwise, logs an error message if a
+     * Retrofit error occurs.
      */
     @Override
     public void onStart() {
@@ -263,24 +233,15 @@ public class SensableActivity extends Activity {
 
         service.getSensorData(sensable.getSensorid(), new Callback<Sensable>() {
             /**
-             * updates a sensable object and a view after a callback success response.
-             * 
-             * @param sensable sensory data received from the device and is updated in the
-             * `updateSensable()` and `updateView()` methods.
-             * 
-             * * `Log.d(TAG, "Callback Success - Sensable");`: This line logs a message to the
-             * console with the tag `TAG`.
-             * * `updateSensable(sensable);`: This line updates the `sensable` object with some
-             * changes made to its properties or attributes.
-             * * `updateView(sensable);`: This line updates the view by applying changes to the
-             * `sensable` object.
-             * 
-             * @param response response from the API call, which is used to update the sensable
-             * and view components in the application.
-             * 
-             * * `sensable`: A `Sensable` object, representing the user's input.
-             * * `response`: A JSON response from the server, containing the user's input and
-             * other data.
+             * Processes a successful callback by logging a message, updating the `sensable`
+             * object through `updateSensable`, and refreshing the view with `updateView`. This
+             * implies that it handles a response from an asynchronous operation or API call successfully.
+             *
+             * @param sensable object being updated by the function, which is then used to trigger
+             * updates in both the UI and the data model.
+             *
+             * @param response response received from the server after a successful operation and
+             * is not utilized within the method.
              */
             @Override
             public void success(Sensable sensable, Response response) {
@@ -290,13 +251,13 @@ public class SensableActivity extends Activity {
             }
 
             /**
-             * is called when a Retrofit error occurs during callback processing. It logs an error
-             * message with the RetrofitError object's toString() value and its TAG.
-             * 
-             * @param retrofitError error that occurred during the callback process and is logged
-             * along with its message using the `Log.e()` method.
-             * 
-             * * `toString()` returns a string representation of the error object.
+             * Handles errors occurred during a Retrofit request and logs the error message with
+             * the specified tag `TAG`. It takes a `RetrofitError` object as a parameter, which
+             * contains information about the failure. The function logs the error message to the
+             * Android logcat for debugging purposes.
+             *
+             * @param retrofitError error that occurred during the execution of the Retrofit API
+             * request and is passed to the callback method for processing.
              */
             @Override
             public void failure(RetrofitError retrofitError) {
@@ -306,24 +267,17 @@ public class SensableActivity extends Activity {
     }
 
     /**
-     * updates the view by setting the sensor ID, unit, and location to the corresponding
-     * values from a `Sensable` object, clears any existing samples, adds the samples
-     * from the `Sensable` object to a list, and notifies the adapter of the changes.
-     * 
-     * @param sensable sensory data to be displayed in the UI, which includes the sensor
-     * ID, unit, and location information.
-     * 
-     * * `sensableId`: A text field that displays the sensor ID of `sensable`.
-     * * `sensableUnit`: A text field that displays the unit of measurement for `sensable`.
-     * * `sensableLocation`: A text field that displays the location of `sensable` in a
-     * comma-separated format (longitude, latitude).
-     * * `mSamples`: A List<Sample> object that stores the samples of `sensable`.
-     * * `mExpandableListAdapter`: An adapter object for an expandable list view that is
-     * used to display the samples of `sensable`.
-     * * `prepareListData()`: This method prepares the data to be displayed in the
-     * expandable list view by adding the samples of `sensable` to a List<Sample>.
-     * * `updateSaveButton()`: This method updates the state of a button in the UI to
-     * reflect whether the data has been saved successfully or not.
+     * Updates the GUI components by setting text fields with sensor ID, unit, and location
+     * information from a given `Sensable` object. It also clears and replenishes a list
+     * of samples, notifies the adapter to update the list, and triggers another method
+     * to update a save button.
+     *
+     * @param sensable object whose properties are updated and displayed in the view,
+     * providing sensor ID, unit, location, and sample data.
+     *
+     * Get sensor ID, unit and location from sensable object.
+     * Sensable contains array of samples which is cleared, updated and then notified to
+     * adapter.
      */
     public void updateView(Sensable sensable) {
 
@@ -341,20 +295,14 @@ public class SensableActivity extends Activity {
     }
 
     /**
-     * updates a sensable object's fields with values from the provided sensable object,
-     * then saves the updated object to the database.
-     * 
-     * @param sensable sensory data to be updated, and its properties are copied to the
-     * corresponding fields of the `Sensable` object.
-     * 
-     * * `name`: A string property representing the name of the sensable device.
-     * * `sensorid`: An integer property representing the unique identifier of the sensable
-     * device.
-     * * `location`: A string property representing the location of the sensable device.
-     * * `sensortype`: An integer property representing the type of sensable device.
-     * * `samples`: An array of data samples represented as a list of floating-point numbers.
-     * * `unit`: A string property representing the unit of measurement for the sensable
-     * device.
+     * Updates an object's properties. It sets the name, sensor ID, location, sensor type,
+     * samples, and unit of a `Sensable` object based on the provided parameters. The
+     * updated object is then stored in the database using the `updateSensableInDatabase`
+     * method.
+     *
+     * @param sensable object to be updated, whose properties such as name, sensor ID,
+     * location, sensor type, samples, and unit are copied into the corresponding fields
+     * of the class instance.
      */
     private void updateSensable(Sensable sensable) {
         this.sensable.setName(sensable.getName());
@@ -368,9 +316,9 @@ public class SensableActivity extends Activity {
 
 
     /**
-     * saves a sensable data to local storage or database, depending on whether it has
-     * been saved previously. It first checks if the sensable has been saved locally and
-     * then inserts it into the database if not saved before.
+     * Inserts a sensable object into the SQLite database if it has not been saved locally.
+     * It uses a ContentValues object to store the data and the getContentResolver's
+     * insert method to execute the insertion.
      */
     private void saveThisSensable() {
         savedLocally = checkSavedLocally();
@@ -389,12 +337,11 @@ public class SensableActivity extends Activity {
     }
 
     /**
-     * updates a sensable data in the database by checking if it was saved locally,
-     * serializing it for SQL Lite, and then updating the content URI with the new values.
-     * It returns true if at least one row was updated or false otherwise.
-     * 
-     * @returns a boolean value indicating whether the sensable data was successfully
-     * updated in the database.
+     * Updates a sensable's information in the database by checking if it is saved locally,
+     * serializing it for SQLite, and then updating the corresponding database rows using
+     * the content resolver.
+     *
+     * @returns a boolean value indicating successful update or failure.
      */
     private boolean updateSensableInDatabase() {
         savedLocally = checkSavedLocally();
@@ -414,8 +361,9 @@ public class SensableActivity extends Activity {
     }
 
     /**
-     * deletes rows from a local database based on a check of whether the data was saved
-     * locally or not, and updates a save button accordingly.
+     * Checks if data is already saved locally and, if so, deletes it from a database
+     * using a Uri object. It updates the state of the `savedLocally` variable based on
+     * the deletion result and triggers an update to the save button's state accordingly.
      */
     private void unsaveThisSensable() {
         // Defines a new Uri object that receives the result of the insertion
@@ -430,19 +378,11 @@ public class SensableActivity extends Activity {
     }
 
     /**
-     * queries the local database using a `ContentResolver` and counts the number of rows
-     * returned. If the count is greater than zero, the function returns `true`.
-     * 
-     * @returns a boolean value indicating whether any data is saved locally.
-     * 
-     * * The function returns a boolean value indicating whether any data is saved locally
-     * in the database.
-     * * The count returned by the `getCount()` method of the `Cursor` object represents
-     * the number of rows in the result set.
-     * * The `getContentResolver()` method is used to query the database, and the `new
-     * String[]{"*"}` argument specifies that all columns are needed in the result set.
-     * * The `null` arguments for the `where` and `groupby` methods indicate that no
-     * filtering or grouping is performed on the data.
+     * Queries a database using a cursor to retrieve the number of rows stored locally.
+     * It then checks if the retrieved count is greater than zero, returning a boolean
+     * indicating whether data has been saved locally.
+     *
+     * @returns a boolean value indicating database presence.
      */
     private boolean checkSavedLocally() {
         Cursor count = getContentResolver().query(getDatabaseUri(), new String[]{"*"}, null, null, null, null);
@@ -450,14 +390,11 @@ public class SensableActivity extends Activity {
     }
 
     /**
-     * retrieves a Cursor object containing data from a scheduled database using a query
-     * executed by the device's content resolver.
-     * 
-     * @returns a cursor object containing data from a query on the scheduled database.
-     * 
-     * The Cursor object returned by the function represents the results of querying the
-     * scheduled database with the specified criteria. The cursor contains information
-     * about the sender objects in the database, including their ID, name, and status.
+     * Queries a database using its content resolver and returns a cursor containing data
+     * from the specified URI. The query retrieves all records (`"*"`) without any filtering
+     * conditions or sorting.
+     *
+     * @returns a cursor object that queries scheduled database.
      */
     private Cursor getSensableSender() {
         Cursor count = getContentResolver().query(getScheduledDatabaseUri(), new String[]{"*"}, null, null, null, null);
@@ -466,44 +403,22 @@ public class SensableActivity extends Activity {
 
     // Returns the DB URI for this sensable
     /**
-     * parses a URI string to obtain a database connection for Sensable content provider.
-     * 
-     * @returns a Uri object representing a content provider entry point for a specific
-     * sensor ID.
-     * 
-     * * `Uri.parse(SensableContentProvider.CONTENT_URI + "/" + sensable.getSensorid())`:
-     * This returns a Uri object representing the database location for the given sensor
-     * ID. The Uri object has various attributes such as scheme, authority, path, and query.
-     * * Scheme: The scheme of the Uri object represents the protocol used to access the
-     * database, which is typically "content".
-     * * Authority: The authority component of the Uri object specifies the domain name
-     * or IP address of the server hosting the database.
-     * * Path: The path component of the Uri object specifies the location within the
-     * server where the database is stored. In this case, it is "/" + sensable.getSensorid(),
-     * which represents the specific sensor ID for which the database is being retrieved.
-     * * Query: The query component of the Uri object can contain additional information
-     * such as filters or sorting criteria used to narrow down the data retrieved from
-     * the database. However, in this case, there are no query parameters provided.
+     * Parses a uniform resource identifier (URI) by concatenating a constant URI string
+     * with a sensor ID retrieved from the `sensable` object, forming a database URI for
+     * specific sensor data retrieval.
+     *
+     * @returns a parsed URI for accessing a specific sensor's data.
      */
     private Uri getDatabaseUri() {
         return Uri.parse(SensableContentProvider.CONTENT_URI + "/" + sensable.getSensorid());
     }
 
     /**
-     * parses a Uri based on a content provider and sensor ID to return a scheduled
-     * database Uri.
-     * 
-     * @returns a Uri object representing the scheduled database location for a specific
-     * sensor ID.
-     * 
-     * * The output is a `Uri` object representing a database URL.
-     * * The `Uri.parse()` method is used to create the `Uri` object from a string
-     * representation of the database URL.
-     * * The string representation consists of the `ScheduledSensableContentProvider.CONTENT_URI`
-     * scheme and path, followed by the sensor ID as a String.
-     * 
-     * The ` Uri` object represents a database URL that can be used to access the sensory
-     * data stored in the database.
+     * Parses a URI to retrieve data from a scheduled database, combining a predefined
+     * constant URI with a sensor ID obtained from an object called `sensable`. The
+     * resulting URI is then returned as a Uri object.
+     *
+     * @returns a parsed URI combining CONTENT_URI and sensor ID.
      */
     private Uri getScheduledDatabaseUri() {
         return Uri.parse(ScheduledSensableContentProvider.CONTENT_URI + "/" + sensable.getSensorid());
@@ -511,8 +426,9 @@ public class SensableActivity extends Activity {
 
 
     /**
-     * determines the visibility of two buttons based on whether a location is saved
-     * locally or not, hiding one button and showing the other.
+     * Toggles the visibility of two buttons based on a boolean flag `savedLocally`. If
+     * `savedLocally` is true, it hides the favourite button and shows the unFavourite
+     * button. Otherwise, it shows the favourite button and hides the unFavourite button.
      */
     public void updateSaveButton() {
         if (savedLocally) {
@@ -528,9 +444,9 @@ public class SensableActivity extends Activity {
      * Preparing the list data
      */
     /**
-     * prepares a list of data by reversing the order of sample timestamps, sorting them
-     * based on their timestamps, and then adding the samples to a new list with headers
-     * and child data.
+     * Sorts a list of samples based on their timestamps and groups them by day. It then
+     * creates a hierarchical data structure to store the grouped samples, with each
+     * group's header representing the date.
      */
     private void prepareListData() {
         listDataHeader.clear();//
@@ -539,22 +455,17 @@ public class SensableActivity extends Activity {
         // Reverse the order of samples so they are by timestamp desc
         Collections.sort(mSamples, new Comparator<Sample>() {
             /**
-             * compares two `Sample` objects based on their timestamps, returning an integer value
-             * indicating the difference between the two timestamps.
-             * 
-             * @param a 1st sample being compared to the 2nd sample `b`.
-             * 
-             * * `a` is a `Sample` object containing attributes such as `timestamp`, which is a
-             * long value representing the time of creation of the sample.
-             * 
-             * @param b 2nd sample object to be compared with the `a` parameter, and its `timestamp`
-             * field is used for the comparison.
-             * 
-             * * `getTimestamp()`: returns the timestamp value in milliseconds since the epoch
-             * (January 1, 1970, 00:00:00 GMT) for object `b`.
-             * 
-             * @returns an integer value representing the difference between the timestamps of
-             * the two input samples.
+             * Returns an integer value representing the difference between the timestamps of two
+             * `Sample` objects, with a larger value indicating that the second object has an
+             * earlier timestamp. The comparison is done by subtracting the first object's timestamp
+             * from the second object's timestamp.
+             *
+             * @param a first `Sample` object to be compared with the second `Sample` object `b`.
+             *
+             * @param b second object being compared to the first object `a`, with its timestamp
+             * subtracted from `a`'s timestamp to determine the comparison result.
+             *
+             * @returns an integer representing the timestamp difference between two samples.
              */
             @Override
             public int compare(Sample a, Sample b) {

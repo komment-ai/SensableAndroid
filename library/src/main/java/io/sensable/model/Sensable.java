@@ -11,11 +11,10 @@ import java.util.Arrays;
  * Created by madine on 01/07/14.
  */
 /**
- * is a Java class that represents a sensory data point with various metadata such
- * as location, sensor ID, name, type, and unit. The class also contains a sample
- * value, which can be retrieved through the `getSample()` method or set through the
- * `setSample()` method. Additionally, the class has a `writeToParcel()` method for
- * serializing the data to a Parcel object.
+ * Is a Parcelable object that represents a sensory data point with various metadata
+ * such as location, sensor ID, name, type, and unit. It also contains sample values
+ * and can serialize its state to a Parcel object for efficient storage or transmission.
+ * The class provides methods for accessing and manipulating these properties.
  */
 public class Sensable implements Parcelable {
     private double[] location;
@@ -31,111 +30,116 @@ public class Sensable implements Parcelable {
     }
 
     /**
-     * returns an array of doubles representing the location of an object.
-     * 
-     * @returns a double-valued array containing the location of the object.
+     * Returns an array of doubles representing a location. The returned array contains
+     * the coordinates of a specific point or object. This function does not perform any
+     * calculations, it simply retrieves and exposes the pre-defined location data.
+     *
+     * @returns an array of double values representing a geographic location.
      */
     public double[] getLocation() {
         return location;
     }
 
     /**
-     * sets the location of an object, represented by a double array, to the input argument
-     * provided.
-     * 
-     * @param location 3D coordinates of an object or entity, which is assigned to the
-     * function's local variable `this.location`.
-     * 
-     * 	- The `double[]` parameter `location` represents an array of double values
-     * containing the location coordinates.
-     * 	- Each element in the array corresponds to a particular coordinate (longitude and
-     * latitude) for the location.
+     * Assigns a specified double array as the value for an instance variable `location`.
+     * This variable is expected to hold a specific set of geographic coordinates. The
+     * method sets or updates the current location with the provided values.
+     *
+     * @param location 2D array of double values that sets the location attribute for the
+     * object.
      */
     public void setLocation(double[] location) {
         this.location = location;
     }
 
     /**
-     * retrieves the value of a static variable `sensorid`.
-     * 
-     * @returns a string representing the sensor ID.
+     * Retrieves and returns a string value representing a sensor ID. This value is stored
+     * as an instance variable named `sensorid`. The function does not modify any data
+     * or perform complex operations, simply returning the current state of the `sensorid`
+     * variable.
+     *
+     * @returns a string representing the value of the `sensorid`.
      */
     public String getSensorid() {
         return sensorid;
     }
 
     /**
-     * sets the value of a field named `sensorid` to a provided string parameter.
-     * 
-     * @param sensorId ID of the sensor to which the method is applying the specified
-     * action, and it is assigned to the `sensorid` field of the class instance.
+     * Assigns a specified `sensorId` to an instance variable. The function takes a
+     * `String` parameter and updates the value of the `sensorid` attribute within the
+     * class. This allows external code to modify the sensor ID associated with an object.
+     *
+     * @param sensorId identifier of a sensor and is used to set the value of the
+     * corresponding instance variable `this.sensorid`.
      */
     public void setSensorid(String sensorId) {
         this.sensorid = sensorId;
     }
 
     /**
-     * returns a string representing the name of an object.
-     * 
-     * @returns a string representing the name of the object.
+     * Returns a string value named `name`. This suggests that it retrieves or accesses
+     * a predefined string variable, likely a property or attribute of an object or class.
+     *
+     * @returns a string value stored in the `name` variable.
      */
     public String getName() {
         return name;
     }
 
     /**
-     * sets the value of the class member variable `name`.
-     * 
-     * @param name name to be assigned to the object, and by assigning a value to it
-     * within the function, the name of the object is updated.
+     * Assigns a specified string value to the instance variable `name`. This method sets
+     * the property of an object with a new value, effectively updating its state. It
+     * takes one parameter, a string that represents the new name.
+     *
+     * @param name value to be assigned to the instance variable `this.name`, allowing
+     * it to be set or updated by the method.
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * returns a string representing the sensory type of an object.
-     * 
-     * @returns a string representing the sensory type.
+     * Returns a string value representing the sensor type. It retrieves and provides
+     * access to an internal variable named `sensortype`. The retrieved value is passed
+     * back as a string, allowing external code to utilize it for further processing or
+     * display purposes.
+     *
+     * @returns a string value of type `sensortype`.
      */
     public String getSensortype() {
         return sensortype;
     }
 
     /**
-     * sets a object's `sensortype` field to the provided String value.
-     * 
-     * @param sensortype sensor type to be used by the `setSensortype()` method, providing
-     * a means for setting the specific type of sensor that will be used by the method.
+     * Sets a string value to an instance variable named `sensortype`. This method allows
+     * the assignment of a new sensor type to an object, which can be accessed and used
+     * elsewhere in the program through the public property.
+     *
+     * @param sensortype value to be assigned to the instance variable `sensortype`.
      */
     public void setSensortype(String sensortype) {
         this.sensortype = sensortype;
     }
 
     /**
-     * returns an array of sample objects, `samples`.
-     * 
-     * @returns an array of `Sample` objects.
-     * 
-     * 	- `samples`: A sample array of objects that contains information about the samples.
-     * The length of this array indicates the total number of samples available. Each
-     * object within the array has fields for the sample name, description, and other
-     * relevant details.
+     * Retrieves a collection of `Sample` objects and returns it as an array. The retrieved
+     * samples are stored in the `samples` variable, which is accessible within the scope
+     * of this method.
+     *
+     * @returns an array of `Sample` objects named `samples`.
      */
     public Sample[] getSamples() {
         return samples;
     }
 
     /**
-     * updates the reference to the last sample in a collection and sets the value of the
-     * `samples` field to that collection.
-     * 
-     * @param samples sample data to be stored in the `this.samples` member variable.
-     * 
-     * 	- Length greater than 0: The `samples` array has at least one element, indicating
-     * that the last element in the array can be used for setting a sample.
-     * 	- Length equal to 0: The `samples` array is empty, meaning no samples are present
-     * and the last call to `setSample` resulted in null.
+     * Sets a given array of `Sample` objects as the new sample data for an instance. If
+     * the array is not empty, it sets the last sample from the array using another method
+     * `setSample`. Otherwise, it sets the sample to null.
+     *
+     * @param samples array of Sample objects to be processed by the function, which then
+     * sets the last sample or null depending on its length and updates the internal state
+     * with the provided samples.
      */
     public void setSamples(Sample[] samples) {
         if(samples.length > 0) {
@@ -147,31 +151,22 @@ public class Sensable implements Parcelable {
     }
 
     /**
-     * returns a `Sample` object, which is its own instance variable `sample`.
-     * 
-     * @returns a reference to an object of type `Sample`.
-     * 
-     * The `sample` variable is of type `public Sample`, indicating that it is a class
-     * member and can be accessed within the same class or package.
-     * 
-     * The `return` statement indicates that the function will return the `sample` object
-     * to the caller.
-     * 
-     * The `sample` object represents an instance of the `Sample` class, which contains
-     * properties and methods related to sample data.
+     * Retrieves a reference to an object of type `Sample`. It returns the current value
+     * of the `sample` variable. This allows external code to access and utilize the
+     * internal state of the class.
+     *
+     * @returns an instance of class `Sample`.
      */
     public Sample getSample() {
         return sample;
     }
 
     /**
-     * sets the value of the class member variable `sample`.
-     * 
-     * @param sample Sample object that is assigned to the field `this.sample` within the
-     * function, effectively storing the value of the input parameter.
-     * 
-     * 	- `this.sample`: This field assigns the input `sample` to a class member variable
-     * named `sample`.
+     * Assigns a new value to the `sample` field. It takes an object of type `Sample` as
+     * input and updates the internal state of the class by setting it equal to the
+     * provided sample object. This allows the class to manage external samples internally.
+     *
+     * @param sample object to be assigned to the instance variable `this.sample`.
      */
     public void setSample(Sample sample) {
 
@@ -179,47 +174,57 @@ public class Sensable implements Parcelable {
     }
 
     /**
-     * returns a string representing the unit associated with a given value.
-     * 
-     * @returns a string representation of the variable `unit`.
+     * Retrieves the value stored in the `unit` variable and returns it as a string. This
+     * suggests that the function is designed to provide access to a unit or measurement
+     * quantity for some purpose. The returned value can then be used by the calling code.
+     *
+     * @returns a string value stored in the `unit` variable.
      */
     public String getUnit() {
         return unit;
     }
 
     /**
-     * sets the `unit` field of the current object to the provided `String`.
-     * 
-     * @param unit unit of measurement for the object being modified by the `setUnit()`
-     * method.
+     * Updates the internal state of an object by assigning a new value to the `unit`
+     * property, which is likely a variable or field of the class. This allows external
+     * code to modify the unit associated with the object programmatically. The update
+     * is made directly on the object's instance variables.
+     *
+     * @param unit value to be assigned to the instance variable `this.unit`, updating
+     * its state.
      */
     public void setUnit(String unit) {
         this.unit = unit;
     }
 
     /**
-     * retrieves an access token for use in authenticated API calls.
-     * 
-     * @returns a string representing the access token.
+     * Returns a string representing the access token. This accessor method allows external
+     * classes to retrieve the current value of the `accessToken` variable.
+     *
+     * @returns a `String` value representing an access token.
      */
     public String getAccessToken() {
         return accessToken;
     }
 
     /**
-     * sets the instance variable `accessToken` to a given string value.
-     * 
-     * @param accessToken token that grants access to the protected resources.
+     * Assigns a specified `accessToken` to the current instance's corresponding attribute,
+     * effectively updating the stored access token value. This modification is made by
+     * assigning the provided string value directly to the attribute with the same name.
+     * The updated value becomes accessible for further use.
+     *
+     * @param accessToken token to be assigned to the object's `accessToken` field.
      */
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
 
     /**
-     * generates a string representation of an object by combining its `sensorID`,
-     * `samples`, and unit into a single string.
-     * 
-     * @returns a concise representation of the sensor ID and value, including the unit.
+     * Returns a string representation of an object, combining its sensor ID with either
+     * the value and unit of the first sample if available, or just the unit if no samples
+     * are present. The result is formatted as "sensor_id - value_unit".
+     *
+     * @returns a string representation of sensor ID and its value or unit.
      */
     @Override
     public String toString() {
@@ -231,9 +236,12 @@ public class Sensable implements Parcelable {
     }
 
     /**
-     * returns an integer value indicating that no contents are present.
-     * 
-     * @returns an integer value of 0.
+     * Returns an integer value representing the type and size of the Parcelable object's
+     * content. It is a method required by the Parcelable interface, used to specify the
+     * number of elements that need to be written toParcel(). The returned value typically
+     * indicates the type of data being transferred.
+     *
+     * @returns an integer value representing the type of data contained.
      */
     @Override
     public int describeContents() {
@@ -241,28 +249,15 @@ public class Sensable implements Parcelable {
     }
 
     /**
-     * writes the location, sensor ID, name, sensor type, and samples to a Parcel object,
-     * along with the unit of measurement.
-     * 
-     * @param dest Parcel object that will be used to write the instance's state to.
-     * 
-     * 1/ `dest`: A `Parcel` object that represents the output stream for writing the
-     * data to a Parcel. It has various attributes such as `writeDoubleArray()`,
-     * `writeString()`, `writeString()`, `writeParcelableArray()`, and `writeString()`.
-     * 2/ `location`: An array of double values representing the location of the sensor.
-     * 3/ `sensorid`: A string value representing the ID of the sensor.
-     * 4/ `name`: A string value representing the name of the sensor.
-     * 5/ `sensortype`: A string value representing the type of sensor (e.g., "GPS",
-     * "Accelerometer", etc.).
-     * 6/ `samples`: An array of Parcelable objects representing the sensor readings. The
-     * `Parcelable` interface allows for efficient serialization and deserialization of
-     * complex data structures.
-     * 7/ `unit`: A string value representing the unit of measurement for the sensor
-     * readings (e.g., " meters", "degrees", etc.).
-     * 
-     * @param flags 32-bit integer value that specifies the type of data being written
-     * to the Parcel, with possible values including `PARCEL_WRITE_REusable`,
-     * `PARCEL_WRITE_TRANSIENT`, and `PARCEL_WRITE_CANCELABLE`.
+     * Serializes the data to a parcel for storage. It writes an array of doubles
+     * representing location coordinates, four strings (sensor ID, name, sensor type, and
+     * unit), and an array of Parcelable samples to the parcel using Parcel API methods.
+     *
+     * @param dest parcel that holds the data to be written by the function, allowing it
+     * to store and send complex data objects efficiently.
+     *
+     * @param flags 32-bit integer that controls the behavior of various operations such
+     * as data serialization and deserialization using Parcel.
      */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -277,42 +272,27 @@ public class Sensable implements Parcelable {
 
     public static final Parcelable.Creator<Sensable> CREATOR = new Parcelable.Creator<Sensable>() {
         /**
-         * creates a new instance of `Sensable` from a given `Parcel`.
-         * 
-         * @param in parcel that contains the data to be converted into a `Sensable` object.
-         * 
-         * 	- `in`: A Parcel object containing the data to be deserialized into a `Sensable`
-         * object.
-         * 	- `Sensable`: The class that represents the type of data being deserialized, with
-         * properties and attributes defined by its definition.
-         * 
-         * @returns a newly created `Sensable` object initialized from the provided `Parcel`
-         * input.
-         * 
-         * The `Sensable` object created is an instance of a class that represents a sensory
-         * input capable of being processed by the system. It contains information regarding
-         * its origin and format, as well as any relevant data itself. The format could be
-         * audio, video, image, or another type of sensory input altogether. The class likely
-         * has fields for these various parameters, which are populated with values provided
-         * in the `in` parameter passed to the function.
+         * Creates a new instance of the `Sensible` class from a parcel object. It uses the
+         * provided parcel to initialize the newly created object. The function returns the
+         * newly created object as an instance of the `Sensible` class.
+         *
+         * @param in Parcel object that contains the data to be deserialized into an instance
+         * of the Sensable class.
+         *
+         * @returns a new instance of `Sensable`.
          */
         public Sensable createFromParcel(Parcel in) {
             return new Sensable(in);
         }
 
         /**
-         * creates a new array of `Sensable` objects with the specified size.
-         * 
-         * @param size number of elements to be created and allocated in the newly returned
-         * array.
-         * 
-         * @returns an array of `Sensable` objects with the specified size.
-         * 
-         * 	- The `Sensable[]` array is created with the specified `size` parameter.
-         * 	- The array contains zero or more instances of the `Sensable` class, which has
-         * not been provided in the code snippet.
-         * 	- The exact behavior and attributes of the `Sensable` class are unknown without
-         * further information.
+         * Creates a new array of type `Sensible` with the specified `size`. It returns a
+         * reference to the newly created array, allowing it to be used in the calling code.
+         * The array is initialized without any values.
+         *
+         * @param size umber of elements to be allocated for an array of type `Sensible`.
+         *
+         * @returns an array of type `Sensible` with a specified `size`.
          */
         public Sensable[] newArray(int size) {
             return new Sensable[size];
@@ -336,9 +316,10 @@ public class Sensable implements Parcelable {
 
 
     /**
-     * takes a `Sample` object and returns its JSON representation as a string.
-     * 
-     * @returns a JSON string representation of the `Sample` object.
+     * Returns a string representation of a sample object as JSON. If the sample is null,
+     * it initializes a new instance before conversion to JSON.
+     *
+     * @returns a JSON string representation of the sample object.
      */
     public String getSampleAsJsonString() {
         if(sample == null) {

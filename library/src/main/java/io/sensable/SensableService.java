@@ -18,8 +18,8 @@ import java.util.List;
  * retrieving sensor data.
  */
 /**
- * provides methods for interacting with a REST API to retrieve and manipulate sensory
- * data.
+ * Provides a contract for interacting with a REST API to manipulate and retrieve
+ * sensory data through various endpoints.
  */
 public interface SensableService {
     @GET("/sensable")

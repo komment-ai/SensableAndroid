@@ -12,10 +12,9 @@ import org.json.JSONObject;
  * Created by madine on 03/07/14.
  */
 /**
- * is used to store and manage sensor data in a SQLite database. It has various columns
- * for storing location, sensor ID, sensor type, name, and last sample information.
- * The class also provides methods for serializing and deserializing the sensor data
- * into JSON format for efficient storage and retrieval.
+ * Is responsible for managing sensor data in a SQLite database. It provides methods
+ * to create and upgrade the database schema, serialize and deserialize Sensable
+ * objects, and retrieve Sensable objects from a cursor.
  */
 public class SavedSensablesTable {
 
@@ -41,15 +40,13 @@ public class SavedSensablesTable {
 
 
     /**
-     * executes a SQL statement to create the database schema when the application starts.
-     * 
-     * @param database SQLite Database object that is being executed by the function.
-     * 
-     * 	- `SQLiteDatabase`: The database class that provides methods for managing SQLite
-     * databases.
-     * 	- `execSQL()`: A method that executes SQL commands on the database.
-     * 	- `DATABASE_CREATE`: The SQL command that is executed, which creates the database
-     * if it does not already exist.
+     * Executes a SQL statement to create a table in a SQLite database when it is first
+     * created. The SQL statement is stored in the `DATABASE_CREATE` variable and is
+     * executed on the provided `SQLiteDatabase`. This function initializes the database
+     * with the specified schema.
+     *
+     * @param database SQLiteDatabase object that is passed to the onCreate method,
+     * allowing the method to execute SQL commands on it.
      */
     public static void onCreate(SQLiteDatabase database) {
         database.execSQL(DATABASE_CREATE);
@@ -57,21 +54,20 @@ public class SavedSensablesTable {
 
     // TODO: make it smarter
     /**
-     * drops an existing table named `NAME` and then calls the `onCreate` function to
-     * create a new table with the same name.
-     * 
-     * @param database SQLiteDatabase object that is being upgraded, and it is used to
-     * execute SQL commands on the database.
-     * 
-     * 	- `database`: A SQLiteDatabase object that represents the database to be upgraded.
-     * 	- `oldVersion`: An integer representing the previous version number of the database.
-     * 	- `newVersion`: An integer representing the current version number of the database.
-     * 
-     * @param oldVersion previous version of the database, which is used to determine
-     * whether an upgrade is necessary.
-     * 
-     * @param newVersion version of the application that is being upgraded, and it is
-     * used to determine whether the database schema needs to be updated or not.
+     * Drops an existing table and recreates it if a schema change occurs during the
+     * upgrade process of a SQLite database. It uses the `execSQL` method to execute SQL
+     * statements for dropping the table and then calls the `onCreate` function to recreate
+     * the table structure.
+     *
+     * @param database SQLiteDatabase object that is being upgraded or created, allowing
+     * for execution of SQL statements and other database operations.
+     *
+     * @param oldVersion previous version of the database schema that was used prior to
+     * the current upgrade operation, allowing the function to determine what changes
+     * need to be made to bring it up to date with the new schema specified by `newVersion`.
+     *
+     * @param newVersion current version of the database schema, which is used to determine
+     * whether any changes have been made and if so, the necessary actions are taken accordingly.
      */
     public static void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
         database.execSQL("DROP TABLE IF EXISTS " + NAME);
@@ -79,46 +75,23 @@ public class SavedSensablesTable {
     }
 
     /**
-     * converts a `Sensable` object into a `ContentValues` instance, which can be used
-     * for storing or retrieving data from a SQLite database. It sets values for columns
-     * such as `COLUMN_LOCATION_LATITUDE`, `COLUMN_LOCATION_LONGITUDE`, `COLUMN_SENSOR_ID`,
-     * `COLUMN_SENSOR_TYPE`, `COLUMN_NAME`, `COLUMN_LAST_SAMPLE`, and `COLUMN_UNIT`.
-     * 
-     * @param sensable Sensible object that contains information about the sensor, including
-     * its location, sensor ID, sensor type, name, last sample, and unit of measurement.
-     * 
-     * 	- ` COLUMN_LOCATION_LATITUDE`: The latitude value of the location associated with
-     * the sensable.
-     * 	- `COLUMN_LOCATION_LONGITUDE`: The longitude value of the location associated
-     * with the sensable.
-     * 	- `COLUMN_SENSOR_ID`: The ID of the sensor that generated the sensable data.
-     * 	- `COLUMN_SENSOR_TYPE`: The type of sensor that generated the sensable data (e.g.,
-     * accelerometer, gyroscope, etc.).
-     * 	- `COLUMN_NAME`: The name of the sensable.
-     * 	- `COLUMN_LAST_SAMPLE`: The last sample value of the sensable as a JSON string.
-     * 	- `COLUMN_UNIT`: The unit of measurement for the sensable data.
-     * 
-     * @returns a ContentValues object containing the serialized sensable data.
-     * 
-     * 	- `ContentValues serializedSensable`: This is an instance of the `ContentValues`
-     * class, which represents a set of key-value pairs for a SQLite database.
-     * 	- `put()` methods: The `put()` methods are used to associate a key with a value
-     * in the `ContentValues` object. In this case, the keys are the column names in the
-     * SQLite table, and the values are the serialized values of the `Sensable` object.
-     * 	- `COLUMN_LOCATION_LATITUDE`, `COLUMN_LOCATION_LONGITUDE`, `COLUMN_SENSOR_ID`,
-     * `COLUMN_SENSOR_TYPE`, `COLUMN_NAME`, `COLUMN_LAST_SAMPLE`, and `COLUMN_UNIT`: These
-     * are the column names in the SQLite table, representing the different attributes
-     * of the `Sensable` object.
-     * 	- `sensable.getLocation()[0]`, `sensable.getLocation()[1]`: These are methods
-     * that return the latitude and longitude values of the `Sensable` object, respectively.
-     * 	- `sensable.getSampleAsJsonString()`: This is a method that returns the sample
-     * value of the `Sensable` object as a JSON string.
-     * 	- `sensable.getSensorid()`: This is a method that returns the sensor ID of the
-     * `Sensable` object.
-     * 	- `sensable.getSensortype()`: This is a method that returns the sensor type of
-     * the `Sensable` object.
-     * 	- `sensable.getName()`: This is a method that returns the name of the `Sensable`
-     * object.
+     * Creates a ContentValues object to store sensor data. It populates the object with
+     * various properties of a Sensable object, including location coordinates, sensor
+     * ID, type, name, last sample, and unit, transforming JSON-formatted samples into
+     * SQL-compatible values.
+     *
+     * @param sensable object being serialized into a ContentValues object for storage
+     * in SQLite database.
+     *
+     * The object has location with latitude and longitude coordinates, sensor ID, sensor
+     * type, name, last sample as JSON string, and unit. These properties are serialized
+     * into a ContentValues object.
+     *
+     * @returns a ContentValues object with various sensor details.
+     *
+     * The output is an instance of `ContentValues`, which is a key-value pair container
+     * used for storing and retrieving data in SQLite databases. The keys are column
+     * names, and the values are corresponding data elements.
      */
     public static ContentValues serializeSensableForSqlLite(Sensable sensable) {
         ContentValues serializedSensable = new ContentValues();
@@ -133,27 +106,13 @@ public class SavedSensablesTable {
     }
 
     /**
-     * serializes a `Sensable` object into a ContentValues format for storage in a SQLite
-     * database, including the sensor ID and a single sample as a JSON string.
-     * 
-     * @param sensable sensory data that is to be serialized and stored in a SQLite database.
-     * 
-     * 	- `sensable`: This is an instance of the `Sensable` class, which has a single
-     * property - `sensorid`.
-     * 	- `sensorid`: A column name in the serialized data, representing the unique
-     * identifier of the sensor.
-     * 
-     * @returns a ContentValues object containing the sensor ID and the last sample as a
-     * JSON string.
-     * 
-     * 	- `ContentValues serializedSensable`: This is an immutable map of key-value pairs
-     * representing the sensable data to be stored in a SQLite database. The keys are
-     * defined by the `COLUMN_` constants, and the values are the corresponding sensor data.
-     * 	- `serializedSensable.put(COLUMN_SENSOR_ID, sensable.getSensorid())`: This line
-     * adds a column named "sensor_id" to the serialized data with the value of `sensable.getSensorid()`.
-     * 	- `serializedSensable.put(COLUMN_LAST_SAMPLE, sensable.getSampleAsJsonString())`:
-     * This line adds a column named "last_sample" to the serialized data with the value
-     * of `sensable.getSampleAsJsonString()`.
+     * Converts a `Sensable` object into a `ContentValues` object for SQLite database
+     * storage. It takes a `sensable` object as input and populates the `ContentValues`
+     * with its sensor ID and a single sample in JSON format.
+     *
+     * @param sensable object being serialized into a ContentValues instance.
+     *
+     * @returns a ContentValues object.
      */
     public static ContentValues serializeSensableWithSingleSampleForSqlLite(Sensable sensable) {
         ContentValues serializedSensable = new ContentValues();
@@ -163,52 +122,21 @@ public class SavedSensablesTable {
     }
 
     /**
-     * retrieves a Sensable object from a cursor and populates its fields with values
-     * from the cursor, including location, sensor ID, unit, sensor type, last sample (if
-     * available), name, and samples.
-     * 
-     * @param cursor Cursor object that contains the data to be retrieved and manipulated
-     * by the `getSensable()` method.
-     * 
-     * 	- `Cursor cursor`: A `Cursor` object that contains the data for the sensable to
-     * be constructed.
-     * 	+ `getDouble(int columnIndex)`: Retrieves a double value from the specified column
-     * index in the cursor.
-     * 	+ `getString(int columnIndex)`: Retrieves a string value from the specified column
-     * index in the cursor.
-     * 	+ `getColumnIndex()`: Returns the index of the column containing the data being
-     * retrieved.
-     * 	+ `getLastSampleColumnIndex()`: Returns the index of the column containing the
-     * last sample data, or -1 if no such column exists.
-     * 	+ `getString(int columnIndex)`: Retrieves a string value from the specified column
-     * index in the cursor.
-     * 
-     * The function then constructs a new `Sensable` object with the retrieved data,
-     * setting the following properties:
-     * 
-     * 	- `setLocation(double[] location)`: Sets the location of the sensable using the
-     * double values retrieved from the cursor.
-     * 	- `setSensorid(String sensorId)`: Sets the ID of the sensor associated with this
-     * sensable.
-     * 	- `setUnit(String unit")`: Sets the unit of measurement for this sensable.
-     * 	- `setSensortype(String sensorType")`: Sets the type of sensor associated with
-     * this sensable.
-     * 	- `setName(String name)`: Sets the name of the sensable.
-     * 
-     * Finally, the function returns the constructed `Sensable` object.
-     * 
-     * @returns a Sensable object containing location, sensor ID, unit, sensor type, and
-     * samples data.
-     * 
-     * 	- `sensable`: A `Sensable` object representing the sensory data.
-     * 	+ `setLocation()` sets the location of the sensory data using two doubles
-     * representing latitude and longitude.
-     * 	+ `setSensorid()`, `setUnit()`, and `setSensortype()` set the sensor ID, unit,
-     * and sensor type, respectively, using string values.
-     * 	+ `setLastSample()` sets a JSON object containing the last sample of sensory data
-     * using a string value.
-     * 	+ `getSamples()` returns an array of `Sample` objects representing the sensory data.
-     * 	+ `getName()` returns the name of the sensory data using a string value.
+     * Extracts data from a database cursor and populates a `Sensable` object with location,
+     * sensor ID, unit, sensor type, last sample, and name information. It also handles
+     * parsing a JSON string to create a `Sample` object if available in the database.
+     *
+     * @param cursor ursor object that retrieves data from the database table and provides
+     * values to populate the `Sensable` object properties.
+     *
+     * Moves to a specific column by index or name. Returns -1 if the column does not exist.
+     *
+     * @returns an instance of class `Sensable`.
+     *
+     * The output is an object of type `Sensable`. It has a location property with latitude
+     * and longitude values, a sensor ID string, a unit string, a sensor type string, a
+     * sample array containing a single `Sample` object or an empty array if no sample
+     * exists, and a name string.
      */
     public static Sensable getSensable(Cursor cursor) {
         Sensable sensable = new Sensable();

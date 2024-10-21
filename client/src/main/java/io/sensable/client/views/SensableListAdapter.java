@@ -25,12 +25,11 @@ import java.util.Random;
  * Created by simonmadine on 23/07/2014.
  */
 /**
- * is an extension of CursorAdapter that provides a custom layout for displaying
- * sensor data from a database. It takes in a context, layout resource ID, cursor,
- * and AdapterHolder projection, and uses these inputs to inflate a custom layout and
- * bind the data from the cursor to the appropriate UI elements. The AdapterHolder
- * class contains the data from the cursor, including the sensor ID, name, type,
- * value, and unit.
+ * Is an extension of CursorAdapter that provides a custom layout for displaying
+ * sensor data from a database. It uses a cursor to fetch data and binds it to a view,
+ * which can be customized with various elements such as text views, image views, and
+ * colors based on the sensor ID and value. The class also generates random colors
+ * based on the hash code of the sensor name.
  */
 public class SensableListAdapter extends CursorAdapter {
     private static final String TAG = SensableListAdapter.class.getSimpleName();
@@ -53,45 +52,21 @@ public class SensableListAdapter extends CursorAdapter {
     }
 
     /**
-     * inflates a layout for a list row based on the provided cursor and parent view group.
-     * 
-     * @param context Android framework's current context, which is used to inflate the
-     * layout for the list row.
-     * 
-     * 	- `Context`: This is an object that represents the current application context.
-     * It provides access to various resources and services, such as the user interface,
-     * data storage, and network connections.
-     * 	- `Cursor`: A cursor object represents a database result set, which can be retrieved
-     * through various means such as SQL queries or web services. The cursor contains
-     * information about the rows in the result set, including column values for each row.
-     * 
-     * @param cursor Cursor object containing the data to be displayed in the list row.
-     * 
-     * 	- `Context context`: The application's current context, which contains essential
-     * resources and services for rendering the view.
-     * 	- `Cursor cursor`: A cursor object representing a database row, containing
-     * attributes such as ID, title, and other relevant data.
-     * 	- `ViewGroup parent`: The parent view group that will hold the new view once created.
-     * 
-     * @param parent ViewGroup that will hold or contain the newly inflated View.
-     * 
-     * 	- `Context`: The context of the application that initialized the view.
-     * 	- `Cursor`: A cursor object representing the data to be displayed in the view.
-     * 	- `ViewGroup`: The parent view group that contains the newly inflated view.
-     * 
-     * @returns a fully inflated View object representing a list row layout with customizable
-     * elements.
-     * 
-     * 	- `mInflater`: This is an instance of `LayoutInflater`, which is used to inflate
-     * the layout for the list row.
-     * 	- `R.layout.sensable_list_row`: This is the resource ID for the layout file that
-     * is inflated by `mInflater`.
-     * 	- `Context`: This is the context object, which contains information about the
-     * device and operating system on which the app is running.
-     * 	- `Cursor cursor`: This is an instance of `Cursor`, which contains the data that
-     * will be displayed in the list row.
-     * 	- `ViewGroup parent`: This is the parent view group, which is used to inflate the
-     * layout for the list row.
+     * Inflates a layout resource into a new view, specifically an instance of
+     * `R.layout.sensable_list_row`, which is then returned for use. It takes three
+     * parameters: the context, a cursor object, and a parent ViewGroup. The `false`
+     * parameter indicates that the inflated view should not be attached to the parent immediately.
+     *
+     * @param context application environment and provides access to application-specific
+     * resources, such as inflated views.
+     *
+     * @param cursor data to be displayed in the list row, allowing for the retrieval and
+     * processing of specific column values within the cursor object.
+     *
+     * @param parent ViewGroup that the inflated layout will be added to and helps determine
+     * the measurement and positioning of the inflated view.
+     *
+     * @returns a newly inflated view from the "sensable_list_row" layout.
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -100,72 +75,28 @@ public class SensableListAdapter extends CursorAdapter {
     }
 
     /**
-     * binds a view to a sensor data, displaying the sensor name, ID, type, value and
-     * unit. It also sets the background color of the view based on the sensor ID and ID.
-     * 
-     * @param view View object that will be populated with data from the cursor.
-     * 
-     * 	- `view`: The View object to be populated with data from the cursor.
-     * 	- `context`: The Context object that provides access to resources and information
-     * necessary for the function.
-     * 	- `cursor`: The Cursor object containing the data to be bound to the View.
-     * 
-     * The View object has several properties:
-     * 
-     * 	- `findViewById(int id)`: Allows to find and retrieve a view by its ID. In this
-     * case, it is used to retrieve the `TextView` objects with IDs `R.id.row_sensable_name`,
-     * `R.id.row_sensable_id`, `R.id.row_sensable_type`, and `R.id.row_sensable_sample_value`.
-     * 	- `setImageResource(int resId)`: Sets the image resource of an ImageView object.
-     * In this case, it is used to set the image resource based on the value of the `TYPE`
-     * column in the cursor.
-     * 	- `setText(CharSequence text)`: Sets the text of a TextView object. In this case,
-     * it is used to set the text of the `name`, `sensorId`, and `unit` TextViews based
-     * on the values in the corresponding columns of the cursor.
-     * 	- `setBackgroundColor(int color)`: Sets the background color of a View object.
-     * In this case, it is used to set the background color of the View based on the value
-     * of the `SENSOR_ID` column in the cursor.
-     * 
-     * @param context Android context of the view being bound, which is used to obtain
-     * resources and information necessary for binding the view to the sensor data.
-     * 
-     * 	- `Context context`: This is the application context, which provides access to
-     * various resources and functionality within the application.
-     * 	- `Cursor cursor`: This is the result set from a database query, containing the
-     * data that will be displayed in the fragment's list view.
-     * 	- `projection`: This is an instance of `SimpleCursorAdapter.SelectionKey`,
-     * representing the columns and values in the cursor that are to be displayed in the
-     * list view.
-     * 
-     * The function then processes the cursor data as follows:
-     * 
-     * 	- It retrieves the text value from the `NAME` column, and sets it as the text for
-     * a `TextView` with the ID `R.id.row_sensable_name`.
-     * 	- It retrieves the `SENSOR_ID`, `TYPE`, and `VALUE` columns, and sets their
-     * corresponding values as text for `TextView`s with IDs `R.id.row_sensable_id`,
-     * `R.id.row_sensable_type`, and `R.id.row_sensable_sample_value`, respectively.
-     * 	- It retrieves the `UNIT` column, and sets its value as text for a `TextView`
-     * with the ID `R.id.row_sensable_sample_unit`.
-     * 	- It sets the background color of the list view item to a color determined by the
-     * combination of the `SENSOR_ID` and `ID` values.
-     * 
-     * Note that the `Context` object provides access to various resources and functionality
-     * within the application, but its specific properties or attributes are not mentioned
-     * in this function.
-     * 
-     * @param cursor Cursor object returned by the database query, which contains the
-     * data to be displayed in each row of the layout.
-     * 
-     * 	- `projection`: The projection used to extract the data from the cursor.
-     * 	- `Name`: A column index representing the name of the sensor.
-     * 	- `SensorId`: A column index representing the ID of the sensor.
-     * 	- `Type`: A column index representing the type of sensor (e.g., temperature,
-     * humidity, etc.).
-     * 	- `Value`: A column index representing the sample value.
-     * 	- `Unit`: A column index representing the unit of measurement for the sample value.
-     * 	- `JSONObject`: A JSON object containing the raw data from the Value column.
-     * 	- `Sample`: An instance of the Sample class, which contains the parsed JSON data.
-     * 	- `DecimalFormat`: An instance of the DecimalFormat class, used to format the
-     * sample value as a decimal number.
+     * Retrieves data from a Cursor and binds it to various views within a row of a list.
+     * It populates text views with sensor name, ID, type, value, and unit, sets an image
+     * based on the sensor type, and changes the background color based on the sensor ID
+     * and row ID.
+     *
+     * @param view View that is being populated with data from the Cursor, allowing the
+     * function to interact with and modify its properties.
+     *
+     * FindViewById: Returns a View object with the given id or null if no such view
+     * exists. The findViewById() method searches for a child view that has been assigned
+     * this ID in its layout description.
+     *
+     * @param context context of the activity or fragment, used to access resources and
+     * perform operations on the UI components within the view.
+     *
+     * Context contains the application's resources and local class loader, as well as
+     * its base directory.
+     *
+     * @param cursor data source from which to retrieve data, providing access to the
+     * columns of the underlying database table through its getter methods.
+     *
+     * Contains columns named NAME, SENSOR_ID, TYPE, VALUE and UNIT.
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
@@ -201,14 +132,19 @@ public class SensableListAdapter extends CursorAdapter {
     }
 
     /**
-     * generates a random color based on the hash code of a given string, using an array
-     * of predefined colors as a probability distribution.
-     * 
-     * @param name 8-bit hash code of the name, which is used to generate a random index
-     * into an array of colors.
-     * 
-     * @returns an integer representing a random color between 0 and 255, determined by
-     * hash code of the input string.
+     * Generates a random color based on the input string's hash code. It creates an array
+     * of predefined colors and selects one randomly using the hash code to generate a
+     * random index within the array. The selected color is then returned as an integer
+     * value representing an RGB color.
+     *
+     * @param name seed value used to generate a random instance of the Random class,
+     * which determines the selection of a color from the predefined array.
+     *
+     * @returns a random color from an array of predefined colours.
+     *
+     * The output is an integer value representing a color in ARGB (Alpha, Red, Green,
+     * Blue) format. The value is a combination of alpha channel transparency and RGB
+     * colors, with each component ranging from 0 to 255.
      */
     private int getColour(String name) {
         Random rnd = new Random(name.hashCode());
@@ -228,17 +164,22 @@ public class SensableListAdapter extends CursorAdapter {
     }
 
     /**
-     * represents a holder for sensor data adapter attributes.
-     * Fields:
-     * 	- ID (String): a unique identifier for an object or data point.
-     * 	- NAME (String): a name associated with an ID, sensor ID, type, value, and unit.
-     * 	- SENSOR_ID (String): a unique identifier for each sensor.
-     * 	- TYPE (String): a string value indicating the type of sensable being displayed,
-     * with possible values being "temperature", "humidity", "pressure", etc.
-     * 	- VALUE (String): a string value with no additional context or information beyond
-     * what is explicitly defined in the class definition.
-     * 	- UNIT (String): a textual representation of the unit of measurement associated
-     * with a sample value.
+     * Represents a data holder for sensor data adapter attributes.
+     *
+     * - ID (String): represents a unique identifier for an object or data point.
+     *
+     * - NAME (String): represents a name associated with an ID.
+     *
+     * - SENSOR_ID (String): represents a unique identifier for each sensor.
+     *
+     * - TYPE (String): represents a string value indicating the type of sensable being
+     * displayed.
+     *
+     * - VALUE (String): in the AdapterHolder class represents a string value with no
+     * additional context or information beyond what is explicitly defined.
+     *
+     * - UNIT (String): represents a textual representation of the unit of measurement
+     * associated with a sample value.
      */
     static class AdapterHolder {
         String ID;

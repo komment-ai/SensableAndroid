@@ -11,9 +11,10 @@ import io.sensable.client.views.RemoteSensablesFragment;
  * Created by simonmadine on 20/07/2014.
  */
 /**
- * is an extension of FragmentPagerAdapter that provides fragments for a tabbed
- * interface with three tabs: Top Rated, Games, and Movies. The adapter receives the
- * index of the current tab and returns the corresponding fragment activity.
+ * Extends FragmentPagerAdapter, providing fragments for a tabbed interface with three
+ * tabs: Top Rated, Games, and Movies. It determines the type of fragment to display
+ * based on its index and returns a corresponding `Fragment` instance. The class has
+ * a fixed count of 3 tabs.
  */
 public class TabsPagerAdapter extends FragmentPagerAdapter {
 
@@ -22,29 +23,20 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     }
 
     /**
-     * determines the type of fragment to display based on its index and returns a
-     * `Fragment` instance accordingly.
-     * 
-     * @param index 0-based index of the fragment to be returned, with values 0, 1, and
-     * 2 corresponding to different fragments: `FavouriteSensablesFragment`,
-     * `LocalSensablesFragment`, and `RemoteSensablesFragment`, respectively.
-     * 
-     * @returns a reference to a `Fragment` object that represents one of four different
-     * activity types based on the input index.
-     * 
-     * The return type of the function is `Fragment`, which means that the function returns
-     * an instance of a fragment class.
-     * 
-     * The variable `index` passed as an argument to the function takes on the values 0,
-     * 1, or 2, indicating the type of fragment to be returned.
-     * 
-     * The code inside the `switch` statement defines three different fragments:
-     * `FavouriteSensablesFragment`, `LocalSensablesFragment`, and `RemoteSensablesFragment`.
-     * Each of these fragments represents a specific type of content, such as top-rated
-     * sensibles, local sensibles, or remote sensibles.
-     * 
-     * The `return` statement at the end of the `switch` statement returns an instance
-     * of one of these fragments based on the value of `index`.
+     * Returns a Fragment instance based on the specified index, which determines the
+     * type of content to display. It uses a switch statement to handle three cases:
+     * FavouriteSensablesFragment for index 0, LocalSensablesFragment for index 1, and
+     * RemoteSensablesFragment for index 2.
+     *
+     * @param index 0-based index of a tab within a tab layout, determining which fragment
+     * to return from the switch statement.
+     *
+     * @returns a Fragment object, depending on the specified index.
+     *
+     * The output is an instance of a fragment class. The type of fragment depends on the
+     * input index. If the index is 0, the output is an instance of `FavouriteSensablesFragment`.
+     * If the index is 1, the output is an instance of `LocalSensablesFragment`. If the
+     * index is 2, the output is an instance of `RemoteSensablesFragment`.
      */
     @Override
     public Fragment getItem(int index) {
@@ -65,16 +57,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     }
 
     /**
-     * retrieves the count of items by calculating the number of tabs. The count is
-     * returned as an integer value, equal to the number of tabs.
-     * 
-     * @returns the number of tabs.
-     * 
-     * 	- The output is an integer value representing the number of tabs.
-     * 	- The value is equal to 3 in this case, indicating that there are three tabs
-     * present in the system.
-     * 	- The output does not provide any information about the contents or organization
-     * of the tabs, only their total count.
+     * Returns an integer representing the number of items, specifically the number of
+     * tabs. The method overrides a parent class's implementation and always returns a
+     * fixed value of 3.
+     *
+     * @returns an integer value, specifically `3`.
      */
     @Override
     public int getCount() {

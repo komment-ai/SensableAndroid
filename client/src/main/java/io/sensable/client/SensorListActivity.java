@@ -10,6 +10,13 @@ import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Disables the default list layout and replaces it with a list of available sensors
+ * on the device.
+ * It enables text filtering on the list view to allow users to search for specific
+ * sensors.
+ * The list of sensors is retrieved from the device's SensorManager.
+ */
 public class SensorListActivity extends ListActivity {
     /**
      * Called when the activity is first created.

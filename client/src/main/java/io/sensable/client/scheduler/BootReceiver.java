@@ -9,31 +9,23 @@ import android.util.Log;
  * Created by simonmadine on 19/07/2014.
  */
 /**
- * is a broadcast receiver that handles events related to the system booting up. When
- * the device boots, the receiver starts an AlarmManager to schedule tasks using the
- * ScheduleHelper class.
+ * Is a broadcast receiver that handles system boot events in Android applications.
+ * It starts an AlarmManager and initiates the Schedule Helper to begin scheduling
+ * tasks when the device boots up. This ensures timely execution of scheduled tasks.
  */
 public class BootReceiver extends BroadcastReceiver {
     private static final String TAG = BootReceiver.class.getSimpleName();
 
     /**
-     * starts AlarmManager at boot and initiates the Schedule Helper to begin scheduling
-     * tasks.
-     * 
-     * @param context Android app's context, which provides access to resources and APIs
-     * needed to perform the function.
-     * 
-     * 	- `TAG`: a String variable representing the logging tag for the function.
-     * 	- `intent`: an Intent object passed as an argument to the function, containing
-     * data relevant to the function's execution.
-     * 
-     * @param intent Android AlarmManager's intent, which triggers the start of the
-     * ScheduleHelper's scheduler when the device boots.
-     * 
-     * 	- `context`: The context of the application, which is a crucial component in
-     * Android applications.
-     * 	- `intent`: An intent object representing the purpose and data associated with
-     * the event being handled.
+     * Schedules a task using an AlarmManager when the device boots up. It creates a
+     * `ScheduleHelper` object and calls its `startScheduler` method to initiate the
+     * scheduling process. The scheduled task is logged with debug information.
+     *
+     * @param context application environment and provides access to various system
+     * resources, services, and functionality within the code.
+     *
+     * @param intent Intent that triggered the onReceive() method and is not utilized
+     * within the provided code snippet.
      */
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "Starting AlarmManager at Boot (onReceive)");
